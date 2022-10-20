@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LevelController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,3 +16,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [LevelController::class, 'index']);
+
+Route::controller(AuthController::class)->group(function () {
+    Route::get('/login', 'login')->name('login');
+    Route::post('/login', 'logining')->name('logining');
+
+    Route::get('/register', 'register')->name('register');
+    Route::post('/register', 'registering')->name('registering');
+
+    Route::get('/auth/redirect/{provider}', 'redirect')->name('auth.redirect');
+    Route::get('/auth/callback/{provider}', 'callback')->name('auth.callback');
+
+    Route::get('/logout', 'logout')->name('logout');
+
+
+});

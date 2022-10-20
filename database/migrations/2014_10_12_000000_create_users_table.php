@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->tinyInteger('gender')->nullable();
-            $table->foreignId('level_id')->default(0)
+            $table->foreignId('level_id')->default(1)
                     ->nullable()
                     ->constrained();
             $table->string('avatar', 100)->nullable();
