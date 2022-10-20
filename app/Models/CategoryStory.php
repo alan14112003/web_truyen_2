@@ -9,7 +9,7 @@ class CategoryStory extends Model
 {
     use HasFactory;
     protected $fillable = [
-        "category_id",
-        "story_id",
+        'category_id',
+        'story_id',
     ];
 }

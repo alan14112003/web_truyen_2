@@ -16,7 +16,7 @@ class LevelController extends Controller
      */
     public function index()
     {
-        return Schema::getColumnListing('comments');
+        return Schema::getColumnListing('stars');
     }
 
     /**

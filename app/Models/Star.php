@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Star extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'total',
+        'story_id',
+        'user_id',
+    ];
 }
