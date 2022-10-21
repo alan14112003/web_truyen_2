@@ -13,19 +13,19 @@
 
 
     <!-- Bootstrap core CSS     -->
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('admin/css/bootstrap.min.css') }}" rel="stylesheet" />
 
     <!--  Light Bootstrap Dashboard core CSS    -->
-    <link href="{{ asset('css/light-bootstrap-dashboard.css? v=1.4.1') }}" rel="stylesheet" />
+    <link href="{{ asset('admin/css/light-bootstrap-dashboard.css? v=1.4.1') }}" rel="stylesheet" />
 
     <!--  css for Demo Purpose, don't include it in your project     -->
-    <link href="{{ asset('css/demo.css') }}" rel="stylesheet" />
+    <link href="{{ asset('admin/css/demo.css') }}" rel="stylesheet" />
 
 
     <!--     Fonts and icons     -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
-    <link href="{{ asset('css/pe-icon-7-stroke.css') }}" rel="stylesheet" />
+    <link href="{{ asset('admin/css/pe-icon-7-stroke.css') }}" rel="stylesheet" />
     @stack('css')
 </head>
 
@@ -62,37 +62,37 @@
 
 </body>
 <!--   Core JS Files  -->
-<script src="{{ asset('js/jquery.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('js/bootstrap.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('js/perfect-scrollbar.jquery.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('admin/js/jquery.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('admin/js/bootstrap.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('admin/js/perfect-scrollbar.jquery.min.js') }}" type="text/javascript"></script>
 
 
 <!--  Forms Validations Plugin -->
-<script src="{{ asset('js/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('admin/js/jquery.validate.min.js') }}"></script>
 
 <!--  Select Picker Plugin -->
-<script src="{{ asset('js/bootstrap-selectpicker.js') }}"></script>
+<script src="{{ asset('admin/js/bootstrap-selectpicker.js') }}"></script>
 
 <!--  Checkbox, Radio, Switch and Tags Input Plugins -->
-<script src="{{ asset('js/bootstrap-switch-tags.min.js') }}"></script>
+<script src="{{ asset('admin/js/bootstrap-switch-tags.min.js') }}"></script>
 
 <!--  Charts Plugin -->
-<script src="{{ asset('js/chartist.min.js') }}"></script>
+<script src="{{ asset('admin/js/chartist.min.js') }}"></script>
 
 <!--  Notifications Plugin    -->
-<script src="{{ asset('js/bootstrap-notify.js') }}"></script>
+<script src="{{ asset('admin/js/bootstrap-notify.js') }}"></script>
 
 <!-- Sweet Alert 2 plugin -->
-<script src="{{ asset('js/sweetalert2.js') }}"></script>
+<script src="{{ asset('admin/js/sweetalert2.js') }}"></script>
 
 <!-- Wizard Plugin    -->
-<script src="{{ asset('js/jquery.bootstrap.wizard.min.js') }}"></script>
+<script src="{{ asset('admin/js/jquery.bootstrap.wizard.min.js') }}"></script>
 
 <!--  bootstrap Table Plugin    -->
-<script src="{{ asset('js/bootstrap-table.js') }}"></script>
+<script src="{{ asset('admin/js/bootstrap-table.js') }}"></script>
 
 <!-- Light Bootstrap Dashboard Core javascript and methods -->
-<script src="{{ asset('js/light-bootstrap-dashboard.js?v=1.4.1') }}"></script>
+<script src="{{ asset('admin/js/light-bootstrap-dashboard.js?v=1.4.1') }}"></script>
 @stack('js')
 
 </html>

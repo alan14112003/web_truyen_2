@@ -98,6 +98,7 @@ class AuthController extends Controller
             User::query()->where('email', Auth::user()->email)
                 ->update([
                     'password' => $password,
+                    'name' => $request->get('name'),
                 ]);
         } else {
             $user = User::create([
