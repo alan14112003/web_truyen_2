@@ -18,7 +18,7 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check()) {
-            if (Auth::user()->level_id === 2) {
+            if (Auth::user()->level_id === 3) {
                 return $next($request);
             }
         }

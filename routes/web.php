@@ -28,6 +28,4 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('/auth/callback/{provider}', 'callback')->name('auth.callback');
 
     Route::get('/logout', 'logout')->name('logout');
-
-
 });

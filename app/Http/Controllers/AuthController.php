@@ -93,6 +93,19 @@ class AuthController extends Controller
 
     public function registering(Request $request)
     {
+        $request->validate([
+            'email' => [
+                'required',
+                'email',
+            ],
+            'name' => [
+                'required',
+                'string',
+            ],
+            'password' => [
+                'required',
+            ]
+        ]);
         $password = Hash::make($request->get('password'));
         if (auth()->check()) {
             User::query()->where('email', Auth::user()->email)
@@ -106,8 +119,8 @@ class AuthController extends Controller
                 'email' => $request->get('email'),
                 'password' => $password,
             ]);
+            Auth::login($user);
         }
-        Auth::login($user);
         return redirect()->route('user.welcome');
     }
 }
