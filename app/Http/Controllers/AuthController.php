@@ -71,7 +71,7 @@ class AuthController extends Controller
             } else if ($user->level_id === 3) {
                 $level = 'admin';
             }
-            return redirect()->route("$level.welcome");
+            return redirect()->route("$level.index");
         } else {
             return redirect()->route('login')->with('error', 'Tài khoản hoặc mật khẩu không đúng');
         }
@@ -121,6 +121,6 @@ class AuthController extends Controller
             ]);
             Auth::login($user);
         }
-        return redirect()->route('user.welcome');
+        return redirect()->route('user.index');
     }
 }

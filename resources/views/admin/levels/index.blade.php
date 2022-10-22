@@ -3,7 +3,7 @@
     @push('css')
         <style>
             [class^="pe-"] {
-                font-size: 35px;
+                font-size: 30px;
             }
         </style>
     @endpush

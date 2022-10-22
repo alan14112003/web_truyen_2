@@ -16,7 +16,12 @@
             <div class="info">
                 @auth
                 <div class="photo">
-                    <img src="{{ auth()->user()->avatar ?? asset('img/no_face.png') }}" />
+                    @if(isset(auth()->user()->avatar))
+                            <img src="{{ file_exists("storage/" . auth()->user()->avatar) ?
+                                 asset("storage/" . auth()->user()->avatar) : auth()->user()->avatar }}">
+                    @else
+                        <img src="{{ asset('img/no_face.png') }}">
+                    @endif
                 </div>
 
                 <a data-toggle="collapse" href="#collapseExample" class="collapsed">
@@ -74,9 +79,15 @@
                             </a>
                         </li>
                         <li>
-                            <a href="../forms/regular.html">
+                            <a href="{{ route('admin.users.index') }}">
                                 <span class="sidebar-mini">Nd</span>
                                 <span class="sidebar-normal">Người dùng</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.users.index') }}">
+                                <span class="sidebar-mini">Sd</span>
+                                <span class="sidebar-normal">Sổ đen</span>
                             </a>
                         </li>
                     </ul>

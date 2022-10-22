@@ -56,7 +56,7 @@ class LevelController extends Controller
 
     public function edit($id)
     {
-        $level = $this->model->where('id', $id)->first();
+        $level = $this->model->find($id);
         $this->title = 'Sửa cấp bậc';
         View::share('title', $this->title);
 

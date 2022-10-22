@@ -21,27 +21,53 @@
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Tên</th>
-                                    <th>Mô tả</th>
-                                    <th>Hành động</th>
+                                    <th>Info</th>
+                                    <th>Cấp bậc</th>
+                                    <th>Ảnh đại diện</th>
+                                    <th>Xóa</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach ($data as $level)
+                                @foreach ($data as $user)
                                     <tr>
-                                        <td>{{ $level->id }}</td>
-                                        <td>{{ $level->name }}</td>
-                                        <td>{{ $level->descriptions }}</td>
+                                        <td>{{ $user->id }}</td>
                                         <td>
-                                        <div style="display: flex;">
-                                            <a href="{{ route("admin.$table.edit", $level->id) }}" class="pe-7s-note">
+                                            <div style="display: flex">
+                                                <span style="margin-right: 8px">{{ $user->name }}</span> -
+                                                <span style="margin-left: 8px">{{ $user->gender_name }}</span>
+                                            </div>
+                                            <div>
+                                                <a href="mailto:{{ $user->email }}" style="margin: 0 10px">{{ $user->email }}</a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {{ $user->level->name}}
+                                        </td>
+                                        <td>
+                                            <style>
+                                                img:hover {
+                                                    transform: scale(1.2);
+                                                    transition: all 0.3s ease;
+                                                }
+                                            </style>
+                                            @if(isset($user->avatar))
+                                            <a href="{{ $user->avatar }}" target="_blank">
+
+                                                <img style="width: 50px; height: 50px; object-fit: cover;"
+                                                     src="{{ file_exists("storage/$user->avatar") ?
+                                                     asset("storage/$user->avatar") : $user->avatar }}">
                                             </a>
-                                            <form action="{{ route("admin.$table.destroy", $level->id) }}" method="post">
+                                            @else
+                                                <img style="width: 50px; object-fit: cover;"
+                                                     src="{{ asset('img/no_face.png') }}">
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <form action="{{ route("admin.$table.destroy", $user->id) }}" method="post">
                                                 @csrf
                                                 @method('delete')
-                                                <button class="pe-7s-trash text-danger" style="border: none; background: transparent" type="button"></button>
+                                                <button class="pe-7s-trash text-danger" style="border: none; background: transparent"></button>
                                             </form>
-                                        </div>
                                         </td>
                                     </tr>
                                 @endforeach

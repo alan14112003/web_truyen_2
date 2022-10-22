@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests\User;
 
+use App\Enums\UserGenderEnum;
+use App\Models\Level;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreRequest extends FormRequest
 {
@@ -13,7 +17,7 @@ class StoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +28,32 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => [
+                'required',
+                'string',
+            ],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique(User::class, 'email'),
+            ],
+            'password' => [
+                'required',
+                'string',
+            ],
+            'gender' => [
+                'required',
+                Rule::in(UserGenderEnum::asArray()),
+            ],
+            'level' => [
+                'required',
+                Rule::exists(Level::class, 'id'),
+            ],
+            'avatar' => [
+                'nullable',
+                'file',
+                'image',
+            ],
         ];
     }
 }
