@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [LevelController::class, 'index']);
+//Route::get('/', [LevelController::class, 'index']);
 
 Route::controller(AuthController::class)->group(function () {
     Route::get('/login', 'login')->name('login');

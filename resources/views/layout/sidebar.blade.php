@@ -7,7 +7,7 @@
     -->
 
     <div class="logo">
-        XXX
+        Web truyện
     </div>
 
     <div class="sidebar-wrapper">
@@ -60,7 +60,7 @@
         <ul class="nav">
             <li>
                 <a data-toggle="collapse" href="#userHandle">
-                    <i class="pe-7s-note2"></i>
+                    <i class="pe-7s-users"></i>
                     <p>Xử lý người dùng
                         <b class="caret"></b>
                     </p>
@@ -68,7 +68,7 @@
                 <div class="collapse" id="userHandle">
                     <ul class="nav">
                         <li>
-                            <a href="../forms/extended.html">
+                            <a href="{{ route('admin.levels.index') }}">
                                 <span class="sidebar-mini">Cb</span>
                                 <span class="sidebar-normal">Cấp bậc</span>
                             </a>

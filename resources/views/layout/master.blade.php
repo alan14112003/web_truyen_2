@@ -42,11 +42,15 @@
                 <div class="container-fluid">
                     <div class="row">
                        <div class="col-12">
-                            @if (session()->has('success'))
-                                <div class="alert alert-success">
-                                    {{ session()->get('success') }}
-                                </div>
-                            @endif
+                           @if(session()->has('success'))
+                               <div class="alert alert-success alert-dismissible fade in" style="max-width: 500px; margin: auto">
+                                   <a href="#" class="close" data-dismiss="alert" style="right: 0" aria-label="close">&times;</a>
+                                   <strong>Thành công!</strong> {{ session()->get('success') }}
+                                   @php
+                                       session()->forget('success')
+                                   @endphp
+                               </div>
+                           @endif
                        </div>
                     </div>
                     @yield('main')

@@ -20,7 +20,7 @@
             <form class="navbar-form navbar-left navbar-search-form"  role="search">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                    <input type="text" value="" name="q" class="form-control" placeholder="Search...">
+                    <input type="text" value="{{ $q ?? '' }}" name="q" class="form-control" placeholder="Tìm kiếm...">
                 </div>
             </form>
 

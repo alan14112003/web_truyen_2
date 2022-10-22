@@ -29,6 +29,7 @@ class StoreRequest extends FormRequest
                 'string',
             ],
             'descriptions' => [
+                'nullable',
                 'string',
             ],
         ];
