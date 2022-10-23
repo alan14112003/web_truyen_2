@@ -23,6 +23,7 @@
                                     <th>#</th>
                                     <th>Tên</th>
                                     <th>Mô tả</th>
+                                    <th>Số lượng</th>
                                     <th>Hành động</th>
                                 </tr>
                                 </thead>
@@ -32,6 +33,7 @@
                                         <td>{{ $level->id }}</td>
                                         <td>{{ $level->name }}</td>
                                         <td>{{ $level->descriptions }}</td>
+                                        <td>{{ $level->user_count }}</td>
                                         <td>
                                         <div style="display: flex;">
                                             <a href="{{ route("admin.$table.edit", $level->id) }}" class="pe-7s-note">

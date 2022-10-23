@@ -85,7 +85,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('admin.users.index') }}">
+                            <a href="{{ route('admin.users.black_list') }}">
                                 <span class="sidebar-mini">Sd</span>
                                 <span class="sidebar-normal">Sổ đen</span>
                             </a>

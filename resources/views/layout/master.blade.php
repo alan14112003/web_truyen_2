@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" href="../assets/img/favicon.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-    <title>{{ $title ?? 'Quản lý' }}</title>
+    <title>{{ env('APP_NAME') ?? ''}}  - {{ $title ?? 'Quản lý' }}</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -38,7 +38,7 @@
 
             @include('layout.header')
 
-            <div class="main-content" style="max-height: 137px; overflow-y: auto">
+            <div class="main-content">
                 <div class="container-fluid">
                     <div class="row">
                        <div class="col-12">
@@ -68,7 +68,7 @@
 <!--   Core JS Files  -->
 <script src="{{ asset('admin_asset/js/jquery.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('admin_asset/js/bootstrap.min.js') }}" type="text/javascript"></script>
-{{-- <script src="{{ asset('admin_asset/js/perfect-scrollbar.jquery.min.js') }}" type="text/javascript"></script> --}}
+<script src="{{ asset('admin_asset/js/perfect-scrollbar.jquery.min.js') }}" type="text/javascript"></script>
 
 
 <!--  Forms Validations Plugin -->

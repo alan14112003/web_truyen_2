@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Throwable;
+use function PHPUnit\Framework\directoryExists;
 
 class UserController extends Controller
 {
@@ -35,35 +37,108 @@ class UserController extends Controller
      * @param Request $request
      * @return Application|Factory|ViewAlias
      */
-//    : ViewAlias|Factory|Application
+    //    : ViewAlias|Factory|Application
     public function index(Request $request)
     {
         $q = $request->get('q');
+        $genderFilter = $request->get('gender');
+        $levelFilter = $request->get('level_id');
+
         $query = $this->model->with('level')
             ->where('name', 'like', "%$q%")
-        ->whereNot('id', Auth::user()->id);
+            ->whereNot('id', Auth::user()->id)
+            ->latest();
+
+        if (isset($genderFilter) && $genderFilter !== 'All') {
+            $query = $query->where('gender', $genderFilter);
+        }
+        if (isset($levelFilter) && $levelFilter !== 'All') {
+            $query = $query->where('level_id', $levelFilter);
+        }
+
         $data = $query->paginate();
 
-
-        $this->title = 'Quản lý người dùng';
-        View::share('title', $this->title);
-        return view("admin.$this->table.index", [
-            'data' => $data,
-            'q' => $q,
-        ]);
-    }
-
-
-    public function create()
-    {
-//        genders
+        //        genders
         $gendersEnum = UserGenderEnum::getValues();
         $genders = [];
         foreach ($gendersEnum as $gender) {
             $genders[$gender] = UserGenderEnum::getNameByValue($gender);
         }
 
-//       level
+        //       level
+        $levels = Level::query()->get([
+            'id',
+            'name',
+        ]);
+
+
+        $this->title = 'Quản lý người dùng';
+        View::share('title', $this->title);
+
+        return view("admin.$this->table.index", [
+            'data' => $data,
+            'q' => $q,
+            'genders' => $genders,
+            'levels' => $levels,
+            'genderFilter' => $genderFilter,
+            'levelFilter' => $levelFilter,
+        ]);
+    }
+
+    public function blackList(Request $request)
+    {
+        $q = $request->get('q');
+        $genderFilter = $request->get('gender');
+        $levelFilter = $request->get('level_id');
+
+        $query = User::onlyTrashed()->with('level')
+            ->where('name', 'like', "%$q%")->latest();
+
+        if (isset($genderFilter) && $genderFilter !== 'All') {
+            $query = $query->where('gender', $genderFilter);
+        }
+        if (isset($levelFilter) && $levelFilter !== 'All') {
+            $query = $query->where('level_id', $levelFilter);
+        }
+
+        $data = $query->paginate();
+
+        //        genders
+        $gendersEnum = UserGenderEnum::getValues();
+        $genders = [];
+        foreach ($gendersEnum as $gender) {
+            $genders[$gender] = UserGenderEnum::getNameByValue($gender);
+        }
+
+        //       level
+        $levels = Level::query()->get([
+            'id',
+            'name',
+        ]);
+
+        $this->title = 'Sổ đen';
+        View::share('title', $this->title);
+
+        return view("admin.$this->table.black_list", [
+            'data' => $data,
+            'q' => $q,
+            'genders' => $genders,
+            'levels' => $levels,
+            'levelFilter' => $levelFilter,
+            'genderFilter' => $genderFilter,
+        ]);
+    }
+
+    public function create()
+    {
+        //        genders
+        $gendersEnum = UserGenderEnum::getValues();
+        $genders = [];
+        foreach ($gendersEnum as $gender) {
+            $genders[$gender] = UserGenderEnum::getNameByValue($gender);
+        }
+
+        //       level
         $levels = Level::query()->get([
             'id',
             'name',
@@ -104,7 +179,41 @@ class UserController extends Controller
         $this->model->find($id)->delete();
 
         return redirect()->route("admin.$this->table.index")
-            ->with('success', 'Đã xóa thành công');
+            ->with('success', 'Đã đưa vào sổ đen');
     }
 
+    public function restore($id)
+    {
+        if ($user = User::onlyTrashed()->find($id)) {
+            $user->restore();
+
+            return redirect()->route("admin.$this->table.black_list")
+                ->with('success', 'Đã khôi phục thành công');
+        }
+        return redirect()->route("admin.$this->table.black_list")
+            ->with('success', 'Không có người này');
+    }
+
+    public function kill($id)
+    {
+        try {
+            if ($user = User::onlyTrashed()->find($id)) {
+                if (file_exists("storage/$user->avatar")) {
+                    $link = "storage/$user->avatar";
+                    $path = "storage/avatars/$user->id";
+                    unlink($link);
+                    rmdir($path);
+                }
+                $user->forceDelete();
+
+                return redirect()->route("admin.$this->table.black_list")
+                    ->with('success', 'Đã xóa vĩnh viễn người này');
+            }
+        } catch (Throwable $e) {
+            dd($e);
+        }
+
+        return redirect()->route("admin.$this->table.black_list")
+            ->with('success', "Không thành công");
+    }
 }

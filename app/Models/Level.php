@@ -12,4 +12,9 @@ class Level extends Model
         'name',
         'descriptions',
     ];
+
+    public function user()
+    {
+        return $this->hasMany(User::class);
+    }
 }

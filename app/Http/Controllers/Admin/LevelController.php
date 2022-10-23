@@ -27,9 +27,9 @@ class LevelController extends Controller
     public function index(Request $request)
     {
         $q = $request->get('q');
-        $query = $this->model->where('name', 'like', "%$q%");
+        $query = $this->model->where('name', 'like', "%$q%")
+                    ->withCount('user');
         $data = $query->paginate();
-
 
         $this->title = 'Quản lý cấp bậc';
         View::share('title', $this->title);

@@ -8,8 +8,6 @@
         </style>
     @endpush
     <div class="row">
-        <a href="{{ route("admin.$table.create") }}" class="pe-7s-plus" style="font-size: 40px; margin: 24px;">
-        </a>
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
@@ -43,7 +41,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="{{ route("admin.$table.index") }}" class="btn btn-default btn-fill">Reset</a>
+                                    <a href="{{ route("admin.$table.black_list") }}" class="btn btn-default btn-fill">Reset</a>
                                 </div>
                             </div>
                         </form>
@@ -59,14 +57,14 @@
                                         <th>Info</th>
                                         <th>Cấp bậc</th>
                                         <th>Ảnh đại diện</th>
-                                        <th>Ngày đăng ký</th>
-                                        <th>Xóa</th>
+                                        <th>Ngày vào sổ</th>
+                                        <th>Xử lý</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($data as $user)
                                         <tr>
-                                            <td>{{ $user->id }}</td>
+                                            <td>{{ '###'. $user->id }}</td>
                                             <td>
                                                 <div style="display: flex">
                                                     <span style="margin-right: 8px">{{ $user->name }}</span> -
@@ -99,16 +97,24 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                {{ $user->created_at }}
+                                                {{ $user->deleted_at }}
                                             </td>
                                             <td>
-                                                <form action="{{ route("admin.$table.destroy", $user->id) }}"
-                                                    method="post">
-                                                    @csrf
-                                                    @method('delete')
-                                                    <button class="pe-7s-trash text-danger"
-                                                        style="border: none; background: transparent"></button>
-                                                </form>
+                                                <div class="" style="display: flex;">
+                                                    <form action="{{ route("admin.$table.restore", $user->id) }}"
+                                                        method="post">
+                                                        @csrf
+                                                        <button class="pe-7s-refresh-2 text-success"
+                                                            style="border: none; background: transparent"></button>
+                                                    </form>
+                                                    <form action="{{ route("admin.$table.kill", $user->id) }}"
+                                                          method="post">
+                                                        @csrf
+                                                        @method('delete')
+                                                        <button class="pe-7s-trash text-danger"
+                                                                style="border: none; background: transparent"></button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
