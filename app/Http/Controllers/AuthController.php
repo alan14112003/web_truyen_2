@@ -61,21 +61,27 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password')])) {
-            $user = User::where('email', $request->get('email'))->first();
-            Auth::login($user);
 
-            $level = 'user';
-            if ($user->level_id === 2) {
-                $level = 'censor';
-            } else if ($user->level_id === 3) {
-                $level = 'admin';
+        if ($user = User::query()->where('email', $request->get('email'))->first()) {
+            if (Hash::check($request->get('password'), $user->password )) {
+                Auth::login($user);
+
+                $level = 'user';
+                if ($user->level_id === 2) {
+                    $level = 'censor';
+                } else if ($user->level_id === 3) {
+                    $level = 'admin';
+                }
+                return redirect()->route("$level.index");
             }
-            return redirect()->route("$level.index");
-        } else {
-            return redirect()->route('login')->with('error', 'Tài khoản hoặc mật khẩu không đúng');
+            return redirect()->back()->with('error', 'Nhập sai mật khẩu');
+        } else if (User::onlyTrashed()
+            ->where('email', $request->get('email'))->first()) {
+            return redirect()->back()->with('error', 'Tài khoản đã bị đưa vào sổ đen');
         }
+        return redirect()->back()->with('error', 'Tài khoản với email bạn nhập không tồn tại');
     }
+
 
     public function logout(Request $request)
     {

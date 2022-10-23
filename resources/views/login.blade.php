@@ -47,7 +47,7 @@ transition: all 0.5s ease-in-out;
     <script>
         const btnClose = document.querySelector('.alert#errorMessage>button.close')
         btnClose.onclick = function() {
-            document.querySelector('.alert#errorMessage').style = 'top: -20px-100%; opacity: 0';
+            document.querySelector('.alert#errorMessage').style = 'top: -500%; opacity: 0';
         }
     </script>
 @endif
