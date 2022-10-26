@@ -13,4 +13,14 @@ final class StoryStatusEnum extends Enum
 {
     const UNFINISHED = 0;
     const COMPLETE = 1;
+
+    public static function getArrayView() {
+        return [
+            'Chưa hoàn' => self::UNFINISHED,
+            'Đã hoàn' => self::COMPLETE,
+        ];
+    }
+    public static function getNameByValue($value) {
+        return array_search($value, self::getArrayView(), true);
+    }
 }

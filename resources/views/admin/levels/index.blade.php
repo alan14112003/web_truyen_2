@@ -38,11 +38,17 @@
                                         <div style="display: flex;">
                                             <a href="{{ route("admin.$table.edit", $level->id) }}" class="pe-7s-note">
                                             </a>
+                                            @if($level->id > 3)
                                             <form action="{{ route("admin.$table.destroy", $level->id) }}" method="post">
                                                 @csrf
                                                 @method('delete')
-                                                <button class="pe-7s-trash text-danger" style="border: none; background: transparent" type="button"></button>
+                                                <button class="pe-7s-trash text-danger" style="border: none; background: transparent"></button>
                                             </form>
+                                            @else
+                                                <button class="pe-7s-trash text-danger" disabled
+                                                        style="border: none; background: transparent; cursor: no-drop">
+                                                </button>
+                                            @endif
                                         </div>
                                         </td>
                                     </tr>

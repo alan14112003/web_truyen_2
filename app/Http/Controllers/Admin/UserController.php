@@ -196,7 +196,6 @@ class UserController extends Controller
 
     public function kill($id)
     {
-        try {
             if ($user = User::onlyTrashed()->find($id)) {
                 if (file_exists("storage/$user->avatar")) {
                     $link = "storage/$user->avatar";
@@ -209,9 +208,6 @@ class UserController extends Controller
                 return redirect()->route("admin.$this->table.black_list")
                     ->with('success', 'Đã xóa vĩnh viễn người này');
             }
-        } catch (Throwable $e) {
-            dd($e);
-        }
 
         return redirect()->route("admin.$this->table.black_list")
             ->with('success', "Không thành công");

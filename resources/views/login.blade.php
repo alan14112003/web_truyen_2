@@ -130,7 +130,6 @@ transition: all 0.5s ease-in-out;
     </div>
 
 
-
     <!--   Core JS Files  -->
     <script src="{{ asset('admin_asset/js/jquery.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('admin_asset/js/bootstrap.min.js') }}" type="text/javascript"></script>

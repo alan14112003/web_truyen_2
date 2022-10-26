@@ -16,12 +16,12 @@
                     <hr>
                 </div>
                 <div class="content">
-                    <form action="{{ route("admin.$table.update", $level->id) }}" method="post">
+                    <form action="{{ route("admin.$table.update", $category->id) }}" method="post">
                         @csrf
                         @method('put')
                         <div class="form-group">
                             <label for="name" class="control-label">Tên</label>
-                            <input type="text" class="form-control" name="name" id="name" value="{{ $level->name }}">
+                            <input type="text" class="form-control" name="name" id="name" value="{{ $category->name }}">
                             @if ($errors->any())
                                 <span class="text-danger">{{ $errors->first('name') }}</span>
                             @endif
@@ -29,7 +29,7 @@
                         <div class="form-group">
                             <label for="describe" class="control-label">Mô tả</label>
                             <textarea class="form-control" rows="4" name="descriptions" id="describe">
-                            {{ $level->descriptions }}
+                            {{ $category->descriptions }}
                             </textarea>
                             @if ($errors->any())
                                 <span class="text-danger">{{ $errors->first('descriptions') }}</span>

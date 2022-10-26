@@ -34,15 +34,15 @@ class AuthController extends Controller
             $checkExit = false;
         }
 
-        Auth::login($user);
+        Auth::login($user, true);
         if ($checkExit) {
-            $level = 'user';
+            $level = 'index';
             if ($user->level_id === 2) {
-                $level = 'censor';
+                $level = 'censor.index';
             } else if ($user->level_id === 3) {
-                $level = 'admin';
+                $level = 'admin.index';
             }
-            return redirect()->route("$level.welcome");
+            return redirect()->route("$level");
         }
 
         return redirect()->route('register')->with('message', 'Bạn cần nhập mật khẩu');
@@ -64,15 +64,15 @@ class AuthController extends Controller
 
         if ($user = User::query()->where('email', $request->get('email'))->first()) {
             if (Hash::check($request->get('password'), $user->password )) {
-                Auth::login($user);
+                Auth::login($user, true);
 
-                $level = 'user';
+                $level = 'index';
                 if ($user->level_id === 2) {
-                    $level = 'censor';
+                    $level = 'censor.index';
                 } else if ($user->level_id === 3) {
-                    $level = 'admin';
+                    $level = 'admin.index';
                 }
-                return redirect()->route("$level.index");
+                return redirect()->route("$level");
             }
             return redirect()->back()->with('error', 'Nhập sai mật khẩu');
         } else if (User::onlyTrashed()
@@ -88,6 +88,7 @@ class AuthController extends Controller
         Auth::logout();
 
         $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect()->route('login');
     }

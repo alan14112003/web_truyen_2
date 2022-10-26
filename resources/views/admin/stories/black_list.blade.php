@@ -88,6 +88,17 @@
                                 </select>
                             </div>
                             <div class="form-group" style="margin-left: 16px">
+                                <label for="pin" class="control-label">Trạng thái</label>
+                                <select name="pin" id="pin" class="form-control filter-input"
+                                        style="margin-left: 6px">
+                                    <option value="">All</option>
+                                    @foreach ($pin as $value => $name)
+                                        <option value="{{ $value }}"
+                                                @if ($pinFilter === (string) $value) selected @endif>{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-left: 16px">
                                 <label for="author" class="control-label">Tác giả</label>
                                 <select name="author" id="author" class="form-control filter-input"
                                     style="margin-left: 6px">
@@ -106,17 +117,6 @@
                                     @foreach ($author_2 as $row)
                                         <option value="{{ $row->id }}"
                                             @if ($author_2Filter === (string) $row->id) selected @endif>{{ $row->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group" style="margin-left: 16px">
-                                <label for="pin" class="control-label">Trạng thái</label>
-                                <select name="pin" id="pin" class="form-control filter-input"
-                                    style="margin-left: 6px">
-                                    <option value="">All</option>
-                                    @foreach ($pin as $value => $name)
-                                        <option value="{{ $value }}"
-                                            @if ($pinFilter === (string) $value) selected @endif>{{ $name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -162,42 +162,26 @@
                                                     <td class="td-actions text-right">
                                                         <div style="display: flex;">
                                                             <a rel="tooltip" data-original-title="Xem"
-                                                                href="{{ route("admin.$table.edit", $story->id) }}"
+                                                                href="{{ route("admin.$table.view", $story->id) }}"
                                                                 class="btn btn-simple btn-info btn-icon table-action">
                                                                 <i class="fa fa-eye"></i>
                                                             </a>
-                                                            @if ($story->pin === 1)
                                                                 <form
-                                                                    action="{{ route("admin.$table.approve", $story->id) }}"
+                                                                    action="{{ route("admin.$table.restore", $story->id) }}"
                                                                     method="post">
                                                                     @csrf
-                                                                    <button rel="tooltip" data-original-title="duyệt"
+                                                                    <button rel="tooltip" data-original-title="Khôi phục"
                                                                         class="btn btn-simple btn-success btn-icon
                                                                     table-action">
-                                                                        <i class="fa fa-check"></i>
+                                                                        <i class="fa fa-refresh"></i>
                                                                     </button>
                                                                 </form>
-                                                            @endif
 
-                                                            <form
-                                                                action='{{ route("admin.$table.pinned", $story->id) }}'
-                                                                method="post" id="pinnedForm">
-                                                                @csrf
-                                                            <div class="checkbox" style="margin-top: 8px;">
-                                                                <input type="checkbox" id="pin-{{ $story->id }}"
-                                                                    {{ $story->pin === 3 ? 'checked' : '' }}
-                                                                    class="pinnedInput"
-                                                                >
-                                                                <label data-original-title="ghim" rel="tooltip"
-                                                                    for="pin-{{ $story->id }}"></label>
-                                                            </div>
-                                                            </form>
-
-                                                            <form action="{{ route("admin.$table.destroy", $story->id) }}"
+                                                            <form action="{{ route("admin.$table.kill", $story->id) }}"
                                                                 method="post">
                                                                 @csrf
                                                                 @method('delete')
-                                                                <button rel="tooltip" data-original-title="Xóa"
+                                                                <button rel="tooltip" data-original-title="Xóa hẳn"
                                                                     class="btn btn-simple btn-danger btn-icon table-action">
                                                                     <i class="fa fa-remove"></i>
                                                                 </button>

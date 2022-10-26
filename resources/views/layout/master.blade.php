@@ -53,6 +53,19 @@
                            @endif
                        </div>
                     </div>
+                    <div class="row">
+                        <div class="col-12">
+                            @if(session()->has('error'))
+                                <div class="alert alert-success alert-dismissible fade in" style="max-width: 500px; margin: auto">
+                                    <a href="#" class="close" data-dismiss="alert" style="right: 0" aria-label="close">&times;</a>
+                                    <strong>Thất bại!</strong> {{ session()->get('error') }}
+                                    @php
+                                        session()->forget('error')
+                                    @endphp
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                     @yield('main')
 
                 </div>

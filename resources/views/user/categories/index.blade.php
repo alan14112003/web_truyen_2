@@ -26,32 +26,30 @@
                                     <th>#</th>
                                     <th>Tên</th>
                                     <th>Mô tả</th>
-                                    <th>Số lượng</th>
-                                    <th>Hành động</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach ($data as $level)
+                                @foreach ($data as $category)
                                     <tr>
-                                        <td>{{ $level->id }}</td>
-                                        <td>{{ $level->name }}</td>
-                                        <td>{{ $level->descriptions }}</td>
-                                        <td>{{ $level->user_count }}</td>
+                                        <td>{{ $category->id }}</td>
+                                        <td>{{ $category->name }}</td>
+                                        <td>{{ $category->descriptions }}</td>
+                                        @auth
+                                            @if(auth()->user()->level_id === 2 || auth()->user()->level_id === 3)
                                         <td>
-                                            @auth
-                                                @if(auth()->user()->level_id === 2 || auth()->user()->level_id === 3)
                                         <div style="display: flex;">
-                                            <a href="{{ route("admin.$table.edit", $level->id) }}" class="pe-7s-note">
+                                            <a href="{{ route("admin.$table.edit", $category->id) }}" class="pe-7s-note">
                                             </a>
-                                            <form action="{{ route("admin.$table.destroy", $level->id) }}" method="post">
+                                            <form action="{{ route("admin.$table.destroy", $category->id) }}" method="post">
                                                 @csrf
                                                 @method('delete')
-                                                <button class="pe-7s-trash text-danger" style="border: none; background: transparent" type="button"></button>
+                                                <button class="pe-7s-trash text-danger" style="border: none; background: transparent"></button>
                                             </form>
                                         </div>
-                                                @endif
-                                            @endauth
                                         </td>
+                                            @endif
+                                        @endauth
                                     </tr>
                                 @endforeach
                                 </tbody>

@@ -13,9 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        if (!Schema::hasColumn('authors', 'level')) {
-            Schema::table('authors', function(Blueprint $table) {
-                $table->tinyInteger('level')->nullable()->after('name');
+        if (Schema::hasColumn('stories', 'author')) {
+            Schema::table('stories', function(Blueprint $table) {
+                $table->dropColumn('author');
+            });
+        }
+        if (Schema::hasColumn('stories', 'author_2')) {
+            Schema::table('stories', function(Blueprint $table) {
+                $table->dropColumn('author_2');
             });
         }
     }
@@ -27,10 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn('authors', 'level')) {
-            Schema::table('authors', function(Blueprint $table) {
-                $table->dropColumn('level');
-            });
-        }
+
     }
 };

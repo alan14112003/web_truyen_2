@@ -13,4 +13,10 @@ class Category extends Model
         "name",
         "descriptions",
     ];
+
+    public function stories()
+    {
+        return $this->belongsToMany(Story::class, 'category_story',
+            'category_id', 'story_id');
+    }
 }
