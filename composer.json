@@ -8,12 +8,12 @@
         "php": "^8.0.2",
         "bensampo/laravel-enum": "^6.0",
         "cviebrock/eloquent-sluggable": "^9.0",
+        "diglactic/laravel-breadcrumbs": "^8.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/socialite": "^5.5",
-        "laravel/tinker": "^2.7",
-        "ext-http": "*"
+        "laravel/tinker": "^2.7"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",

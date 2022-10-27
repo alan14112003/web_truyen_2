@@ -63,13 +63,14 @@
                                 <label for="file_image" style="width: 100%; height: 100%;">
                                     <div class="image_box">
                                         <i class="fa fa-photo photo_img"></i>
+                                        @if ($errors->any())
+                                            <span class="text-danger"
+                                            style="position: absolute; bottom: 12px;">{{ $errors->first('image') }}</span>
+                                        @endif
                                     </div>
                                 </label>
                                 <input type="file" accept="image/*" style="display: none;" id="file_image"
                                        name="image">
-                                @if ($errors->any())
-                                    <span class="text-danger">{{ $errors->first('image') }}</span>
-                                @endif
                             </div>
                             <div class="col-md-8">
                                 <div class="row">

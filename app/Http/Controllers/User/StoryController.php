@@ -13,6 +13,7 @@ use App\Models\Story;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 
 class StoryController extends Controller
@@ -197,7 +198,7 @@ class StoryController extends Controller
 //        user
         $users = User::query()->get(['id', 'name']);
 
-        $this->title = 'Viết truyện mới';
+        $this->title = 'Thêm truyện mới';
         View::share('title', $this->title);
 
 
@@ -214,6 +215,14 @@ class StoryController extends Controller
 
     public function store(StoreRequest $request)
     {
-        dd($request->validated());
+        $data = $request->validated();
+        dd($data['categories']);
+        DB::beginTransaction();
+        try {
+            
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+        }
     }
 }
