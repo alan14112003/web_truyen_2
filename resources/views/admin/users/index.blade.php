@@ -8,6 +8,11 @@
         </style>
     @endpush
     <div class="row">
+        <div class="col-md-12">
+            {{ Breadcrumbs::render('admin.users.index') }}
+        </div>
+    </div>
+    <div class="row">
         <a href="{{ route("admin.$table.create") }}" class="pe-7s-plus" style="font-size: 40px; margin: 24px;">
         </a>
         <div class="col-md-12">
@@ -88,10 +93,10 @@
                                                     }
                                                 </style>
                                                 @if (isset($user->avatar))
-                                                    <a href="{{ $user->avatar }}" target="_blank">
+                                                    <a href="{{ $user->avatar_url }}" target="_blank">
 
                                                         <img style="width: 50px; height: 50px; object-fit: cover;"
-                                                            src="{{ file_exists("storage/$user->avatar") ? asset("storage/$user->avatar") : $user->avatar }}">
+                                                            src="{{ $user->avatar_url }}" alt="hình ảnh $user->name">
                                                     </a>
                                                 @else
                                                     <img style="width: 50px; object-fit: cover;"

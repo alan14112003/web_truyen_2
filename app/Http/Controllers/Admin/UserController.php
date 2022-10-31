@@ -162,7 +162,7 @@ class UserController extends Controller
 
         if (isset($avatar)) {
             $fileAvatarExtension = $request->file('avatar')->extension();
-            $fileAvatarName = "$request->name.$fileAvatarExtension";
+            $fileAvatarName = "avatar.$fileAvatarExtension";
             $fileAvatarUrl = Storage::disk('public')->putFileAs("avatars/$newUser->id", $request->file('avatar'), $fileAvatarName);
 
             $newUser->update([

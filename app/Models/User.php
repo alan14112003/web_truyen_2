@@ -57,4 +57,10 @@ class User extends Authenticatable
        return UserGenderEnum::getNameByValue($this->gender) === false ?
            'Không' : UserGenderEnum::getNameByValue($this->gender);
     }
+
+    public function getAvatarUrlAttribute()
+    {
+        return file_exists("storage/$this->avatar") ?
+            asset("storage/$this->avatar") : $this->avatar;
+    }
 }

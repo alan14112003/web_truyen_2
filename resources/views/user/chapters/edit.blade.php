@@ -2,7 +2,7 @@
 @section('main')
     <div class="row">
         <div class="col-md-12">
-            {{ Breadcrumbs::render('user.chapter.create', $story) }}
+            {{ Breadcrumbs::render('user.chapter.edit', $story, $chapter) }}
         </div>
     </div>
     <div class="row">
@@ -13,12 +13,13 @@
                     <hr>
                 </div>
                 <div class="content">
-                    <form action="{{ route("user.stories.chapters.store", $story->slug) }}" method="post">
+                    <form action="{{ route("user.stories.chapters.update", [$story->slug, $chapter->id]) }}" method="post">
                         @csrf
+                        @method('put')
                         <input type="hidden" name="story_id" value="{{ $story->id }}">
                         <div class="form-group">
                             <label for="name" class="control-label">Tên</label>
-                            <input type="text" class="form-control" name="name" id="name" value="{{ old('name') }}">
+                            <input type="text" class="form-control" name="name" id="name" value="{{ $chapter->name }}">
                             @if ($errors->any())
                                 <span class="text-danger">{{ $errors->first('name') }}</span>
                             @endif
@@ -26,14 +27,14 @@
                         <div class="form-group">
                             <label for="content" class="control-label">Nội dung</label>
                             <textarea class="form-control" rows="4" name="content" id="content">
-                            {{ old('content') }}
+                            {{ $chapter->content }}
                             </textarea>
                             @if ($errors->any())
                                 <span class="text-danger">{{ $errors->first('content') }}</span>
                             @endif
                         </div>
                         <div class="footer text-center">
-                            <button class="btn btn-primary">Thêm</button>
+                            <button class="btn btn-primary">Sửa</button>
                         </div>
                     </form>
                 </div>

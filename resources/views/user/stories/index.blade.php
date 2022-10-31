@@ -9,6 +9,11 @@
     @endpush
     <div class="row">
         <div class="col-md-12">
+            {{ Breadcrumbs::render('user.stories.index') }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <a href="{{ route("user.$table.create") }}" class="pe-7s-plus" style="font-size: 40px; margin: 24px;">
             </a>
         </div>
@@ -18,7 +23,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="content">
-                        <form action="" method="get" id="form-filter" class="form-inline">
+                        <form action="" method="get" name="form-filter" id="form-filter" class="form-inline">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="panel panel-default">
@@ -65,7 +70,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-1 col-md-offset-3">
-                                    <a href="{{ route("admin.$table.index") }}" class="btn btn-default btn-fill"
+                                    <a href="{{ route("user.$table.index") }}" class="btn btn-default btn-fill"
                                        style="margin: 24px">
                                         <i class="fa fa-spin fa-refresh"></i>
                                     </a>
@@ -104,39 +109,6 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group" style="margin-left: 16px">
-                                <label for="author" class="control-label">Tác giả</label>
-                                <select name="author" id="author" class="form-control filter-input"
-                                        style="margin-left: 6px">
-                                    <option value="">All</option>
-                                    @foreach ($author as $row)
-                                        <option value="{{ $row->id }}"
-                                                @if ($authorFilter === (string) $row->id) selected @endif>{{ $row->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group" style="margin-left: 16px">
-                                <label for="author_2" class="control-label">Tác giả 2</label>
-                                <select name="author_2" id="author_2" class="form-control filter-input"
-                                        style="margin-left: 6px">
-                                    <option value="">All</option>
-                                    @foreach ($author_2 as $row)
-                                        <option value="{{ $row->id }}"
-                                                @if ($author_2Filter === (string) $row->id) selected @endif>{{ $row->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group" style="margin-left: 16px">
-                                <label for="users" class="control-label">Người đăng</label>
-                                <select name="users" id="users" class="form-control filter-input"
-                                        style="margin-left: 6px">
-                                    <option value="">All</option>
-                                    @foreach ($users as $user)
-                                        <option value="{{ $user->id }}"
-                                                @if ($usersFilter === (string) $user->id) selected @endif>{{ $user->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
                         </form>
                     </div>
                 </div>
@@ -164,48 +136,36 @@
                                     <tr>
                                         <td>{{ $story->id }}</td>
                                         <td>{{ $story->name }}</td>
-                                        <td>{{ implode(', ', $story->categories->pluck('name')->toArray()) }}</td>
+                                        <td>{{ $story->categories_name }}</td>
                                         <td>{{ $story->chapter_count }}</td>
-                                        <td>{{ \App\Enums\StoryStatusEnum::getNameByValue($story->status) }}</td>
-                                        <td>{{ \App\Enums\StoryLevelEnum::getNameByValue($story->level) }}</td>
+                                        <td>{{ $story->status_name }}</td>
+                                        <td>{{ $story->level_name }}</td>
                                         <td>{{ $story->author->name }}</td>
                                         <td>{{ optional($story->author_2)->name }}</td>
-                                        <td><img src="{{ $story->image }}"></td>
-                                        <td>{{ \App\Enums\StoryPinEnum::getNameByValue($story->pin) }}</td>
-                                        @auth
-                                            @if (auth()->user()->level_id === 2 || auth()->user()->level_id === 3)
+                                        <td><a href="{{ $story->image_url }}" target="_blank"><img src="{{ $story->image_url }}"
+                                                            style="max-width: 100px; max-height: 150px; object-fit: cover;"></a> </td>
+                                        <td>{{ $story->pin_name }}</td>
                                                 <td class="td-actions text-right">
-                                                    <div style="display: flex;">
+                                                    <div style="display: flex; align-items: center;">
                                                         <a rel="tooltip" data-original-title="Xem"
-                                                           href="{{ route("admin.$table.edit", $story->id) }}"
+                                                           href="{{ route("user.$table.show", [$story->slug, $story->id]) }}"
                                                            class="btn btn-simple btn-info btn-icon table-action">
                                                             <i class="fa fa-eye"></i>
                                                         </a>
-                                                        @if ($story->pin === 1)
-                                                            <form
-                                                                action="{{ route("admin.$table.approve", $story->id) }}"
-                                                                method="post">
-                                                                @csrf
-                                                                <button rel="tooltip" data-original-title="duyệt"
-                                                                        class="btn btn-simple btn-success btn-icon
-                                                                    table-action">
-                                                                    <i class="fa fa-check"></i>
-                                                                </button>
-                                                            </form>
-                                                        @endif
-
                                                         <form
                                                             action='{{ route("admin.$table.pinned", $story->id) }}'
                                                             method="post" id="pinnedForm">
                                                             @csrf
-                                                            <div class="checkbox" style="margin-top: 8px;">
-                                                                <input type="checkbox" id="pin-{{ $story->id }}"
-                                                                       {{ $story->pin === 3 ? 'checked' : '' }}
-                                                                       class="pinnedInput"
-                                                                >
-                                                                <label data-original-title="ghim" rel="tooltip"
-                                                                       for="pin-{{ $story->id }}"></label>
-                                                            </div>
+                                                                <div rel="tooltip" data-original-title="Đăng lên"
+                                                                     class="bootstrap-switch-container">
+                                                                    <input type="checkbox" data-toggle="switch"
+                                                                           data-off-text="OFF" data-on-text="ON"
+                                                                            id="pin-{{ $story->id }}"
+                                                                           @if($story->pin !== \App\Enums\StoryPinEnum::EDITING)
+                                                                           checked
+                                                                           @endif
+                                                                    >
+                                                                </div>
                                                         </form>
 
                                                         <form action="{{ route("admin.$table.destroy", $story->id) }}"
@@ -219,8 +179,6 @@
                                                         </form>
                                                     </div>
                                                 </td>
-                                            @endif
-                                        @endauth
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -238,11 +196,11 @@
     </div>
     @push('js')
         <script>
-            const formFilter = document.querySelector('#form-filter');
+            const formFilter = document.forms['form-filter'];
             const inputFilter = document.querySelectorAll('.filter-input');
             inputFilter.forEach((input) => {
                 input.onchange = () => {
-                    formFilter.submit();
+                   formFilter.submit();
                 }
             })
             const categoriesReset = document.getElementById('categories_reset');

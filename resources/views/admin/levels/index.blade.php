@@ -8,6 +8,11 @@
         </style>
     @endpush
     <div class="row">
+        <div class="col-md-12">
+            {{ Breadcrumbs::render('admin.levels.index') }}
+        </div>
+    </div>
+    <div class="row">
         <a href="{{ route("admin.$table.create") }}" class="pe-7s-plus" style="font-size: 40px; margin: 24px;">
         </a>
         <div class="col-md-12">

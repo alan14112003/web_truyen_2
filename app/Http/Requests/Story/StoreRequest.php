@@ -55,8 +55,8 @@ class StoreRequest extends FormRequest
             'author_2' => [
                 new RequiredIf($this->level === (string)StoryLevelEnum::EDITOR),
             ],
-            'description' => [
-                'nullable',
+            'descriptions' => [
+                'required',
                 'string',
             ],
             'image' => [

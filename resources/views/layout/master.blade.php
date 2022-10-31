@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" href="../assets/img/favicon.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-    <title>{{ env('APP_NAME') ?? ''}}  - {{ $title ?? 'Quản lý' }}</title>
+    <title>{{ env('APP_NAME') ?? '' }} - {{ $title ?? 'Quản lý' }}</title>
 
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -39,36 +39,38 @@
             @include('layout.header')
 
             <div class="main-content">
-                <div class="container-fluid">
-                    <div class="row">
-                       <div class="col-12">
-                           @if(session()->has('success'))
-                               <div class="alert alert-success alert-dismissible fade in" style="max-width: 500px; margin: auto">
-                                   <a href="#" class="close" data-dismiss="alert" style="right: 0" aria-label="close">&times;</a>
-                                   <strong>Thành công!</strong> {{ session()->get('success') }}
-                                   @php
-                                       session()->forget('success')
-                                   @endphp
-                               </div>
-                           @endif
-                       </div>
-                    </div>
+                @if (session()->has('success'))
                     <div class="row">
                         <div class="col-12">
-                            @if(session()->has('error'))
-                                <div class="alert alert-success alert-dismissible fade in" style="max-width: 500px; margin: auto">
-                                    <a href="#" class="close" data-dismiss="alert" style="right: 0" aria-label="close">&times;</a>
-                                    <strong>Thất bại!</strong> {{ session()->get('error') }}
-                                    @php
-                                        session()->forget('error')
-                                    @endphp
-                                </div>
-                            @endif
+                            <div class="alert alert-success alert-dismissible fade in"
+                                style="max-width: 500px; margin: auto">
+                                <a href="#" class="close" data-dismiss="alert" style="right: 0"
+                                    aria-label="close">&times;</a>
+                                <strong>Thành công!</strong> {{ session()->get('success') }}
+                                @php
+                                    session()->forget('success');
+                                @endphp
+                            </div>
                         </div>
                     </div>
-                    @yield('main')
+                @endif
+                @if (session()->has('error'))
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="alert alert-danger alert-dismissible fade in"
+                                style="max-width: 500px; margin: auto">
+                                <a href="#" class="close" data-dismiss="alert" style="right: 0"
+                                    aria-label="close">&times;</a>
+                                <strong>Thất bại!</strong> {{ session()->get('error') }}
+                                @php
+                                    session()->forget('error');
+                                @endphp
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                @yield('main')
 
-                </div>
             </div>
 
             @include('layout.footer')
@@ -111,5 +113,7 @@
 <!-- Light Bootstrap Dashboard Core javascript and methods -->
 <script src="{{ asset('admin_asset/js/light-bootstrap-dashboard.js?v=1.4.1') }}"></script>
 @stack('js')
+
+{{-- </body> --}}
 
 </html>

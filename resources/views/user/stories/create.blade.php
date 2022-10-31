@@ -50,13 +50,18 @@
     @endpush
     <div class="row">
         <div class="col-md-12">
+            {{ Breadcrumbs::render('user.stories.create') }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <h3 style="padding: 24px 24px 0;">{{ $title ?? '' }}</h3>
                     <hr>
                 </div>
                 <div class="content">
-                    <form action="{{ route("user.$table.store") }}" method="post">
+                    <form action="{{ route("user.$table.store") }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="col-md-3" style="padding: 16px">
@@ -292,6 +297,7 @@
                 }
             }
         </script>
+
         <script>
             const levelSelect = document.querySelector('#level');
             let editor_level = document.querySelector('.editor_level')

@@ -7,6 +7,22 @@
             }
         </style>
     @endpush
+        @auth
+            @if(auth()->user()->level_id === 2 || auth()->user()->level_id === 3)
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ Breadcrumbs::render('admin.categories.index') }}
+                    </div>
+                </div>
+            @endif
+            @if(auth()->user()->level_id === 1)
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ Breadcrumbs::render('user.categories.index') }}
+                    </div>
+                </div>
+            @endif
+        @endauth
     <div class="row">
         @auth
             @if(auth()->user()->level_id === 2 || auth()->user()->level_id === 3)

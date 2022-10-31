@@ -37,8 +37,6 @@ class StoryController extends Controller
         $statusFilter = $request->get('status');
         $levelFilter = $request->get('level');
         $pinFilter = $request->get('pin');
-        $authorFilter = $request->get('author');
-        $author2Filter = $request->get('author_2');
         $usersFilter = $request->get('users');
 
         $query = $this->model
@@ -69,14 +67,6 @@ class StoryController extends Controller
 
         if (isset($pinFilter) && $pinFilter !== 'All') {
             $query = $query->where('pin', $pinFilter);
-        }
-
-        if (isset($authorFilter) && $authorFilter !== 'All') {
-            $query = $query->where('author_id', $authorFilter);
-        }
-
-        if (isset($author2Filter) && $author2Filter !== 'All') {
-            $query = $query->where('author_2_id', $author2Filter);
         }
 
         if (isset($usersFilter) && $usersFilter !== 'All') {
@@ -112,14 +102,6 @@ class StoryController extends Controller
             $pin[$item] = StoryPinEnum::getNameByValue($item);
         }
 
-        //        author
-        $author = Author::query()->where('level', 0)
-            ->get(['id', 'name']);
-
-        //        author 2
-        $author_2 = Author::query()->where('level', 1)
-            ->get(['id', 'name']);
-
 //        user
         $users = User::query()->get(['id', 'name']);
 
@@ -137,16 +119,12 @@ class StoryController extends Controller
             'status' => $status,
             'level' => $level,
             'pin' => $pin,
-            'author' => $author,
-            'author_2' => $author_2,
             'users' => $users,
 
             'categoriesFilter' => $categoriesFilter,
             'statusFilter' => $statusFilter,
             'levelFilter' => $levelFilter,
             'pinFilter' => $pinFilter,
-            'authorFilter' => $authorFilter,
-            'author_2Filter' => $author2Filter,
             'usersFilter' => $usersFilter,
         ]);
     }

@@ -1,3 +1,15 @@
+    <style>
+        .sidebar .logo  {
+            height: 60px;
+            position: relative;
+            margin-top: 4px;
+            padding: 0 24px;
+        }
+        .logo img {
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
 <div class="sidebar" data-color="azure" data-image="{{ asset('admin_asset/img/full-screen-image-3.jpg') }}">
     <!--
 
@@ -6,8 +18,8 @@
 
     -->
 
-    <div class="logo">
-        Web truyện
+    <div class="logo" style="overflow: hidden;">
+        <span class="sidebar-normal"><img src="{{ asset('img/page/logo.png') }}"></span>
     </div>
 
     <div class="sidebar-wrapper">
@@ -17,8 +29,7 @@
                 @auth
                 <div class="photo">
                     @if(isset(auth()->user()->avatar))
-                            <img src="{{ file_exists("storage/" . auth()->user()->avatar) ?
-                                 asset("storage/" . auth()->user()->avatar) : auth()->user()->avatar }}">
+                            <img src="{{ auth()->user()->avatar_url }}">
                     @else
                         <img src="{{ asset('img/no_face.png') }}">
                     @endif

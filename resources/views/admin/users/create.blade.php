@@ -11,6 +11,11 @@
     @endpush
     <div class="row">
         <div class="col-md-12">
+            {{ Breadcrumbs::render('admin.users.create') }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <h3 style="padding: 24px 24px 0;">{{ $title ?? '' }}</h3>

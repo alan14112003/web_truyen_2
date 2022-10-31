@@ -9,6 +9,11 @@
     @endpush
     <div class="row">
         <div class="col-md-12">
+            {{ Breadcrumbs::render('admin.users.black_list') }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <div class="content">
@@ -86,10 +91,10 @@
                                                     }
                                                 </style>
                                                 @if (isset($user->avatar))
-                                                    <a href="{{ $user->avatar }}" target="_blank">
+                                                    <a href="{{ $user->avatar_url }}" target="_blank">
 
                                                         <img style="width: 50px; height: 50px; object-fit: cover;"
-                                                            src="{{ file_exists("storage/$user->avatar") ? asset("storage/$user->avatar") : $user->avatar }}">
+                                                            src="{{ $user->avatar_url }}">
                                                     </a>
                                                 @else
                                                     <img style="width: 50px; object-fit: cover;"

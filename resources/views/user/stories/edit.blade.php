@@ -50,7 +50,7 @@
     @endpush
     <div class="row">
         <div class="col-md-12">
-            {{ Breadcrumbs::render('user.stories.create') }}
+            {{ Breadcrumbs::render('user.stories.edit', $story) }}
         </div>
     </div>
     <div class="row">
@@ -61,13 +61,15 @@
                     <hr>
                 </div>
                 <div class="content">
-                    <form action="{{ route("user.$table.store") }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route("user.$table.update", $story->id) }}" method="post" enctype="multipart/form-data">
                         @csrf
+                        @method('put')
+                        <input type="hidden" name="id" value="{{ $story->id }}">
                         <div class="row">
                             <div class="col-md-3" style="padding: 16px">
                                 <label for="file_image" style="width: 100%; height: 100%;">
                                     <div class="image_box">
-                                        <i class="fa fa-photo photo_img"></i>
+                                        <img src="{{ $story->image_url }}" style="width: 100%; object-fit: cover;" alt="">
                                         @if ($errors->any())
                                             <span class="text-danger"
                                             style="position: absolute; bottom: 12px;">{{ $errors->first('image') }}</span>
@@ -76,6 +78,7 @@
                                 </label>
                                 <input type="file" accept="image/*" style="display: none;" id="file_image"
                                        name="image">
+                                <input type="hidden" name="image_old" value="{{ $story->image }}">
                             </div>
                             <div class="col-md-8">
                                 <div class="row">
@@ -102,10 +105,9 @@
                                                                            id="categories{{ $category->id }}"
                                                                            name="categories[]" type="checkbox"
                                                                            value="{{ $category->id }}"
-                                                                           @if(old('categories') !== null)
-                                                                               @if(in_array($category->id, old('categories')))
-                                                                                   checked
-                                                                               @endif
+                                                                           @if(in_array($category->id,
+                                                                                $story->categories->pluck('id')->toArray()))
+                                                                               checked
                                                                            @endif
                                                                     >
                                                                     <label for="categories{{ $category->id }}"
@@ -129,7 +131,7 @@
                                         <div class="form-group">
                                             <label for="name" class="control-label">Tên</label>
                                             <input type="text" class="form-control" name="name" id="name"
-                                                   value="{{ old('name') }}">
+                                                   value="{{ $story->name }}">
                                             @if ($errors->any())
                                                 <span class="text-danger">{{ $errors->first('name') }}</span>
                                             @endif
@@ -142,7 +144,7 @@
                                                     style="margin-left: 6px">
                                                 @foreach ($status as $value => $name)
                                                     <option value="{{ $value }}"
-                                                            @if((string)$value === old('status'))
+                                                            @if((string)$value === $story->status)
                                                                 selected
                                                         @endif
                                                     >{{ $name }}</option>
@@ -160,7 +162,7 @@
                                                     style="margin-left: 6px">
                                                 @foreach ($level as $value => $name)
                                                     <option value="{{ $value }}"
-                                                            @if((string)$value === old('level'))
+                                                            @if((string)$value === $story->level)
                                                                 selected
                                                         @endif
                                                     >{{ $name }}</option>
@@ -177,7 +179,7 @@
                                         <div class="form-group">
                                             <label for="author" class="control-label">Tác giả</label>
                                             <input type="text" class="form-control" name="author" id="author"
-                                                   value="{{ old('author') }}" autocomplete="off">
+                                                   value="{{ $story->author->name }}" autocomplete="off">
                                             <div class="autobox" id="author_list">
                                                 <ul>
                                                 </ul>
@@ -191,7 +193,7 @@
                                         <div class="form-group editor_level">
                                             <label for="author_2" class="control-label">Người chỉnh sửa</label>
                                             <input type="text" class="form-control" name="author_2" id="author_2"
-                                                   value="{{ old('author_2') }}" autocomplete="off">
+                                                   value="{{ optional($story->author_2)->name }}" autocomplete="off">
                                             <div class="autobox" id="author_2_list">
                                                 <ul>
                                                 </ul>
@@ -206,7 +208,7 @@
                                             <div class="form-group">
                                                 <label for="describe" class="control-label">Mô tả</label>
                                                 <textarea class="form-control" name="descriptions" id="describe">
-                                    {{ old('descriptions') }}
+                                    {{ $story->descriptions }}
                                     </textarea>
                                                 @if ($errors->any())
                                                     <span
@@ -219,7 +221,7 @@
                             </div>
                         </div>
                         <div class="footer text-center">
-                            <button class="btn btn-primary">Thêm</button>
+                            <button class="btn btn-primary">Sửa</button>
                         </div>
                     </form>
                 </div>

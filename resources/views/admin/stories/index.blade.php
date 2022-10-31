@@ -9,6 +9,11 @@
     @endpush
     <div class="row">
         <div class="col-md-12">
+            {{ Breadcrumbs::render('admin.stories.index') }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <div class="content">
@@ -99,28 +104,6 @@
                                 </select>
                             </div>
                             <div class="form-group" style="margin-left: 16px">
-                                <label for="author" class="control-label">Tác giả</label>
-                                <select name="author" id="author" class="form-control filter-input"
-                                    style="margin-left: 6px">
-                                    <option value="">All</option>
-                                    @foreach ($author as $row)
-                                        <option value="{{ $row->id }}"
-                                            @if ($authorFilter === (string) $row->id) selected @endif>{{ $row->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group" style="margin-left: 16px">
-                                <label for="author_2" class="control-label">Tác giả 2</label>
-                                <select name="author_2" id="author_2" class="form-control filter-input"
-                                    style="margin-left: 6px">
-                                    <option value="">All</option>
-                                    @foreach ($author_2 as $row)
-                                        <option value="{{ $row->id }}"
-                                            @if ($author_2Filter === (string) $row->id) selected @endif>{{ $row->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group" style="margin-left: 16px">
                                 <label for="users" class="control-label">Người đăng</label>
                                 <select name="users" id="users" class="form-control filter-input"
                                     style="margin-left: 6px">
@@ -159,7 +142,7 @@
                                         <tr>
                                             <td>{{ $story->id }}</td>
                                             <td>{{ $story->name }}</td>
-                                            <td>{{ implode(', ', $story->categories->pluck('name')->toArray()) }}</td>
+                                            <td>{{ $story->categories_name }}</td>
                                             <td>{{ $story->chapter_count }}</td>
                                             <td>{{ \App\Enums\StoryStatusEnum::getNameByValue($story->status) }}</td>
                                             <td>{{ \App\Enums\StoryLevelEnum::getNameByValue($story->level) }}</td>

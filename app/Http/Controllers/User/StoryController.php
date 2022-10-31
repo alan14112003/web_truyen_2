@@ -2,19 +2,26 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Enums\AuthorLevelEnum;
 use App\Enums\StoryLevelEnum;
 use App\Enums\StoryPinEnum;
 use App\Enums\StoryStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Story\StoreRequest;
+use App\Http\Requests\Story\UpdateRequest;
 use App\Models\Author;
 use App\Models\Category;
+use App\Models\Chapter;
 use App\Models\Story;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
+use Throwable;
 
 class StoryController extends Controller
 {
@@ -38,8 +45,6 @@ class StoryController extends Controller
         $statusFilter = $request->get('status');
         $levelFilter = $request->get('level');
         $pinFilter = $request->get('pin');
-        $authorFilter = $request->get('author');
-        $author2Filter = $request->get('author_2');
         $usersFilter = $request->get('users');
 
         $query = $this->model
@@ -72,14 +77,6 @@ class StoryController extends Controller
             $query = $query->where('pin', $pinFilter);
         }
 
-        if (isset($authorFilter) && $authorFilter !== 'All') {
-            $query = $query->where('author_id', $authorFilter);
-        }
-
-        if (isset($author2Filter) && $author2Filter !== 'All') {
-            $query = $query->where('author_2_id', $author2Filter);
-        }
-
         if (isset($usersFilter) && $usersFilter !== 'All') {
             $query = $query->where('user_id', $usersFilter);
         }
@@ -109,17 +106,8 @@ class StoryController extends Controller
         $pinEnum = StoryPinEnum::getValues();
         $pin = [];
         foreach ($pinEnum as $item) {
-            if ($item === StoryPinEnum::EDITING) continue;
             $pin[$item] = StoryPinEnum::getNameByValue($item);
         }
-
-        //        author
-        $author = Author::query()->where('level', 0)
-            ->get(['id', 'name']);
-
-        //        author 2
-        $author_2 = Author::query()->where('level', 1)
-            ->get(['id', 'name']);
 
 //        user
         $users = User::query()->get(['id', 'name']);
@@ -138,16 +126,12 @@ class StoryController extends Controller
             'status' => $status,
             'level' => $level,
             'pin' => $pin,
-            'author' => $author,
-            'author_2' => $author_2,
             'users' => $users,
 
             'categoriesFilter' => $categoriesFilter,
             'statusFilter' => $statusFilter,
             'levelFilter' => $levelFilter,
             'pinFilter' => $pinFilter,
-            'authorFilter' => $authorFilter,
-            'author_2Filter' => $author2Filter,
             'usersFilter' => $usersFilter,
         ]);
     }
@@ -171,16 +155,8 @@ class StoryController extends Controller
             $level[$item] = StoryLevelEnum::getNameByValue($item);
         }
 
-        //        pin
-        $pinEnum = StoryPinEnum::getValues();
-        $pin = [];
-        foreach ($pinEnum as $item) {
-            if ($item === StoryPinEnum::EDITING) continue;
-            $pin[$item] = StoryPinEnum::getNameByValue($item);
-        }
-
         //        author
-        $author = Author::query()->where('level', 0)
+        $author = Author::query()->where('level', AuthorLevelEnum::AUTHOR)
             ->get(['id', 'name']);
 
         $authorArray = array();
@@ -188,41 +164,233 @@ class StoryController extends Controller
             $authorArray[] = $item->name;
         }
         //        author 2
-        $author_2 = Author::query()->where('level', 1)
+        $author_2 = Author::query()->where('level', AuthorLevelEnum::EDITOR)
             ->get(['id', 'name']);
 
         $author2Array = [];
         foreach ($author_2 as $item) {
             $author2Array[] = $item->name;
         }
-//        user
-        $users = User::query()->get(['id', 'name']);
 
         $this->title = 'Thêm truyện mới';
         View::share('title', $this->title);
-
 
         return view("user.$this->table.create", [
             'categories' => $categories,
             'status' => $status,
             'level' => $level,
-            'pin' => $pin,
             'authorArray' => $authorArray,
             'author2Array' => $author2Array,
-            'users' => $users,
         ]);
     }
 
     public function store(StoreRequest $request)
     {
         $data = $request->validated();
-        dd($data['categories']);
+        $image = $request->file('image');
         DB::beginTransaction();
         try {
-            
+//            xử lý tác giả
+            $author = Author::query()
+                ->firstOrCreate([
+                    'name' => $data['author'],
+                    'level' => AuthorLevelEnum::AUTHOR,
+                ]);
+            if (isset($data['author_2'])) {
+                $author_2 = Author::query()
+                    ->firstOrCreate([
+                        'name' => $data['author_2'],
+                        'level' => AuthorLevelEnum::EDITOR,
+                    ]);
+            }
+//              Xử lý đăng truyện
+            $story = $this->model->create([
+                'name' => $data['name'],
+                'status' => (int)$data['status'],
+                'author_id' => $author->id,
+                'descriptions' => $data['descriptions'],
+                'level' => (int)$data['level'],
+                'pin' => StoryPinEnum::EDITING,
+                'user_id' => Auth::id(),
+            ]);
+            if (isset($data['author_2'])) {
+                $story->update([
+                    'author_2_id' => $author_2->id,
+                ]);
+            }
+
+//            xử lý upload ảnh và lưu vào cơ sở dữ liệu
+            $fileImageExtension = $image->extension();
+            $fileImageName = "image.$fileImageExtension";
+            $fileImageUrl = Storage::disk('public')
+                ->putFileAs("images/$story->id", $request->file('image'), $fileImageName);
+
+            $story->update([
+                'image' => $fileImageUrl,
+            ]);
+
+//            xử lý liên kết truyện với thể loại
+            $story->categories()->attach($data['categories']);
+
             DB::commit();
-        } catch (\Throwable $e) {
+            return redirect()->route("user.$this->table.index")
+                ->with('success', 'Tạo truyện mới thành công');
+        } catch (Throwable $e) {
+            $link = "storage/$story->image";
+            $path = "storage/images/$story->id";
+            unlink($link);
+            rmdir($path);
             DB::rollBack();
+            echo "Error: " . $e->getMessage();
+            return redirect()->back()->with('error', 'Tạo truyện thất bại' . $e->getMessage());
         }
+    }
+
+    public function edit($id)
+    {
+        $story = $this->model
+            ->with('categories')
+            ->find($id);
+
+        //        categories
+        $categories = Category::query()->get(['id', 'name']);
+
+        //        status
+        $statusEnum = StoryStatusEnum::getValues();
+        $status = [];
+        foreach ($statusEnum as $item) {
+            $status[$item] = StoryStatusEnum::getNameByValue($item);
+        }
+
+        //        level
+        $levelEnum = StoryLevelEnum::getValues();
+        $level = [];
+        foreach ($levelEnum as $item) {
+            $level[$item] = StoryLevelEnum::getNameByValue($item);
+        }
+
+        //        author
+        $author = Author::query()->where('level', AuthorLevelEnum::AUTHOR)
+            ->get(['id', 'name']);
+
+        $authorArray = array();
+        foreach ($author as $item) {
+            $authorArray[] = $item->name;
+        }
+        //        author 2
+        $author_2 = Author::query()->where('level', AuthorLevelEnum::EDITOR)
+            ->get(['id', 'name']);
+
+        $author2Array = [];
+        foreach ($author_2 as $item) {
+            $author2Array[] = $item->name;
+        }
+
+        $this->title = 'Thay đổi thông tin truyện: ' . $story->name;
+        View::share('title', $this->title);
+
+        return view("user.$this->table.edit", [
+            'story' => $story,
+            'categories' => $categories,
+            'status' => $status,
+            'level' => $level,
+            'authorArray' => $authorArray,
+            'author2Array' => $author2Array,
+        ]);
+    }
+
+    public function update(UpdateRequest $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            //            xử lý tác giả
+            $author = Author::query()
+                ->firstOrCreate([
+                    'name' => $request->author,
+                    'level' => AuthorLevelEnum::AUTHOR,
+                ]);
+            if (isset($request->author_2)) {
+                $author_2 = Author::query()
+                    ->firstOrCreate([
+                        'name' => $request->author_2,
+                        'level' => AuthorLevelEnum::EDITOR,
+                    ]);
+            }
+
+            //              Xử lý đăng truyện
+            $story = $this->model->find($id);
+
+            $story->update([
+                    'name' => Str::lower($request->name),
+                    'status' => (int)$request->status,
+                    'author_id' => $author->id,
+                    'descriptions' => $request->descriptions,
+                    'level' => (int)$request->level,
+                    'pin' => StoryPinEnum::EDITING,
+                ]);
+            if (isset($request->author_2)) {
+                $story->update([
+                    'author_2_id' => $author_2->id,
+                ]);
+            }
+
+//            xử lý upload ảnh và lưu vào cơ sở dữ liệu
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $fileImageExtension = $image->extension();
+                $fileImageName = "image.$fileImageExtension";
+
+                $link = "storage/$story->image";
+                unlink($link);
+
+                $fileImageUrl = Storage::disk('public')
+                    ->putFileAs("images/$story->id", $request->file('image'), $fileImageName);
+
+                $story->update([
+                    'image' => $fileImageUrl,
+                ]);
+            }
+//            xử lý liên kết truyện với thể loại
+            $story->categories()->sync($request->categories);
+
+            DB::commit();
+            return redirect()->route("user.$this->table.show", [$story->slug, $story->id])
+                ->with('success', 'Thay đổi thông tin truyện thành công');
+        }
+        catch (Throwable $e) {
+            DB::rollBack();
+            echo "Error: " . $e->getMessage();
+            return redirect()->back()->with('error', 'Tạo truyện thất bại' . $e->getMessage());
+        }
+    }
+
+    public function show($slug, $id)
+    {
+        $stories = $this->model->with('author')
+            ->where('user_id', auth()->id())
+            ->get(['id', 'name']);
+
+
+        $chapters = Chapter::query()->where('story_id', $id)->get();
+
+        $story = $this->model->withCount('chapter')
+            ->find($id)
+        ;
+
+        $this->title = "$story->name";
+        View::share('title', $this->title);
+
+        return view("user.$this->table.show", [
+            'story' => $story,
+            'stories' => $stories,
+            'chapters' => $chapters
+        ]);
+    }
+
+    public function find(Request $request)
+    {
+        $story_id = $request->get('story_id');
+        $story = $this->model->find($story_id);
+        return redirect()->route("user.$this->table.show", [$story->slug, $story->id]);
     }
 }

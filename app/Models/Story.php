@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\StoryLevelEnum;
+use App\Enums\StoryPinEnum;
+use App\Enums\StoryStatusEnum;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,8 +19,8 @@ class Story extends Model
     protected $fillable = [
         'name',
         'status',
-        'author',
-        'author_2',
+        'author_id',
+        'author_2_id',
         'descriptions',
         'level',
         'pin',
@@ -36,11 +39,11 @@ class Story extends Model
     }
 
     public function author() {
-        return $this->belongsTo(Author::class);
+        return $this->belongsTo(Author::class, 'author_id', 'id');
     }
 
     public function author_2() {
-        return $this->belongsTo(Author::class);
+        return $this->belongsTo(Author::class, 'author_2_id', 'id');
     }
 
     public function user()
@@ -57,5 +60,39 @@ class Story extends Model
     public function chapter()
     {
         return $this->hasMany(Chapter::class);
+    }
+
+    public function getCategoriesNameAttribute()
+    {
+        return implode(', ', $this->categories->pluck('name')->toArray());
+    }
+
+    public function getCategoriesLinkAttribute()
+    {
+        $arrCategoriesId = $this->categories->pluck('id')->toArray();
+        $arrCategoriesName = $this->categories->pluck('name')->toArray();
+
+        $arrLinkCategories = array_map(function ($id, $name){
+            return "<a href='" . $id . "'>" . $name . "</a>";
+        }, $arrCategoriesId, $arrCategoriesName);
+
+        return implode(', ', $arrLinkCategories);
+    }
+
+    public function getImageUrlAttribute()
+    {
+        return asset("storage/$this->image");
+    }
+    public function getLevelNameAttribute()
+    {
+        return StoryLevelEnum::getNameByValue($this->level);
+    }
+    public function getStatusNameAttribute()
+    {
+        return StoryStatusEnum::getNameByValue($this->status);
+    }
+    public function getPinNameAttribute()
+    {
+        return StoryPinEnum::getNameByValue($this->pin);
     }
 }

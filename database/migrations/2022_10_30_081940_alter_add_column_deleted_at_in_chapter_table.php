@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('chapter', function (Blueprint $table) {
-            //
-        });
+        if (!Schema::hasColumn('chapters', 'deleted_at')) {
+            Schema::table('chapters', function(Blueprint $table) {
+                $table->softDeletes();
+            });
+        }
     }
 
     /**
@@ -25,8 +27,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('chapter', function (Blueprint $table) {
-            //
-        });
+        if (Schema::hasColumn('chapters', 'deleted_at')) {
+            Schema::table('chapters', function(Blueprint $table) {
+                $table->dropColumn('deleted_at');
+            });
+        }
     }
 };

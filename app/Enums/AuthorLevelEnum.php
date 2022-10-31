@@ -11,7 +11,6 @@ use BenSampo\Enum\Enum;
  */
 final class AuthorLevelEnum extends Enum
 {
-    const OptionOne = 0;
-    const OptionTwo = 1;
-    const OptionThree = 2;
+    const AUTHOR = 0;
+    const EDITOR = 1;
 }

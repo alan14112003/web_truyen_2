@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LevelController;
+use Diglactic\Breadcrumbs\Breadcrumbs;
+use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,4 +32,12 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('/auth/callback/{provider}', 'callback')->name('auth.callback');
 
     Route::get('/logout', 'logout')->name('logout');
+});
+
+
+
+
+// Trang chủ
+Breadcrumbs::for('index', function(BreadcrumbTrail $trail) {
+    $trail->push('Trang chủ', route('index'));
 });
