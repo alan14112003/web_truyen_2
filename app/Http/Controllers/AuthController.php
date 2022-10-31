@@ -67,9 +67,7 @@ class AuthController extends Controller
                 Auth::login($user, true);
 
                 $level = 'index';
-                if ($user->level_id === 2) {
-                    $level = 'censor.index';
-                } else if ($user->level_id === 3) {
+                if ($user->level_id === 2 || $user->level_id === 3) {
                     $level = 'admin.index';
                 }
                 return redirect()->route("$level");
@@ -128,6 +126,6 @@ class AuthController extends Controller
             ]);
             Auth::login($user);
         }
-        return redirect()->route('user.index');
+        return redirect()->route('index');
     }
 }

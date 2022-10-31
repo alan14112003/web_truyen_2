@@ -8,6 +8,7 @@ use App\Enums\StoryStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Author;
 use App\Models\Category;
+use App\Models\Chapter;
 use App\Models\Story;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -240,12 +241,74 @@ class StoryController extends Controller
         ]);
     }
 
+    public function view($id)
+    {
+        $stories = $this->model
+            ->where('pin', '>', StoryPinEnum::EDITING)
+            ->get(['id', 'name']);
+
+        $story = Story::query()->withCount('chapter')->with('author')
+            ->find($id);
+
+        $chapters = Chapter::query()->where('story_id', $id)->paginate(1);
+
+        $this->title = "$story->name";
+        View::share('title', $this->title);
+
+        return view("admin.$this->table.view", [
+            'story' => $story,
+            'stories' => $stories,
+            'chapters' => $chapters
+        ]);
+    }
+
+    public function viewBlack($id)
+    {
+        $stories = Story::onlyTrashed()
+            ->where('pin', '>', StoryPinEnum::EDITING)
+            ->get(['id', 'name']);
+
+        $story = Story::onlyTrashed()->withCount('chapter')->with('author')
+            ->find($id);
+
+        $chapters = Chapter::query()->where('story_id', $id)->paginate(1);
+
+        $this->title = "$story->name";
+        View::share('title', $this->title);
+
+        return view("admin.$this->table.view_black", [
+            'story' => $story,
+            'stories' => $stories,
+            'chapters' => $chapters
+        ]);
+    }
+
+    public function find(Request $request)
+    {
+        $story_id = $request->get('story_id');
+        return redirect()->route("admin.$this->table.view", $story_id);
+    }
+
+    public function findBlack(Request $request)
+    {
+        $story_id = $request->get('story_id');
+        return redirect()->route("admin.$this->table.view_black", $story_id);
+    }
+
     public function approve($id)
     {
         $this->model->find($id)->update([
             'pin' => StoryPinEnum::APPROVE,
         ]);
-        return redirect()->back()->with('success', 'Đã duyệt truyện thành công');
+        return redirect()->back()->with('success', 'Đã duyệt truyện');
+    }
+
+    public function un_approve($id)
+    {
+        $this->model->find($id)->update([
+            'pin' => StoryPinEnum::UPLOADING,
+        ]);
+        return redirect()->back()->with('success', 'Đã bỏ duyệt truyện');
     }
 
     public function pinned($id)

@@ -155,19 +155,24 @@
                                             <td>{{ $story->name }}</td>
                                             <td>{{ $story->categories_name }}</td>
                                             <td>{{ $story->chapter_count }}</td>
-                                            <td>{{ \App\Enums\StoryStatusEnum::getNameByValue($story->status) }}</td>
-                                            <td>{{ \App\Enums\StoryLevelEnum::getNameByValue($story->level) }}</td>
+                                            <td>{{ $story->status_name }}</td>
+                                            <td>{{ $story->level_name }}</td>
                                             <td>{{ $story->author->name }}</td>
                                             <td>{{ optional($story->author_2)->name }}</td>
                                             <td>{{ optional($story->user)->name }}</td>
-                                            <td><img src="{{ $story->image_url }}"></td>
-                                            <td>{{ \App\Enums\StoryPinEnum::getNameByValue($story->pin) }}</td>
+                                            <td>
+                                                <a href="{{ $story->image_url }}" target="_blank">
+                                                    <img src="{{ $story->image_url }}"
+                                                         style="max-width: 100px; max-height: 150px; object-fit: cover;">
+                                                </a>
+                                            </td>
+                                            <td>{{ $story->pin_name }}</td>
                                             @auth
-                                                @if (auth()->user()->level_id === 2 || auth()->user()->level_id === 3)
+                                                @if (auth()->user()->level_id === 3)
                                                     <td class="td-actions text-right">
                                                         <div style="display: flex;">
                                                             <a rel="tooltip" data-original-title="Xem"
-                                                                href="{{ route("user.$table.show", [$story->slug, $story->id]) }}"
+                                                                href="{{ route("admin.$table.view_black", $story->id) }}"
                                                                 class="btn btn-simple btn-info btn-icon table-action">
                                                                 <i class="fa fa-eye"></i>
                                                             </a>

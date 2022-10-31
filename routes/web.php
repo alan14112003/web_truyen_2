@@ -31,7 +31,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('/auth/redirect/{provider}', 'redirect')->name('auth.redirect');
     Route::get('/auth/callback/{provider}', 'callback')->name('auth.callback');
 
-    Route::get('/logout', 'logout')->name('logout');
+    Route::post('/logout', 'logout')->name('logout');
 });
 
 

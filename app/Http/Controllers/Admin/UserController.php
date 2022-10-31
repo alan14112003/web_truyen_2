@@ -13,6 +13,7 @@ use Illuminate\Contracts\View\View as ViewAlias;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
@@ -197,7 +198,7 @@ class UserController extends Controller
     public function kill($id)
     {
             if ($user = User::onlyTrashed()->find($id)) {
-                if (file_exists("storage/$user->avatar")) {
+                if (File::isFile("storage/$user->avatar")) {
                     $link = "storage/$user->avatar";
                     $path = "storage/avatars/$user->id";
                     unlink($link);

@@ -22,6 +22,9 @@ class AdminMiddleware
                 return $next($request);
             }
         }
+        if (url()->previous() !== null)
+            return redirect()->back()->with('error', 'Bạn phải đăng nhập với tư cách quản trị viên.');
+
         return redirect()->route('login')->with('error', 'Bạn phải đăng nhập với tư cách quản trị viên.');
     }
 }

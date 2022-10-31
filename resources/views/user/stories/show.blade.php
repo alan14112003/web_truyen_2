@@ -125,6 +125,9 @@
                 </div>
             @endforeach
         </div>
+        <div style="display: flex; justify-content: center;">
+            {{ $chapters->links() }}
+        </div>
     </div>
     @push('js')
         <script>

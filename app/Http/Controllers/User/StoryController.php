@@ -366,15 +366,15 @@ class StoryController extends Controller
 
     public function show($slug, $id)
     {
-        $stories = $this->model->with('author')
+        $stories = $this->model
             ->where('user_id', auth()->id())
             ->get(['id', 'name']);
 
+        $chapters = Chapter::query()->where('story_id', $id)->paginate(1);
 
-        $chapters = Chapter::query()->where('story_id', $id)->get();
-
-        $story = $this->model->withCount('chapter')
-            ->find($id)
+        $story = Story::query()->withCount('chapter')->where('user_id', Auth::id())
+            ->with('author')
+            ->where('slug', $slug)->first()
         ;
 
         $this->title = "$story->name";
@@ -392,5 +392,29 @@ class StoryController extends Controller
         $story_id = $request->get('story_id');
         $story = $this->model->find($story_id);
         return redirect()->route("user.$this->table.show", [$story->slug, $story->id]);
+    }
+
+    public function upload($id)
+    {
+        $story = $this->model->withCount('chapter')->find($id);
+        if ($story->pin !== StoryPinEnum::EDITING) {
+            $story->update([
+                'pin' => StoryPinEnum::EDITING,
+            ]);
+            return redirect()->back()->with('success', 'đã gỡ truyện thành công');
+        }
+        if ($story->chapter_count === 0) {
+            return redirect()->back()->with('error', 'Truyện phải có ít nhất 1 chương');
+        }
+        if (Auth::user()->level_id === 1) {
+            $story->update([
+                'pin' => StoryPinEnum::UPLOADING,
+            ]);
+        } else {
+            $story->update([
+                'pin' => StoryPinEnum::APPROVE,
+            ]);
+        }
+        return redirect()->back()->with('success', 'đã đăng truyện thành công');
     }
 }

@@ -12,7 +12,8 @@ use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 use Illuminate\Support\Facades\Route;
 
 
-Route::prefix('categories')->name('categories.')->controller(CategoryController::class)->group(function() {
+Route::prefix('categories')->name('categories.')
+    ->controller(CategoryController::class)->group(function() {
     Route::get('/', 'index')->name('index');
 });
 
@@ -38,17 +39,21 @@ Route::prefix('my_stories')->name('stories.')->group(function() {
 
         Route::post('/restore/{id}', 'restore')->name('restore');
         Route::delete('/kill/{id}', 'kill')->name('kill');
+
+        Route::post('/upload/{id}', 'upload')->name('upload');
     });
-    Route::controller(ChapterController::class)->group(function() {
-        Route::get('/{slug}/chapter/create', 'create')->name('chapters.create');
-        Route::post('/{slug}/chapter/create', 'store')->name('chapters.store');
 
-        Route::get('/{slug}/chuong-{number}', 'index')->name('chapters.index');
+    Route::controller(ChapterController::class)->name('chapters.')
+        ->group(function() {
+        Route::get('/{slug}/chapter/create', 'create')->name('create');
+        Route::post('/{slug}/chapter/create', 'store')->name('store');
 
-        Route::get('/{slug}/chapter/edit/{id}', 'edit')->name('chapters.edit');
-        Route::put('/{slug}/chapter/edit/{id}', 'update')->name('chapters.update');
+        Route::get('/{slug}/chuong-{number}', 'index')->name('index');
 
-        Route::delete('/{slug}/chapter/destroy/{number}', 'destroy')->name('chapters.destroy');
+        Route::get('/{slug}/chapter/edit/{id}', 'edit')->name('edit');
+        Route::put('/{slug}/chapter/edit/{id}', 'update')->name('update');
+
+        Route::delete('/{slug}/chapter/destroy/{number}', 'destroy')->name('destroy');
     });
 });
 

@@ -99,9 +99,15 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('logout') }}" class="text-danger">
-                                <i class="pe-7s-close-circle"></i>
-                                Log out
+                            <a>
+                                <form action="{{ route('logout') }}" method="post">
+                                    @csrf
+                                    <button href="{{ route('logout') }}" class="text-danger"
+                                            style="border: none; background: transparent;">
+                                        <i class="pe-7s-close-circle"></i>
+                                        Đăng xuất
+                                    </button>
+                                </form>
                             </a>
                         </li>
                     </ul>

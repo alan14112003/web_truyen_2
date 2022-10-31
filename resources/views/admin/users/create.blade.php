@@ -71,14 +71,14 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="level" class="control-label">Cấp bậc</label>
-                                <select name="level" id="level" class="form-control">
+                                    <label for="level_id" class="control-label">Cấp bậc</label>
+                                <select name="level_id" id="level_id" class="form-control">
                                     @foreach ($levels as $level)
                                         <option value="{{ $level->id }}">{{ $level->name }}</option>
                                     @endforeach
                                 </select>
                                 @if ($errors->any())
-                                    <span class="text-danger">{{ $errors->first('level') }}</span>
+                                    <span class="text-danger">{{ $errors->first('level_id') }}</span>
                                 @endif
                                 </div>
                             </div>

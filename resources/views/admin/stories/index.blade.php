@@ -144,19 +144,24 @@
                                             <td>{{ $story->name }}</td>
                                             <td>{{ $story->categories_name }}</td>
                                             <td>{{ $story->chapter_count }}</td>
-                                            <td>{{ \App\Enums\StoryStatusEnum::getNameByValue($story->status) }}</td>
-                                            <td>{{ \App\Enums\StoryLevelEnum::getNameByValue($story->level) }}</td>
+                                            <td>{{ $story->status_name }}</td>
+                                            <td>{{ $story->level_name }}</td>
                                             <td>{{ $story->author->name }}</td>
                                             <td>{{ optional($story->author_2)->name }}</td>
                                             <td>{{ optional($story->user)->name }}</td>
-                                            <td><img src="{{ $story->image }}"></td>
-                                            <td>{{ \App\Enums\StoryPinEnum::getNameByValue($story->pin) }}</td>
+                                            <td>
+                                                <a href="{{ $story->image_url }}" target="_blank">
+                                                    <img src="{{ $story->image_url }}"
+                                                         style="max-width: 100px; max-height: 150px; object-fit: cover;">
+                                                </a>
+                                            </td>
+                                            <td>{{ $story->pin_name }}</td>
                                             @auth
                                                 @if (auth()->user()->level_id === 2 || auth()->user()->level_id === 3)
                                                     <td class="td-actions text-right">
                                                         <div style="display: flex;">
                                                             <a rel="tooltip" data-original-title="Xem"
-                                                                href="{{ route("admin.$table.edit", $story->id) }}"
+                                                                href="{{ route("admin.$table.view", $story->id) }}"
                                                                 class="btn btn-simple btn-info btn-icon table-action">
                                                                 <i class="fa fa-eye"></i>
                                                             </a>
@@ -171,12 +176,24 @@
                                                                         <i class="fa fa-check"></i>
                                                                     </button>
                                                                 </form>
+                                                            @else
+                                                                <form
+                                                                    action="{{ route("admin.$table.un_approve", $story->id) }}"
+                                                                    method="post">
+                                                                    @csrf
+                                                                    <button rel="tooltip" data-original-title="bỏ duyệt"
+                                                                            class="btn btn-simple btn-info btn-icon
+                                                                    table-action">
+                                                                        <i class="fa fa-history"></i>
+                                                                    </button>
+                                                                </form>
                                                             @endif
 
                                                             <form
                                                                 action='{{ route("admin.$table.pinned", $story->id) }}'
                                                                 method="post" id="pinnedForm">
                                                                 @csrf
+                                                                <button style="background: transparent; border: none;">
                                                             <div class="checkbox" style="margin-top: 8px;">
                                                                 <input type="checkbox" id="pin-{{ $story->id }}"
                                                                     {{ $story->pin === 3 ? 'checked' : '' }}
@@ -185,6 +202,7 @@
                                                                 <label data-original-title="ghim" rel="tooltip"
                                                                     for="pin-{{ $story->id }}"></label>
                                                             </div>
+                                                                </button>
                                                             </form>
 
                                                             <form action="{{ route("admin.$table.destroy", $story->id) }}"
@@ -231,15 +249,6 @@
                 })
                 formFilter.submit();
             }
-
-            const pinnedForm = document.getElementById('pinnedForm');
-            const pinnedInput = document.querySelectorAll('.pinnedInput')
-
-            pinnedInput.forEach((input) => {
-                input.onchange = () => {
-                    pinnedForm.submit();
-                }
-            })
         </script>
     @endpush
 @endsection

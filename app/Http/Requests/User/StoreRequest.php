@@ -45,7 +45,7 @@ class StoreRequest extends FormRequest
                 'required',
                 Rule::in(UserGenderEnum::asArray()),
             ],
-            'level' => [
+            'level_id' => [
                 'required',
                 Rule::exists(Level::class, 'id'),
             ],

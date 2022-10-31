@@ -33,7 +33,25 @@ class ChapterController extends Controller
         $this->title = "Chương truyện";
         View::share('title', $this->title);
 
-        return view("user.$this->table.index", [
+        return view("admin.$this->table.index", [
+            'story' => $story,
+            'chapterList' => $chapterList,
+            'chapter' => $chapter,
+        ]);
+    }
+
+    public function indexBlack($id, $number)
+    {
+        $story = Story::onlyTrashed()->find($id);
+
+        $chapterList = Chapter::query()->where('story_id', $story->id)->pluck('number')->toArray();
+
+        $chapter = Chapter::query()->where('story_id', $story->id)
+            ->where('number', $number)->first();
+        $this->title = "Chương truyện";
+        View::share('title', $this->title);
+
+        return view("admin.$this->table.index_black", [
             'story' => $story,
             'chapterList' => $chapterList,
             'chapter' => $chapter,

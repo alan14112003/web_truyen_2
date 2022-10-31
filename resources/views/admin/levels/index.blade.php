@@ -13,8 +13,6 @@
         </div>
     </div>
     <div class="row">
-        <a href="{{ route("admin.$table.create") }}" class="pe-7s-plus" style="font-size: 40px; margin: 24px;">
-        </a>
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
@@ -29,7 +27,6 @@
                                     <th>Tên</th>
                                     <th>Mô tả</th>
                                     <th>Số lượng</th>
-                                    <th>Hành động</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -39,23 +36,6 @@
                                         <td>{{ $level->name }}</td>
                                         <td>{{ $level->descriptions }}</td>
                                         <td>{{ $level->user_count }}</td>
-                                        <td>
-                                        <div style="display: flex;">
-                                            <a href="{{ route("admin.$table.edit", $level->id) }}" class="pe-7s-note">
-                                            </a>
-                                            @if($level->id > 3)
-                                            <form action="{{ route("admin.$table.destroy", $level->id) }}" method="post">
-                                                @csrf
-                                                @method('delete')
-                                                <button class="pe-7s-trash text-danger" style="border: none; background: transparent"></button>
-                                            </form>
-                                            @else
-                                                <button class="pe-7s-trash text-danger" disabled
-                                                        style="border: none; background: transparent; cursor: no-drop">
-                                                </button>
-                                            @endif
-                                        </div>
-                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>

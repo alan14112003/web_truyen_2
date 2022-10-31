@@ -5,12 +5,12 @@
     @endpush
     <div class="row">
         <div class="col-md-7">
-            {{ Breadcrumbs::render("user.$table.show", $story) }}
+            {{ Breadcrumbs::render("admin.$table.view", $story) }}
         </div>
         <div class="col-md-5">
             <div class="stories_box">
                 <div class="card">
-                    <form action="{{ route("user.$table.find") }}" method="get" id="stories_box_form" class="form-inline">
+                    <form action="{{ route("admin.$table.find") }}" method="get" id="stories_box_form" class="form-inline">
                         <div class="content">
                             <div class="form-group">
                                 <label for="story_id" class="control-label">Chọn truyện</label>
@@ -30,12 +30,6 @@
     <div class="story_info">
         <div class="story_title">
             <h3>Thông tin truyện</h3>
-            <div class="button_box">
-                <a rel="tooltip" class="btn btn-simple btn-warning btn-icon edit"
-                    href="{{ route("user.$table.edit", $story->id) }}" data-original-title="Thay đổi thông tin truyện">
-                    <i class="fa fa-edit"></i>
-                </a>
-            </div>
         </div>
         <div class="story_name">
             <h2>{{ $story->name }}</h2>
@@ -79,7 +73,7 @@
                     </div>
                     <div class="story_box_left_bottom_item">
                         <strong>Số chương:</strong>
-                        <span>{{ $story->chapter_count ?? 0 }}</span>
+                        <span>{{ $story->chapter_count }}</span>
                     </div>
                 </div>
             </div>
@@ -96,32 +90,16 @@
     <div class="chapter_box">
         <div class="story_title">
             <h3>Danh sách chương</h3>
-            <div class="button_box">
-                <a rel="tooltip" class="btn btn-simple btn-success btn-icon edit"
-                    href="{{ route("user.$table.chapters.create", $story->slug) }}" data-original-title="Thêm 1 chương">
-                    <i class="fa fa-plus-circle"></i>
-                </a>
-            </div>
         </div>
         <div class="chapter_list">
             @foreach ($chapters as $chapter)
                 <div class="chapter_box_item" style="display: flex; justify-content: space-between">
                     <a style="display: flex; align-items: center;"
-                        href="{{ route("user.$table.chapters.index", ['slug' => $story->slug, 'number' => $chapter->number]) }}">
+                        href="{{ route("admin.$table.chapters.index", ['id' => $story->id, 'number' => $chapter->number]) }}">
                         <span class="chapter_box_item_text">
                             <span>Chương </span> {{ $chapter->number }}: {{ $chapter->name }}
                         </span>
                     </a>
-
-                    <form action="{{ route("user.$table.chapters.destroy", ['slug' => $story->slug, 'number' => $chapter->number]) }}"
-                          method="post">
-                        @csrf
-                        @method('delete')
-                        <button rel="tooltip" data-original-title="Xóa"
-                                class="btn btn-simple btn-danger btn-icon table-action">
-                            <i class="fa fa-remove"></i>
-                        </button>
-                    </form>
                 </div>
             @endforeach
         </div>

@@ -142,8 +142,12 @@
                                         <td>{{ $story->level_name }}</td>
                                         <td>{{ $story->author->name }}</td>
                                         <td>{{ optional($story->author_2)->name }}</td>
-                                        <td><a href="{{ $story->image_url }}" target="_blank"><img src="{{ $story->image_url }}"
-                                                            style="max-width: 100px; max-height: 150px; object-fit: cover;"></a> </td>
+                                        <td>
+                                            <a href="{{ $story->image_url }}" target="_blank">
+                                                <img src="{{ $story->image_url }}"
+                                                            style="max-width: 100px; max-height: 150px; object-fit: cover;">
+                                            </a>
+                                        </td>
                                         <td>{{ $story->pin_name }}</td>
                                                 <td class="td-actions text-right">
                                                     <div style="display: flex; align-items: center;">
@@ -153,19 +157,20 @@
                                                             <i class="fa fa-eye"></i>
                                                         </a>
                                                         <form
-                                                            action='{{ route("admin.$table.pinned", $story->id) }}'
-                                                            method="post" id="pinnedForm">
+                                                            action='{{ route("user.$table.upload", $story->id) }}'
+                                                            method="post" id="uploadForm">
                                                             @csrf
-                                                                <div rel="tooltip" data-original-title="Đăng lên"
-                                                                     class="bootstrap-switch-container">
-                                                                    <input type="checkbox" data-toggle="switch"
-                                                                           data-off-text="OFF" data-on-text="ON"
-                                                                            id="pin-{{ $story->id }}"
+                                                            <button style="background: transparent; border: none;">
+                                                                <div class="checkbox" style="margin-top: 8px;">
+                                                                    <input type="checkbox" id="pin-{{ $story->id }}"
                                                                            @if($story->pin !== \App\Enums\StoryPinEnum::EDITING)
-                                                                           checked
-                                                                           @endif
+                                                                               checked
+                                                                        @endif
                                                                     >
+                                                                    <label data-original-title="Đăng lên" rel="tooltip"
+                                                                           for="pin-{{ $story->id }}"></label>
                                                                 </div>
+                                                            </button>
                                                         </form>
 
                                                         <form action="{{ route("admin.$table.destroy", $story->id) }}"
@@ -210,15 +215,6 @@
                 })
                 formFilter.submit();
             }
-
-            const pinnedForm = document.getElementById('pinnedForm');
-            const pinnedInput = document.querySelectorAll('.pinnedInput')
-
-            pinnedInput.forEach((input) => {
-                input.onchange = () => {
-                    pinnedForm.submit();
-                }
-            })
         </script>
     @endpush
 @endsection
