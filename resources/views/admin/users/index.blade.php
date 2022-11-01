@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layout.admin_and_user_page.master')
 @section('main')
     @push('css')
         <style>
@@ -28,7 +28,7 @@
                                             <option value="">All</option>
                                             @foreach ($genders as $value => $gender)
                                                 <option value="{{ $value }}"
-                                                @if($genderFilter === (string)$value) selected @endif
+                                                        @if($genderFilter === (string)$value) selected @endif
                                                 >{{ $gender }}</option>
                                             @endforeach
                                         </select>
@@ -41,14 +41,15 @@
                                             <option value="">All</option>
                                             @foreach ($levels as $level)
                                                 <option value="{{ $level->id }}"
-                                                @if($levelFilter === (string)$level->id) selected @endif
+                                                        @if($levelFilter === (string)$level->id) selected @endif
                                                 >{{ $level->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="{{ route("admin.$table.index") }}" class="btn btn-default btn-fill">Reset</a>
+                                    <a href="{{ route("admin.$table.index") }}"
+                                       class="btn btn-default btn-fill">Reset</a>
                                 </div>
                             </div>
                         </form>
@@ -59,64 +60,64 @@
                         <div class="content table-responsive table-full-width">
                             <table class="table table-hover table-striped">
                                 <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Info</th>
-                                        <th>Cấp bậc</th>
-                                        <th>Ảnh đại diện</th>
-                                        <th>Ngày đăng ký</th>
-                                        <th>Xóa</th>
-                                    </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Info</th>
+                                    <th>Cấp bậc</th>
+                                    <th>Ảnh đại diện</th>
+                                    <th>Ngày đăng ký</th>
+                                    <th>Xóa</th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($data as $user)
-                                        <tr>
-                                            <td>{{ '###'. $user->id }}</td>
-                                            <td>
-                                                <div style="display: flex">
-                                                    <span style="margin-right: 8px">{{ $user->name }}</span> -
-                                                    <span style="margin-left: 8px">{{ $user->gender_name }}</span>
-                                                </div>
-                                                <div>
-                                                    <a href="mailto:{{ $user->email }}"
-                                                        style="margin: 0 10px">{{ $user->email }}</a>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                {{ $user->level->name }}
-                                            </td>
-                                            <td>
-                                                <style>
-                                                    img:hover {
-                                                        transform: scale(1.2);
-                                                        transition: all 0.3s ease;
-                                                    }
-                                                </style>
-                                                @if (isset($user->avatar))
-                                                    <a href="{{ $user->avatar_url }}" target="_blank">
+                                @foreach ($data as $user)
+                                    <tr>
+                                        <td>{{ '###'. $user->id }}</td>
+                                        <td>
+                                            <div style="display: flex">
+                                                <span style="margin-right: 8px">{{ $user->name }}</span> -
+                                                <span style="margin-left: 8px">{{ $user->gender_name }}</span>
+                                            </div>
+                                            <div>
+                                                <a href="mailto:{{ $user->email }}"
+                                                   style="margin: 0 10px">{{ $user->email }}</a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {{ $user->level->name }}
+                                        </td>
+                                        <td>
+                                            <style>
+                                                img:hover {
+                                                    transform: scale(1.2);
+                                                    transition: all 0.3s ease;
+                                                }
+                                            </style>
+                                            @if (isset($user->avatar))
+                                                <a href="{{ $user->avatar_url }}" target="_blank">
 
-                                                        <img style="width: 50px; height: 50px; object-fit: cover;"
-                                                            src="{{ $user->avatar_url }}" alt="hình ảnh $user->name">
-                                                    </a>
-                                                @else
-                                                    <img style="width: 50px; object-fit: cover;"
-                                                        src="{{ asset('img/no_face.png') }}">
-                                                @endif
-                                            </td>
-                                            <td>
-                                                {{ $user->created_at }}
-                                            </td>
-                                            <td>
-                                                <form action="{{ route("admin.$table.destroy", $user->id) }}"
-                                                    method="post">
-                                                    @csrf
-                                                    @method('delete')
-                                                    <button class="pe-7s-trash text-danger"
+                                                    <img style="width: 50px; height: 50px; object-fit: cover;"
+                                                         src="{{ $user->avatar_url }}" alt="hình ảnh $user->name">
+                                                </a>
+                                            @else
+                                                <img style="width: 50px; object-fit: cover;"
+                                                     src="{{ asset('img/no_face.png') }}">
+                                            @endif
+                                        </td>
+                                        <td>
+                                            {{ $user->created_at }}
+                                        </td>
+                                        <td>
+                                            <form action="{{ route("admin.$table.destroy", $user->id) }}"
+                                                  method="post">
+                                                @csrf
+                                                @method('delete')
+                                                <button class="pe-7s-trash text-danger"
                                                         style="border: none; background: transparent"></button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>

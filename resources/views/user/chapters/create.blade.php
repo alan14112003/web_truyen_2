@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layout.admin_and_user_page.master')
 @section('main')
     <div class="row">
         <div class="col-md-12">
@@ -41,15 +41,15 @@
         </div>
     </div>
     @push('js')
-    <script src="https://cdn.ckeditor.com/ckeditor5/35.2.0/classic/ckeditor.js"></script>
-    <script>
-        ClassicEditor.create(document.querySelector('#content'))
-            .then(editor => {
-                console.log(editor);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    </script>
+        <script src="https://cdn.ckeditor.com/ckeditor5/35.2.0/classic/ckeditor.js"></script>
+        <script>
+            ClassicEditor.create(document.querySelector('#content'))
+                .then(editor => {
+                    console.log(editor);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        </script>
     @endpush
 @endsection

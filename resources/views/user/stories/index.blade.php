@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layout.admin_and_user_page.master')
 @section('main')
     @push('css')
         <style>
@@ -54,8 +54,10 @@
                                                         <div class="col-sm-3">
                                                             <div class="checkbox">
                                                                 <input class="filter-input"
-                                                                       @if (isset($categoriesFilter) && in_array($category->id, $categoriesFilter)) checked @endif
-                                                                       id="categories{{ $category->id }}" name="categories[]"
+                                                                       @if (isset($categoriesFilter) && in_array($category->id, $categoriesFilter)) checked
+                                                                       @endif
+                                                                       id="categories{{ $category->id }}"
+                                                                       name="categories[]"
                                                                        type="checkbox" value="{{ $category->id }}">
                                                                 <label for="categories{{ $category->id }}"
                                                                        style="padding-left: 24px">
@@ -145,45 +147,45 @@
                                         <td>
                                             <a href="{{ $story->image_url }}" target="_blank">
                                                 <img src="{{ $story->image_url }}"
-                                                            style="max-width: 100px; max-height: 150px; object-fit: cover;">
+                                                     style="max-width: 100px; max-height: 150px; object-fit: cover;">
                                             </a>
                                         </td>
                                         <td>{{ $story->pin_name }}</td>
-                                                <td class="td-actions text-right">
-                                                    <div style="display: flex; align-items: center;">
-                                                        <a rel="tooltip" data-original-title="Xem"
-                                                           href="{{ route("user.$table.show", [$story->slug, $story->id]) }}"
-                                                           class="btn btn-simple btn-info btn-icon table-action">
-                                                            <i class="fa fa-eye"></i>
-                                                        </a>
-                                                        <form
-                                                            action='{{ route("user.$table.upload", $story->id) }}'
-                                                            method="post" id="uploadForm">
-                                                            @csrf
-                                                            <button style="background: transparent; border: none;">
-                                                                <div class="checkbox" style="margin-top: 8px;">
-                                                                    <input type="checkbox" id="pin-{{ $story->id }}"
-                                                                           @if($story->pin !== \App\Enums\StoryPinEnum::EDITING)
-                                                                               checked
-                                                                        @endif
-                                                                    >
-                                                                    <label data-original-title="Đăng lên" rel="tooltip"
-                                                                           for="pin-{{ $story->id }}"></label>
-                                                                </div>
-                                                            </button>
-                                                        </form>
+                                        <td class="td-actions text-right">
+                                            <div style="display: flex; align-items: center;">
+                                                <a rel="tooltip" data-original-title="Xem"
+                                                   href="{{ route("user.$table.show", [$story->slug, $story->id]) }}"
+                                                   class="btn btn-simple btn-info btn-icon table-action">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                                <form
+                                                        action='{{ route("user.$table.upload", $story->id) }}'
+                                                        method="post" id="uploadForm">
+                                                    @csrf
+                                                    <button style="background: transparent; border: none;">
+                                                        <div class="checkbox" style="margin-top: 8px;">
+                                                            <input type="checkbox" id="pin-{{ $story->id }}"
+                                                                   @if($story->pin !== \App\Enums\StoryPinEnum::EDITING)
+                                                                       checked
+                                                                    @endif
+                                                            >
+                                                            <label data-original-title="Đăng lên" rel="tooltip"
+                                                                   for="pin-{{ $story->id }}"></label>
+                                                        </div>
+                                                    </button>
+                                                </form>
 
-                                                        <form action="{{ route("admin.$table.destroy", $story->id) }}"
-                                                              method="post">
-                                                            @csrf
-                                                            @method('delete')
-                                                            <button rel="tooltip" data-original-title="Xóa"
-                                                                    class="btn btn-simple btn-danger btn-icon table-action">
-                                                                <i class="fa fa-remove"></i>
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </td>
+                                                <form action="{{ route("admin.$table.destroy", $story->id) }}"
+                                                      method="post">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button rel="tooltip" data-original-title="Xóa"
+                                                            class="btn btn-simple btn-danger btn-icon table-action">
+                                                        <i class="fa fa-remove"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -205,7 +207,7 @@
             const inputFilter = document.querySelectorAll('.filter-input');
             inputFilter.forEach((input) => {
                 input.onchange = () => {
-                   formFilter.submit();
+                    formFilter.submit();
                 }
             })
             const categoriesReset = document.getElementById('categories_reset');

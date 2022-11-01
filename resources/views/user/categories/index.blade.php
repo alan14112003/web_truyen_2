@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layout.admin_and_user_page.master')
 @section('main')
     @push('css')
         <style>
@@ -7,26 +7,27 @@
             }
         </style>
     @endpush
-        @auth
-            @if(auth()->user()->level_id === 2 || auth()->user()->level_id === 3)
-                <div class="row">
-                    <div class="col-md-12">
-                        {{ Breadcrumbs::render('admin.categories.index') }}
-                    </div>
+    @auth
+        @if(auth()->user()->level_id === 2 || auth()->user()->level_id === 3)
+            <div class="row">
+                <div class="col-md-12">
+                    {{ Breadcrumbs::render('admin.categories.index') }}
                 </div>
-            @endif
-            @if(auth()->user()->level_id === 1)
-                <div class="row">
-                    <div class="col-md-12">
-                        {{ Breadcrumbs::render('user.categories.index') }}
-                    </div>
+            </div>
+        @endif
+        @if(auth()->user()->level_id === 1)
+            <div class="row">
+                <div class="col-md-12">
+                    {{ Breadcrumbs::render('user.categories.index') }}
                 </div>
-            @endif
-        @endauth
+            </div>
+        @endif
+    @endauth
     <div class="row">
         @auth
             @if(auth()->user()->level_id === 2 || auth()->user()->level_id === 3)
-            <a href="{{ route("admin.$table.create") }}" class="pe-7s-plus" style="font-size: 40px; margin: 24px;"></a>
+                <a href="{{ route("admin.$table.create") }}" class="pe-7s-plus"
+                   style="font-size: 40px; margin: 24px;"></a>
             @endif
         @endauth
         <div class="col-md-12">
@@ -53,17 +54,20 @@
                                         <td>{{ $category->descriptions }}</td>
                                         @auth
                                             @if(auth()->user()->level_id === 2 || auth()->user()->level_id === 3)
-                                        <td>
-                                        <div style="display: flex;">
-                                            <a href="{{ route("admin.$table.edit", $category->id) }}" class="pe-7s-note">
-                                            </a>
-                                            <form action="{{ route("admin.$table.destroy", $category->id) }}" method="post">
-                                                @csrf
-                                                @method('delete')
-                                                <button class="pe-7s-trash text-danger" style="border: none; background: transparent"></button>
-                                            </form>
-                                        </div>
-                                        </td>
+                                                <td>
+                                                    <div style="display: flex;">
+                                                        <a href="{{ route("admin.$table.edit", $category->id) }}"
+                                                           class="pe-7s-note">
+                                                        </a>
+                                                        <form action="{{ route("admin.$table.destroy", $category->id) }}"
+                                                              method="post">
+                                                            @csrf
+                                                            @method('delete')
+                                                            <button class="pe-7s-trash text-danger"
+                                                                    style="border: none; background: transparent"></button>
+                                                        </form>
+                                                    </div>
+                                                </td>
                                             @endif
                                         @endauth
                                     </tr>

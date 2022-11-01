@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layout.admin_and_user_page.master')
 @section('main')
     @push('css')
         <style>
@@ -26,7 +26,7 @@
                                             <option value="">All</option>
                                             @foreach ($genders as $value => $gender)
                                                 <option value="{{ $value }}"
-                                                @if($genderFilter === (string)$value) selected @endif
+                                                        @if($genderFilter === (string)$value) selected @endif
                                                 >{{ $gender }}</option>
                                             @endforeach
                                         </select>
@@ -39,7 +39,7 @@
                                             <option value="">All</option>
                                             @foreach ($levels as $level)
                                                 <option value="{{ $level->id }}"
-                                                @if($levelFilter === (string)$level->id) selected @endif
+                                                        @if($levelFilter === (string)$level->id) selected @endif
                                                 >{{ $level->name }}</option>
                                             @endforeach
                                         </select>
@@ -57,72 +57,72 @@
                         <div class="content table-responsive table-full-width">
                             <table class="table table-hover table-striped">
                                 <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Info</th>
-                                        <th>Cấp bậc</th>
-                                        <th>Ảnh đại diện</th>
-                                        <th>Ngày vào sổ</th>
-                                        <th>Xử lý</th>
-                                    </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Info</th>
+                                    <th>Cấp bậc</th>
+                                    <th>Ảnh đại diện</th>
+                                    <th>Ngày vào sổ</th>
+                                    <th>Xử lý</th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($data as $user)
-                                        <tr>
-                                            <td>{{ '###'. $user->id }}</td>
-                                            <td>
-                                                <div style="display: flex">
-                                                    <span style="margin-right: 8px">{{ $user->name }}</span> -
-                                                    <span style="margin-left: 8px">{{ $user->gender_name }}</span>
-                                                </div>
-                                                <div>
-                                                    <a href="mailto:{{ $user->email }}"
-                                                        style="margin: 0 10px">{{ $user->email }}</a>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                {{ $user->level->name }}
-                                            </td>
-                                            <td>
-                                                <style>
-                                                    img:hover {
-                                                        transform: scale(1.2);
-                                                        transition: all 0.3s ease;
-                                                    }
-                                                </style>
-                                                @if (isset($user->avatar))
-                                                    <a href="{{ $user->avatar_url }}" target="_blank">
+                                @foreach ($data as $user)
+                                    <tr>
+                                        <td>{{ '###'. $user->id }}</td>
+                                        <td>
+                                            <div style="display: flex">
+                                                <span style="margin-right: 8px">{{ $user->name }}</span> -
+                                                <span style="margin-left: 8px">{{ $user->gender_name }}</span>
+                                            </div>
+                                            <div>
+                                                <a href="mailto:{{ $user->email }}"
+                                                   style="margin: 0 10px">{{ $user->email }}</a>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {{ $user->level->name }}
+                                        </td>
+                                        <td>
+                                            <style>
+                                                img:hover {
+                                                    transform: scale(1.2);
+                                                    transition: all 0.3s ease;
+                                                }
+                                            </style>
+                                            @if (isset($user->avatar))
+                                                <a href="{{ $user->avatar_url }}" target="_blank">
 
-                                                        <img style="width: 50px; height: 50px; object-fit: cover;"
-                                                            src="{{ $user->avatar_url }}">
-                                                    </a>
-                                                @else
-                                                    <img style="width: 50px; object-fit: cover;"
-                                                        src="{{ asset('img/no_face.png') }}">
-                                                @endif
-                                            </td>
-                                            <td>
-                                                {{ $user->deleted_at }}
-                                            </td>
-                                            <td>
-                                                <div class="" style="display: flex;">
-                                                    <form action="{{ route("admin.$table.restore", $user->id) }}"
-                                                        method="post">
-                                                        @csrf
-                                                        <button class="pe-7s-refresh-2 text-success"
+                                                    <img style="width: 50px; height: 50px; object-fit: cover;"
+                                                         src="{{ $user->avatar_url }}">
+                                                </a>
+                                            @else
+                                                <img style="width: 50px; object-fit: cover;"
+                                                     src="{{ asset('img/no_face.png') }}">
+                                            @endif
+                                        </td>
+                                        <td>
+                                            {{ $user->deleted_at }}
+                                        </td>
+                                        <td>
+                                            <div class="" style="display: flex;">
+                                                <form action="{{ route("admin.$table.restore", $user->id) }}"
+                                                      method="post">
+                                                    @csrf
+                                                    <button class="pe-7s-refresh-2 text-success"
                                                             style="border: none; background: transparent"></button>
-                                                    </form>
-                                                    <form action="{{ route("admin.$table.kill", $user->id) }}"
-                                                          method="post">
-                                                        @csrf
-                                                        @method('delete')
-                                                        <button class="pe-7s-trash text-danger"
-                                                                style="border: none; background: transparent"></button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                                </form>
+                                                <form action="{{ route("admin.$table.kill", $user->id) }}"
+                                                      method="post">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button class="pe-7s-trash text-danger"
+                                                            style="border: none; background: transparent"></button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>

@@ -511,7 +511,7 @@
             }
         }
     };
-    
+
     BootstrapTable.prototype.initContainer = function () {
         this.$container = $([
             '<div class="bootstrap-table">',
@@ -1815,7 +1815,7 @@
                 .find('.fht-cell').width($this.innerWidth());
         });
         // horizontal scroll event
-        // TODO: it's probably better improving the layout than binding to scroll event
+        // TODO: it's probably better improving the admin_and_user_page than binding to scroll event
         this.$tableBody.off('scroll').on('scroll', function () {
             that.$tableHeader.scrollLeft($(this).scrollLeft());
         });

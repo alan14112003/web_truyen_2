@@ -1,5 +1,5 @@
 @php use App\Enums\UserGenderEnum; @endphp
-@extends('layout.master')
+@extends('layout.admin_and_user_page.master')
 @section('main')
     @push('css')
         <style>
@@ -27,7 +27,7 @@
                         <div class="form-group">
                             <label for="name" class="control-label">Tên</label>
                             <input type="text" class="form-control" name="name" id="name"
-                                value="{{ old('name') }}">
+                                   value="{{ old('name') }}">
                             @if ($errors->any())
                                 <span class="text-danger">{{ $errors->first('name') }}</span>
                             @endif
@@ -37,7 +37,7 @@
                                 <div class="form-group">
                                     <label for="email" class="control-label">Email</label>
                                     <input type="email" class="form-control" name="email" id="email"
-                                        value="{{ old('email') }}">
+                                           value="{{ old('email') }}">
                                     @if ($errors->any())
                                         <span class="text-danger">{{ $errors->first('email') }}</span>
                                     @endif
@@ -47,7 +47,7 @@
                                 <div class="form-group">
                                     <label for="password" class="control-label">Mật khẩu</label>
                                     <input type="password" class="form-control" name="password" id="password"
-                                        value="{{ old('password') }}">
+                                           value="{{ old('password') }}">
                                     @if ($errors->any())
                                         <span class="text-danger">{{ $errors->first('password') }}</span>
                                     @endif
@@ -59,27 +59,27 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="gender" class="control-label">Giới tính</label>
-                                <select name="gender" id="gender" class="form-control">
-                                    @foreach ($genders as $value => $gender)
-                                        <option value="{{ $value }}">{{ $gender }}</option>
-                                    @endforeach
-                                </select>
-                                @if ($errors->any())
-                                    <span class="text-danger">{{ $errors->first('gender') }}</span>
-                                @endif
+                                    <select name="gender" id="gender" class="form-control">
+                                        @foreach ($genders as $value => $gender)
+                                            <option value="{{ $value }}">{{ $gender }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->any())
+                                        <span class="text-danger">{{ $errors->first('gender') }}</span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="level_id" class="control-label">Cấp bậc</label>
-                                <select name="level_id" id="level_id" class="form-control">
-                                    @foreach ($levels as $level)
-                                        <option value="{{ $level->id }}">{{ $level->name }}</option>
-                                    @endforeach
-                                </select>
-                                @if ($errors->any())
-                                    <span class="text-danger">{{ $errors->first('level_id') }}</span>
-                                @endif
+                                    <select name="level_id" id="level_id" class="form-control">
+                                        @foreach ($levels as $level)
+                                            <option value="{{ $level->id }}">{{ $level->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->any())
+                                        <span class="text-danger">{{ $errors->first('level_id') }}</span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -110,7 +110,7 @@
         const avatarContainer = document.querySelector('.avatar-container');
         const avatar = document.querySelector('#avatar');
 
-        avatar.onchange = function() {
+        avatar.onchange = function () {
             avatarContainer.innerHTML = '';
             let url = URL.createObjectURL(this.files[0]);
             let img = `<img src="${url}" style="width:200px;">`;

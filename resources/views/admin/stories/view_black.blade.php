@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layout.admin_and_user_page.master')
 @section('main')
     @push('css')
         <link rel="stylesheet" href="{{ asset('user_asset/css/story_view.css') }}">
@@ -10,14 +10,15 @@
         <div class="col-md-5">
             <div class="stories_box">
                 <div class="card">
-                    <form action="{{ route("admin.$table.find_black") }}" method="get" id="stories_box_form" class="form-inline">
+                    <form action="{{ route("admin.$table.find_black") }}" method="get" id="stories_box_form"
+                          class="form-inline">
                         <div class="content">
                             <div class="form-group">
                                 <label for="story_id" class="control-label">Chọn truyện</label>
                                 <select name="story_id" id="story_id" class="form-control">
                                     @foreach ($stories as $item)
                                         <option value="{{ $item->id }}"
-                                            @if ($item->id === $story->id) selected @endif>{{ $item->name }}</option>
+                                                @if ($item->id === $story->id) selected @endif>{{ $item->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -95,7 +96,7 @@
             @foreach ($chapters as $chapter)
                 <div class="chapter_box_item" style="display: flex; justify-content: space-between">
                     <a style="display: flex; align-items: center;"
-                        href="{{ route("admin.$table.chapters.index_black", ['id' => $story->id, 'number' => $chapter->number]) }}">
+                       href="{{ route("admin.$table.chapters.index_black", ['id' => $story->id, 'number' => $chapter->number]) }}">
                         <span class="chapter_box_item_text">
                             <span>Chương </span> {{ $chapter->number }}: {{ $chapter->name }}
                         </span>

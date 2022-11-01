@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layout.admin_and_user_page.master')
 @section('main')
     @push('css')
         <style>
@@ -32,13 +32,13 @@
                                             </h4>
                                         </div>
                                         <div id="collapseOne" class="panel-collapse collapse collapse-hover"
-                                            style="height: 0px;">
+                                             style="height: 0px;">
                                             <div class="panel-body">
                                                 <div class="row">
                                                     <div class="col-sm-3">
                                                         <div class="checkbox">
                                                             <input class="categories_reset" id="categories_reset"
-                                                                name="" type="checkbox" value="">
+                                                                   name="" type="checkbox" value="">
                                                             <label for="categories_reset" style="padding-left: 24px">
                                                                 Bỏ chọn
                                                             </label>
@@ -48,11 +48,13 @@
                                                         <div class="col-sm-3">
                                                             <div class="checkbox">
                                                                 <input class="filter-input"
-                                                                    @if (isset($categoriesFilter) && in_array($category->id, $categoriesFilter)) checked @endif
-                                                                    id="categories{{ $category->id }}" name="categories[]"
-                                                                    type="checkbox" value="{{ $category->id }}">
+                                                                       @if (isset($categoriesFilter) && in_array($category->id, $categoriesFilter)) checked
+                                                                       @endif
+                                                                       id="categories{{ $category->id }}"
+                                                                       name="categories[]"
+                                                                       type="checkbox" value="{{ $category->id }}">
                                                                 <label for="categories{{ $category->id }}"
-                                                                    style="padding-left: 24px">
+                                                                       style="padding-left: 24px">
                                                                     {{ $category->name }}
                                                                 </label>
                                                             </div>
@@ -65,7 +67,7 @@
                                 </div>
                                 <div class="col-md-1 col-md-offset-3">
                                     <a href="{{ route("admin.$table.index") }}" class="btn btn-default btn-fill"
-                                        style="margin: 24px">
+                                       style="margin: 24px">
                                         <i class="fa fa-spin fa-refresh"></i>
                                     </a>
                                 </div>
@@ -73,22 +75,22 @@
                             <div class="form-group">
                                 <label for="status" class="control-label">Tình trạng</label>
                                 <select name="status" id="status" class="form-control filter-input"
-                                    style="margin-left: 6px">
+                                        style="margin-left: 6px">
                                     <option value="">All</option>
                                     @foreach ($status as $value => $name)
                                         <option value="{{ $value }}"
-                                            @if ($statusFilter === (string) $value) selected @endif>{{ $name }}</option>
+                                                @if ($statusFilter === (string) $value) selected @endif>{{ $name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="form-group" style="margin-left: 16px">
                                 <label for="level" class="control-label">Phân loại</label>
                                 <select name="level" id="level" class="form-control filter-input"
-                                    style="margin-left: 6px">
+                                        style="margin-left: 6px">
                                     <option value="">All</option>
                                     @foreach ($level as $value => $name)
                                         <option value="{{ $value }}"
-                                            @if ($levelFilter === (string) $value) selected @endif>{{ $name }}</option>
+                                                @if ($levelFilter === (string) $value) selected @endif>{{ $name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -106,22 +108,22 @@
                             <div class="form-group" style="margin-left: 16px">
                                 <label for="author" class="control-label">Tác giả</label>
                                 <select name="author" id="author" class="form-control filter-input"
-                                    style="margin-left: 6px">
+                                        style="margin-left: 6px">
                                     <option value="">All</option>
                                     @foreach ($author as $row)
                                         <option value="{{ $row->id }}"
-                                            @if ($authorFilter === (string) $row->id) selected @endif>{{ $row->name }}</option>
+                                                @if ($authorFilter === (string) $row->id) selected @endif>{{ $row->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="form-group" style="margin-left: 16px">
                                 <label for="author_2" class="control-label">Tác giả 2</label>
                                 <select name="author_2" id="author_2" class="form-control filter-input"
-                                    style="margin-left: 6px">
+                                        style="margin-left: 6px">
                                     <option value="">All</option>
                                     @foreach ($author_2 as $row)
                                         <option value="{{ $row->id }}"
-                                            @if ($author_2Filter === (string) $row->id) selected @endif>{{ $row->name }}</option>
+                                                @if ($author_2Filter === (string) $row->id) selected @endif>{{ $row->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -133,75 +135,75 @@
                         <div class="content table-responsive table-full-width">
                             <table class="table table-hover table-striped">
                                 <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Tên truyện</th>
-                                        <th>Thể loại</th>
-                                        <th>Số chương</th>
-                                        <th>Tình trạng</th>
-                                        <th>Phân loại</th>
-                                        <th>Tác giả</th>
-                                        <th>Tác giả 2</th>
-                                        <th>Người đăng</th>
-                                        <th>Ảnh đại diện</th>
-                                        <th>Trạng thái</th>
-                                        <th></th>
-                                    </tr>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tên truyện</th>
+                                    <th>Thể loại</th>
+                                    <th>Số chương</th>
+                                    <th>Tình trạng</th>
+                                    <th>Phân loại</th>
+                                    <th>Tác giả</th>
+                                    <th>Tác giả 2</th>
+                                    <th>Người đăng</th>
+                                    <th>Ảnh đại diện</th>
+                                    <th>Trạng thái</th>
+                                    <th></th>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($data as $story)
-                                        <tr>
-                                            <td>{{ $story->id }}</td>
-                                            <td>{{ $story->name }}</td>
-                                            <td>{{ $story->categories_name }}</td>
-                                            <td>{{ $story->chapter_count }}</td>
-                                            <td>{{ $story->status_name }}</td>
-                                            <td>{{ $story->level_name }}</td>
-                                            <td>{{ $story->author->name }}</td>
-                                            <td>{{ optional($story->author_2)->name }}</td>
-                                            <td>{{ optional($story->user)->name }}</td>
-                                            <td>
-                                                <a href="{{ $story->image_url }}" target="_blank">
-                                                    <img src="{{ $story->image_url }}"
-                                                         style="max-width: 100px; max-height: 150px; object-fit: cover;">
-                                                </a>
-                                            </td>
-                                            <td>{{ $story->pin_name }}</td>
-                                            @auth
-                                                @if (auth()->user()->level_id === 3)
-                                                    <td class="td-actions text-right">
-                                                        <div style="display: flex;">
-                                                            <a rel="tooltip" data-original-title="Xem"
-                                                                href="{{ route("admin.$table.view_black", $story->id) }}"
-                                                                class="btn btn-simple btn-info btn-icon table-action">
-                                                                <i class="fa fa-eye"></i>
-                                                            </a>
-                                                                <form
-                                                                    action="{{ route("admin.$table.restore", $story->id) }}"
-                                                                    method="post">
-                                                                    @csrf
-                                                                    <button rel="tooltip" data-original-title="Khôi phục"
-                                                                        class="btn btn-simple btn-success btn-icon
-                                                                    table-action">
-                                                                        <i class="fa fa-refresh"></i>
-                                                                    </button>
-                                                                </form>
-
-                                                            <form action="{{ route("admin.$table.kill", $story->id) }}"
+                                @foreach ($data as $story)
+                                    <tr>
+                                        <td>{{ $story->id }}</td>
+                                        <td>{{ $story->name }}</td>
+                                        <td>{{ $story->categories_name }}</td>
+                                        <td>{{ $story->chapter_count }}</td>
+                                        <td>{{ $story->status_name }}</td>
+                                        <td>{{ $story->level_name }}</td>
+                                        <td>{{ $story->author->name }}</td>
+                                        <td>{{ optional($story->author_2)->name }}</td>
+                                        <td>{{ optional($story->user)->name }}</td>
+                                        <td>
+                                            <a href="{{ $story->image_url }}" target="_blank">
+                                                <img src="{{ $story->image_url }}"
+                                                     style="max-width: 100px; max-height: 150px; object-fit: cover;">
+                                            </a>
+                                        </td>
+                                        <td>{{ $story->pin_name }}</td>
+                                        @auth
+                                            @if (auth()->user()->level_id === 3)
+                                                <td class="td-actions text-right">
+                                                    <div style="display: flex;">
+                                                        <a rel="tooltip" data-original-title="Xem"
+                                                           href="{{ route("admin.$table.view_black", $story->id) }}"
+                                                           class="btn btn-simple btn-info btn-icon table-action">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
+                                                        <form
+                                                                action="{{ route("admin.$table.restore", $story->id) }}"
                                                                 method="post">
-                                                                @csrf
-                                                                @method('delete')
-                                                                <button rel="tooltip" data-original-title="Xóa hẳn"
+                                                            @csrf
+                                                            <button rel="tooltip" data-original-title="Khôi phục"
+                                                                    class="btn btn-simple btn-success btn-icon
+                                                                    table-action">
+                                                                <i class="fa fa-refresh"></i>
+                                                            </button>
+                                                        </form>
+
+                                                        <form action="{{ route("admin.$table.kill", $story->id) }}"
+                                                              method="post">
+                                                            @csrf
+                                                            @method('delete')
+                                                            <button rel="tooltip" data-original-title="Xóa hẳn"
                                                                     class="btn btn-simple btn-danger btn-icon table-action">
-                                                                    <i class="fa fa-remove"></i>
-                                                                </button>
-                                                            </form>
-                                                        </div>
-                                                    </td>
-                                                @endif
-                                            @endauth
-                                        </tr>
-                                    @endforeach
+                                                                <i class="fa fa-remove"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            @endif
+                                        @endauth
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>

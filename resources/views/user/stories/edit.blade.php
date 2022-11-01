@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layout.admin_and_user_page.master')
 @section('main')
     @push('css')
         <style>
@@ -61,7 +61,8 @@
                     <hr>
                 </div>
                 <div class="content">
-                    <form action="{{ route("user.$table.update", $story->id) }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route("user.$table.update", $story->id) }}" method="post"
+                          enctype="multipart/form-data">
                         @csrf
                         @method('put')
                         <input type="hidden" name="id" value="{{ $story->id }}">
@@ -69,10 +70,11 @@
                             <div class="col-md-3" style="padding: 16px">
                                 <label for="file_image" style="width: 100%; height: 100%;">
                                     <div class="image_box">
-                                        <img src="{{ $story->image_url }}" style="width: 100%; object-fit: cover;" alt="">
+                                        <img src="{{ $story->image_url }}" style="width: 100%; object-fit: cover;"
+                                             alt="">
                                         @if ($errors->any())
                                             <span class="text-danger"
-                                            style="position: absolute; bottom: 12px;">{{ $errors->first('image') }}</span>
+                                                  style="position: absolute; bottom: 12px;">{{ $errors->first('image') }}</span>
                                         @endif
                                     </div>
                                 </label>
@@ -108,7 +110,7 @@
                                                                            @if(in_array($category->id,
                                                                                 $story->categories->pluck('id')->toArray()))
                                                                                checked
-                                                                           @endif
+                                                                            @endif
                                                                     >
                                                                     <label for="categories{{ $category->id }}"
                                                                            style="padding-left: 24px">
@@ -146,7 +148,7 @@
                                                     <option value="{{ $value }}"
                                                             @if((string)$value === $story->status)
                                                                 selected
-                                                        @endif
+                                                            @endif
                                                     >{{ $name }}</option>
                                                 @endforeach
                                             </select>
@@ -164,7 +166,7 @@
                                                     <option value="{{ $value }}"
                                                             @if((string)$value === $story->level)
                                                                 selected
-                                                        @endif
+                                                            @endif
                                                     >{{ $name }}</option>
                                                 @endforeach
                                             </select>
@@ -212,7 +214,7 @@
                                     </textarea>
                                                 @if ($errors->any())
                                                     <span
-                                                        class="text-danger">{{ $errors->first('descriptions') }}</span>
+                                                            class="text-danger">{{ $errors->first('descriptions') }}</span>
                                                 @endif
                                             </div>
                                         </div>

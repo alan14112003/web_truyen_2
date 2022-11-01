@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layout.admin_and_user_page.master')
 @section('main')
     @push('css')
         <style>
@@ -70,7 +70,7 @@
                                         <i class="fa fa-photo photo_img"></i>
                                         @if ($errors->any())
                                             <span class="text-danger"
-                                            style="position: absolute; bottom: 12px;">{{ $errors->first('image') }}</span>
+                                                  style="position: absolute; bottom: 12px;">{{ $errors->first('image') }}</span>
                                         @endif
                                     </div>
                                 </label>
@@ -105,8 +105,8 @@
                                                                            @if(old('categories') !== null)
                                                                                @if(in_array($category->id, old('categories')))
                                                                                    checked
-                                                                               @endif
-                                                                           @endif
+                                                                            @endif
+                                                                            @endif
                                                                     >
                                                                     <label for="categories{{ $category->id }}"
                                                                            style="padding-left: 24px">
@@ -144,7 +144,7 @@
                                                     <option value="{{ $value }}"
                                                             @if((string)$value === old('status'))
                                                                 selected
-                                                        @endif
+                                                            @endif
                                                     >{{ $name }}</option>
                                                 @endforeach
                                             </select>
@@ -162,7 +162,7 @@
                                                     <option value="{{ $value }}"
                                                             @if((string)$value === old('level'))
                                                                 selected
-                                                        @endif
+                                                            @endif
                                                     >{{ $name }}</option>
                                                 @endforeach
                                             </select>
@@ -210,7 +210,7 @@
                                     </textarea>
                                                 @if ($errors->any())
                                                     <span
-                                                        class="text-danger">{{ $errors->first('descriptions') }}</span>
+                                                            class="text-danger">{{ $errors->first('descriptions') }}</span>
                                                 @endif
                                             </div>
                                         </div>

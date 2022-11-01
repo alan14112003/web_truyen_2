@@ -1,12 +1,12 @@
-@extends('layout.master')
+@extends('layout.admin_and_user_page.master')
 @section('main')
     @push('css')
-    <style>
-        .card {
-            max-width: 400px;
-            margin: auto;
-        }
-    </style>
+        <style>
+            .card {
+                max-width: 400px;
+                margin: auto;
+            }
+        </style>
     @endpush
     <div class="row">
         <div class="col-md-12">
@@ -17,7 +17,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                        <h3 style="padding: 24px 24px 0;">{{ $title ?? '' }}</h3>
+                    <h3 style="padding: 24px 24px 0;">{{ $title ?? '' }}</h3>
                     <hr>
                 </div>
                 <div class="content">
