@@ -110,6 +110,7 @@ transition: all 0.5s ease-in-out;
                                             class="btn btn-social btn-round btn-google mb-2">
                                             <i class="fa fa-google"></i>
                                         </a>
+                                        <a href="{{ route('auth.redirect', 'facebook') }}">facebook</a>
                                     </div>
                                 </div>
                             </form>

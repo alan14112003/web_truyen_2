@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\FrontPage;
 
 use App\Http\Controllers\Controller;
 use App\Models\Star;

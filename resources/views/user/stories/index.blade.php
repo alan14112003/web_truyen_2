@@ -128,7 +128,7 @@
                                     <th>Phân loại</th>
                                     <th>Tác giả</th>
                                     <th>Tác giả 2</th>
-                                    <th>Ảnh đại diện</th>
+                                    <th>Ảnh bìa</th>
                                     <th>Trạng thái</th>
                                     <th></th>
                                 </tr>
@@ -160,12 +160,12 @@
                                                 </a>
                                                 <form
                                                         action='{{ route("user.$table.upload", $story->id) }}'
-                                                        method="post" id="uploadForm">
+                                                        method="post">
                                                     @csrf
                                                     <button style="background: transparent; border: none;">
                                                         <div class="checkbox" style="margin-top: 8px;">
                                                             <input type="checkbox" id="pin-{{ $story->id }}"
-                                                                   @if($story->pin !== \App\Enums\StoryPinEnum::EDITING)
+                                                                   @if($story->pin > \App\Enums\StoryPinEnum::EDITING)
                                                                        checked
                                                                     @endif
                                                             >
@@ -174,8 +174,7 @@
                                                         </div>
                                                     </button>
                                                 </form>
-
-                                                <form action="{{ route("admin.$table.destroy", $story->id) }}"
+                                                <form action="{{ route("user.$table.destroy", $story->id) }}"
                                                       method="post">
                                                     @csrf
                                                     @method('delete')

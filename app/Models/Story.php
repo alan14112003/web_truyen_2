@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ChapterPinEnum;
 use App\Enums\StoryLevelEnum;
 use App\Enums\StoryPinEnum;
 use App\Enums\StoryStatusEnum;
@@ -69,12 +70,11 @@ class Story extends Model
 
     public function getCategoriesLinkAttribute()
     {
-        $arrCategoriesId = $this->categories->pluck('id')->toArray();
-        $arrCategoriesName = $this->categories->pluck('name')->toArray();
+        $arrCategories = $this->categories()->get(['name', 'slug'])->toArray();
 
-        $arrLinkCategories = array_map(function ($id, $name){
-            return "<a href='" . $id . "'>" . $name . "</a>";
-        }, $arrCategoriesId, $arrCategoriesName);
+        $arrLinkCategories = array_map(function ($category){
+            return "<a href='" . route('show_categories', $category['slug']) . "'>" . $category['name'] . "</a>";
+        }, $arrCategories);
 
         return implode(', ', $arrLinkCategories);
     }
@@ -94,5 +94,10 @@ class Story extends Model
     public function getPinNameAttribute()
     {
         return StoryPinEnum::getNameByValue($this->pin);
+    }
+    public function getChapterNewAttribute()
+    {
+        return  $this->chapter()->where('pin', ChapterPinEnum::APPROVED)
+            ->orderBy('number', 'desc')->limit(1)->first();
     }
 }

@@ -11,16 +11,18 @@ use BenSampo\Enum\Enum;
  */
 final class StoryPinEnum extends Enum
 {
+    const NOT_APPROVE = -1;
     const EDITING = 0;
     const UPLOADING = 1;
-    const APPROVE = 2;
+    const APPROVED = 2;
     const PINNED = 3;
 
     public static function getArrayView() {
         return [
+            'Không được duyệt' => self::NOT_APPROVE,
             'Đang chỉnh sửa' => self::EDITING,
             'Chờ kiểm duyệt' => self::UPLOADING,
-            'Đã kiểm duyệt' => self::APPROVE,
+            'Đã kiểm duyệt' => self::APPROVED,
             'Được ghim' => self::PINNED,
         ];
     }

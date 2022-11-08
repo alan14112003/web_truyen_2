@@ -1,7 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FrontPage\HistoryController;
+use App\Http\Controllers\FrontPage\HomeController;
+use App\Http\Controllers\FrontPage\StarController;
 use App\Http\Controllers\LevelController;
+use App\Models\Story;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 use Illuminate\Support\Facades\Route;
@@ -17,9 +21,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('page.index');
-})->name('index');
 
 Route::controller(AuthController::class)->group(function () {
     Route::get('/login', 'login')->name('login');
@@ -34,10 +35,23 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/logout', 'logout')->name('logout');
 });
 
+Route::controller(HomeController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/the-loai/{slug}', 'showCategories')->name('show_categories');
+    Route::get('/truyen/{slug}', 'showStory')->name('show_story');
+    Route::get('/truyen/{slug}/chuong-{number}', 'showChapter')->name('show_chapter');
+});
 
+Route::post('star/create/{story}', [StarController::class, 'create'])->name('star.create');
 
+Route::post('/history/destroy', [HistoryController::class, 'destroy'])->name('history.destroy');
 
 // Trang chủ
 Breadcrumbs::for('index', function(BreadcrumbTrail $trail) {
     $trail->push('Trang chủ', route('index'));
+});
+
+Breadcrumbs::for('show_story', function(BreadcrumbTrail $trail, Story $story) {
+    $trail->parent('index');
+    $trail->push(ucfirst(strtolower($story->name)), route('show_story', $story->slug));
 });

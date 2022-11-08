@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8"/>
-    <link rel="icon" type="image/png" href="../assets/img/favicon.ico">
+    <link rel="icon" href="{{ asset('/img/page/icon.png') }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 
     <title>{{ env('APP_NAME') ?? '' }} - {{ $title ?? 'Quản lý' }}</title>
@@ -24,6 +24,7 @@
 
     <!--     Fonts and icons     -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+    
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
     <link href="{{ asset('admin_asset/css/pe-icon-7-stroke.css') }}" rel="stylesheet"/>
     @stack('css')

@@ -9,7 +9,7 @@
     @endpush
     <div class="row">
         <div class="col-md-12">
-            {{ Breadcrumbs::render('admin.chapters.index') }}
+            {{ Breadcrumbs::render('user.chapters.index') }}
         </div>
     </div>
     <div class="row">
@@ -42,31 +42,11 @@
                                             <td class="td-actions text-right">
                                                 <div style="display: flex;">
                                                     <a rel="tooltip" data-original-title="Xem"
-                                                        href="{{ route("admin.stories.chapters.show",
-                                                                ['id' => $chapter->story_id, 'number' => $chapter->number]) }}"
+                                                        href="{{ route("user.stories.chapters.show",
+                                                                   ['slug' => $chapter->slug, 'number' => $chapter->number]) }}"
                                                         class="btn btn-simple btn-info btn-icon table-action">
                                                         <i class="fa fa-eye"></i>
                                                     </a>
-                                                    <form action="{{ route("admin.stories.chapters.approve",
-                                                                ['id' => $chapter->story_id, 'number' => $chapter->number]) }}"
-                                                        method="post">
-                                                        @csrf
-                                                        <button rel="tooltip" data-original-title="duyệt"
-                                                            class="btn btn-simple btn-success btn-icon
-                                                                table-action">
-                                                            <i class="fa fa-check"></i>
-                                                        </button>
-                                                    </form>
-                                                    <form action="{{ route("admin.stories.chapters.un_approve",
-                                                                ['id' => $chapter->story_id, 'number' => $chapter->number]) }}"
-                                                          method="post">
-                                                        @csrf
-                                                        <button rel="tooltip" data-original-title="không duyệt"
-                                                                class="btn btn-simple btn-warning btn-icon
-                                                                    table-action">
-                                                            <i class="fa fa-ban"></i>
-                                                        </button>
-                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->tinyInteger('total')->nullable();
             $table->foreignId('story_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->string('user_id', 50);
             $table->timestamps();
         });
     }

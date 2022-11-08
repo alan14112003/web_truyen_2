@@ -13,9 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('chapter', function (Blueprint $table) {
-            //
-        });
+       if (!Schema::hasColumn('chapters', 'pin')) {
+           Schema::table('chapters', function(Blueprint $table) {
+               $table->tinyInteger('pin')->default(0)
+                   ->after('number');
+           });
+       }
     }
 
     /**
@@ -25,8 +28,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('chapter', function (Blueprint $table) {
-            //
-        });
+        if (Schema::hasColumn('chapters', 'pin')) {
+            Schema::table('chapters', function(Blueprint $table) {
+                $table->dropColumn('pin');
+            });
+        }
     }
 };

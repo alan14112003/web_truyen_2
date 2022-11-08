@@ -6,7 +6,7 @@ const run = () => {
     const bars = $('.bars')
     const close = $('.close')
     const headerBottomNav = $('.mobile .header__bottom__nav')
-    // ----------darkMode 
+    // ----------darkMode
     const body = $('body')
     const darkBtns = $$('.header__top__dark_mode')
     // ----------showSubNavBtn
@@ -28,7 +28,7 @@ const run = () => {
             headerBottomNav.classList.remove('open')
         }
     }
-    // ----------Dark Mode 
+    // ----------Dark Mode
     function setDark() {
         localStorage.getItem('darkMode') == 'dark' ? body.classList.add('dark') : body.classList.remove('dark')
     }
@@ -61,8 +61,8 @@ const run = () => {
     // sticky
     // When the user scrolls the page, execute myFunction
     window.onscroll = function () {
-        myFunction(navDesktop, stickyDesktop); 
-        myFunction(navMobile, stickyMobile); 
+        myFunction(navDesktop, stickyDesktop);
+        myFunction(navMobile, stickyMobile);
         };
 
     // Get the navbar
@@ -81,6 +81,8 @@ const run = () => {
             bar.classList.remove("sticky");
         }
     }
+
+
 }
 
 run()

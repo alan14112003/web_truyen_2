@@ -15,6 +15,14 @@ return new class extends Migration
     {
         Schema::create('histories', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('user_id')->unsigned()->index();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->bigInteger('story_id')->unsigned()->index();
+            $table->foreign('story_id')->references('id')->on('stories')->onDelete('cascade');
+
+            $table->bigInteger('chapter_number')->unsigned()->nullable();
+
             $table->timestamps();
         });
     }

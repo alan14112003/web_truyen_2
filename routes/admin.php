@@ -57,13 +57,8 @@ Route::prefix('stories')->name('stories.')->group(function () {
 
     Route::controller(StoryController::class)->group(function() {
         Route::get('/', 'index')->name('index');
-        Route::get('/black_list', 'blackList')->name('black_list')
-        ->middleware('admin');  // kiểm tra phải là admin
         Route::get('/view/{id}', 'view')->name('view');
         Route::get('/find', 'find')->name('find');
-
-        Route::get('/view_black/{id}', 'viewBlack')->name('view_black');
-        Route::get('/find_black', 'findBlack')->name('find_black');
 
         Route::get('/create', 'create')->name('create');
         Route::post('/create', 'store')->name('store');
@@ -82,11 +77,17 @@ Route::prefix('stories')->name('stories.')->group(function () {
     });
 
     Route::controller(ChapterController::class)->name('chapters.')->group(function () {
-        Route::get('/view/{id}/chuong-{number}', 'index')->name('index');
-        Route::get('/view_black/{id}/chuong-{number}', 'indexBlack')->name('index_black');
+        Route::get('/view/{id}/chuong-{number}', 'show')->name('show');
+        Route::post('/approve/{id}/chuong-{number}', 'approve')->name('approve');
+        Route::post('/approve_all/{id}/', 'approve')->name('approve_all');
+        Route::post('/un_approve/{id}/chuong-{number}', 'unApprove')->name('un_approve');
     });
 });
 
+Route::prefix('chapters')->name('chapters.')->controller(ChapterController::class)
+    ->group(function (){
+    Route::get('/', 'index')->name('index');
+});
 
 
 
@@ -142,25 +143,18 @@ Breadcrumbs::for('admin.stories.index', function(BreadcrumbTrail $trail) {
     $trail->parent('admin.index');
     $trail->push('Danh sách truyện', route('admin.stories.index'));
 });
-Breadcrumbs::for('admin.stories.black_list', function(BreadcrumbTrail $trail) {
-    $trail->parent('admin.stories.index');
-    $trail->push('Danh sách truyện đã xóa', route('admin.stories.black_list'));
-});
 Breadcrumbs::for('admin.stories.view', function(BreadcrumbTrail $trail, Story $story) {
     $trail->parent('admin.stories.index');
     $trail->push($story->name, route('admin.stories.view', $story->id));
 });
-Breadcrumbs::for('admin.stories.view_black', function(BreadcrumbTrail $trail, Story $story) {
-    $trail->parent('admin.stories.black_list');
-    $trail->push($story->name, route('admin.stories.view_black', $story->id));
-});
 
 // chương truyện
-Breadcrumbs::for('admin.chapters.index', function(BreadcrumbTrail $trail, Story $story, Chapter $chapter) {
+Breadcrumbs::for('admin.chapters.show', function(BreadcrumbTrail $trail, Story $story, Chapter $chapter) {
     $trail->parent('admin.stories.view', $story);
-    $trail->push("Chương $chapter->number", route('admin.stories.chapters.index', [$story->id, $chapter->number]));
+    $trail->push("Chương $chapter->number", route('admin.stories.chapters.show', [$story->id, $chapter->number]));
 });
-Breadcrumbs::for('admin.chapters.index_black', function(BreadcrumbTrail $trail, Story $story, Chapter $chapter) {
-    $trail->parent('admin.stories.view_black', $story);
-    $trail->push("Chương $chapter->number", route('admin.stories.chapters.index_black', [$story->id, $chapter->number]));
+
+Breadcrumbs::for('admin.chapters.index', function(BreadcrumbTrail $trail) {
+    $trail->parent('admin.index');
+    $trail->push('Danh sách Chương chờ duyệt', route('admin.chapters.index'));
 });

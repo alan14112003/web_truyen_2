@@ -31,7 +31,23 @@
     <div class="story_info">
         <div class="story_title">
             <h3>Thông tin truyện</h3>
-            <div class="button_box">
+            <div class="button_box" style="display: flex; justify-content: space-between;">
+                <form
+                    action='{{ route("user.$table.upload", $story->id) }}'
+                    method="post">
+                    @csrf
+                    <button style="background: transparent; border: none;">
+                        <div class="checkbox" style="margin-top: 8px;">
+                            <input type="checkbox" id="pin-{{ $story->id }}"
+                                   @if($story->pin > \App\Enums\StoryPinEnum::EDITING)
+                                       checked
+                                @endif
+                            >
+                            <label data-original-title="Đăng lên" rel="tooltip"
+                                   for="pin-{{ $story->id }}"></label>
+                        </div>
+                    </button>
+                </form>
                 <a rel="tooltip" class="btn btn-simple btn-warning btn-icon edit"
                    href="{{ route("user.$table.edit", $story->id) }}" data-original-title="Thay đổi thông tin truyện">
                     <i class="fa fa-edit"></i>
@@ -97,9 +113,17 @@
     <div class="chapter_box">
         <div class="story_title">
             <h3>Danh sách chương</h3>
-            <div class="button_box">
-                <a rel="tooltip" class="btn btn-simple btn-success btn-icon edit"
-                   href="{{ route("user.$table.chapters.create", $story->slug) }}" data-original-title="Thêm 1 chương">
+            <div class="button" style="display: flex; justify-content: space-between;">
+                <form
+                    action='{{ route("user.$table.chapters.upload_all", ['slug' => $story->slug]) }}'
+                    method="post" >
+                    @csrf
+                    <button class="btn btn-simple btn-info btn-icon edit" rel="tooltip" data-original-title="Đăng tất cả">
+                        <i class="fa fa-check"></i>
+                    </button>
+                </form>
+                <a rel="tooltip" data-original-title="Thêm chương truyện" class="btn btn-simple btn-success btn-icon edit"
+                   href="{{ route("user.$table.chapters.create", $story->slug) }}">
                     <i class="fa fa-plus-circle"></i>
                 </a>
             </div>
@@ -108,21 +132,40 @@
             @foreach ($chapters as $chapter)
                 <div class="chapter_box_item" style="display: flex; justify-content: space-between">
                     <a style="display: flex; align-items: center;"
-                       href="{{ route("user.$table.chapters.index", ['slug' => $story->slug, 'number' => $chapter->number]) }}">
+                       href="{{ route("user.$table.chapters.show", ['slug' => $story->slug, 'number' => $chapter->number]) }}">
                         <span class="chapter_box_item_text">
                             <span>Chương </span> {{ $chapter->number }}: {{ $chapter->name }}
                         </span>
                     </a>
+                    <span>{{ $chapter->pin_name }} </span>
+                    <div class="button_group">
+                        <form
+                            action='{{ route("user.$table.chapters.upload", ['slug' => $story->slug, 'id' => $chapter->id]) }}'
+                            method="post" >
+                            @csrf
+                            <button style="background: transparent; border: none;">
+                                <div class="checkbox" style="margin-top: 8px;">
+                                    <input type="checkbox" id="pin-{{ $story->id }}"
+                                           @if($chapter->pin > \App\Enums\ChapterPinEnum::EDITING)
+                                               checked
+                                        @endif
+                                    >
+                                    <label data-original-title="Đăng lên" rel="tooltip"
+                                           for="pin-{{ $story->id }}"></label>
+                                </div>
+                            </button>
+                        </form>
+                        <form action="{{ route("user.$table.chapters.destroy", ['slug' => $story->slug, 'number' => $chapter->number]) }}"
+                              method="post">
+                            @csrf
+                            @method('delete')
+                            <button rel="tooltip" data-original-title="Xóa"
+                                    class="btn btn-simple btn-danger btn-icon table-action">
+                                <i class="fa fa-remove"></i>
+                            </button>
+                        </form>
 
-                    <form action="{{ route("user.$table.chapters.destroy", ['slug' => $story->slug, 'number' => $chapter->number]) }}"
-                          method="post">
-                        @csrf
-                        @method('delete')
-                        <button rel="tooltip" data-original-title="Xóa"
-                                class="btn btn-simple btn-danger btn-icon table-action">
-                            <i class="fa fa-remove"></i>
-                        </button>
-                    </form>
+                    </div>
                 </div>
             @endforeach
         </div>

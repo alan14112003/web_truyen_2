@@ -37,9 +37,7 @@ class AuthController extends Controller
         Auth::login($user, true);
         if ($checkExit) {
             $level = 'index';
-            if ($user->level_id === 2) {
-                $level = 'censor.index';
-            } else if ($user->level_id === 3) {
+            if ($user->level_id !== 1) {
                 $level = 'admin.index';
             }
             return redirect()->route("$level");

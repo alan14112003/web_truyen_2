@@ -130,14 +130,12 @@
                                             <span class="sidebar-normal">Truyện</span>
                                         </a>
                                     </li>
-                                    @if (auth()->user()->level_id === 3)
-                                        <li>
-                                            <a href="{{ route('admin.stories.black_list') }}">
-                                                <span class="sidebar-mini">TX</span>
-                                                <span class="sidebar-normal">Truyện đã xóa</span>
-                                            </a>
-                                        </li>
-                                    @endif
+                                    <li>
+                                        <a href="{{ route('admin.chapters.index') }}">
+                                            <span class="sidebar-mini">Ch</span>
+                                            <span class="sidebar-normal">Chương</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -162,6 +160,18 @@
                                     <a href="{{ route('user.stories.index') }}">
                                         <span class="sidebar-mini">Tr</span>
                                         <span class="sidebar-normal">Truyện</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('user.stories.black_list') }}">
+                                        <span class="sidebar-mini">TX</span>
+                                        <span class="sidebar-normal">Truyện đã xóa</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('user.chapters.index') }}">
+                                        <span class="sidebar-mini">Ch</span>
+                                        <span class="sidebar-normal">Chương</span>
                                     </a>
                                 </li>
                             </ul>

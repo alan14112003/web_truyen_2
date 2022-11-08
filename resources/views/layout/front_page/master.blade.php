@@ -5,93 +5,99 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="fb:admins" content="&#123;100048327580198&#125;"/>
+    <meta property="fb:admins" content="&#123;YOUR_FACEBOOK_USER_ID_2&#125;"/>
     <script src="https://kit.fontawesome.com/08c104de7d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="icon" href="./img/icon.png">
+    <!--     Fonts and icons     -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('front_asset/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('front_asset/css/style.css') }}">
+    <link rel="icon" href="{{ asset('/img/page/icon.png') }}">
     @stack('css')
-    <title>Web truyện</title>
+    <title>{{ env('APP_NAME') }} - {{ $title ?? 'cộng đồng những người đam mê truyện chữ' }}</title>
 </head>
 
 <body>
-    <script src="./script/script.js"></script>
-    <link rel="stylesheet" href="./css/index.css">
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v15.0&appId=653129892978610&autoLogAppEvents=1"
+        nonce="MsgWl4XH">
+</script>
+    @include('layout.front_page.header')
+    <link rel="stylesheet" href="{{ asset('front_asset/css/index/index.css') }}">
     <main>
         <div class="container">
-            <section class="banner">
-                <div class="banner__item banner__left__top">
-                    <img src="https://i.truyenvua.xyz/slider/290x191/slider_1559213484.jpg?gf=hdfgdfg&mobile=2" alt="">
-                </div>
-                <div class="banner__item banner__left__bottom">
-                    <img src="https://i.truyenvua.xyz/slider/290x191/slider_1560493497.jpg?gf=hdfgdfg&mobile=2" alt="">
-                </div>
-                <div class="banner__item banner__right__top">
-                    <img src="https://i.truyenvua.xyz/slider/290x191/slider_1567830171.jpg?gf=hdfgdfg&mobile=2" alt="">
-                </div>
-                <div class="banner__item banner__right__bottom">
-                    <img src="https://i.truyenvua.xyz/slider/290x191/slider_1561609693.jpg?gf=hdfgdfg&mobile=2" alt="">
-                </div>
-                <div class="banner__item banner__center">
-                    <img src="https://i.truyenvua.xyz/slider/583x386/slider_1560573084.jpg?gf=hdfgdfg&mobile=2" alt="">
-                </div>
-            </section>
+            @yield('main')
         </div>
     </main>
     <footer>
         <div class="container">
-            <section class="footer">
-                <section class="footer__left">
-                    <div class="logo">
-                        <img src="./img/logo.png" alt="">
-                    </div>
-                    <div class="footer__left__contacts">
-                        Liên hệ với chúng tôi thông qua:
-                        <span class="contacts__face_book">
-                            <a href="">
-                                <i class="fa-brands fa-facebook"></i>
-                            </a>
-                        </span>
-                    </div>
-                    <div class="copyright">
-                        Copyright © web truyện
-                    </div>
-                </section>
-                <section class="footer__right">
-                    <ul class="footer__right__links__box">
-                        <li class="footer__right__links__box__item">
-                            <a href=""> Chuyển sinh </a>
-                        </li>
-                        <li class="footer__right__links__box__item">
-                            <a href=""> Romance </a>
-                        </li>
-                        <li class="footer__right__links__box__item">
-                            <a href=""> Ngôn tình </a>
-                        </li>
-                        <li class="footer__right__links__box__item">
-                            <a href=""> Cổ đại </a>
-                        </li>
-                        <li class="footer__right__links__box__item">
-                            <a href=""> xuyên không </a>
-                        </li>
-                        <li class="footer__right__links__box__item">
-                            <a href=""> Fantasy </a>
-                        </li>
-                    </ul>
-                    <p class="footer__right__content">
-                        Mọi thông tin và hình ảnh trên website đều được sưu tầm trên Internet. Chúng tôi không sở hữu
-                        hay chịu
-                        trách nhiệm bất kỳ thông tin nào trên web này. Nếu làm ảnh hưởng đến cá nhân hay tổ chức nào,
-                        khi được
-                        yêu cầu, chúng tôi sẽ xem xét và gỡ bỏ ngay lập tức.
-                    </p>
-                </section>
-            </section>
+            @include('layout.front_page.footer')
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('front_asset/js/jquery.slim.min.js') }}"></script>
+    <script src="{{ asset('front_asset/js/popper.min.js') }}"></script>
+    <script src="{{ asset('front_asset/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('front_asset/js/script.js') }}"></script>
+    {{-- show search box --}}
+    <script>
+        const inputSearchDesk = document.getElementById('input_search_desk');
+        const autoBoxDesk = document.getElementById('autoBox_desk')
+        const inputSearchMob = document.getElementById('inputSearchMob');
+        const autoboxMob = document.getElementById('autoboxMob');
+
+
+        // danh sách truyện
+        const listSearchStory = {!! json_encode(listStoriesSearch()) !!};
+
+        inputSearchDesk.onkeyup = (e) => {
+            renderSearch(e, inputSearchDesk, autoBoxDesk)
+        }
+        inputSearchMob.onkeyup = (e) => {
+            renderSearch(e, inputSearchMob, autoboxMob)
+        }
+        function renderSearch(value, input, box) {
+            let checkData = value.target.value
+            let dataArr = []
+            if (checkData) {
+                dataArr = listSearchStory.filter((story) => {
+                    return (story['name'].toLocaleLowerCase().search(checkData.toLocaleLowerCase())) !== -1;
+                })
+
+                dataArr = dataArr.map((story) => {
+                    return story = `<li>
+                                           <a href="/truyen/${story['slug']}" style="display: flex;">
+                                                <img src="${story['image']}" alt="${story['name']}">
+                                                <div class="ml-2">
+                                                    <h4 class="search_name">${story['name']}</h4>
+                                                    <p class="search_chapter"> Chương ${story['chapter_new']}</p>
+                                                    <p class="search_author">${story['author']}</p>
+                                                    <p class="search_categories">${story['category_name']}</p>
+                                                </div>
+                                           </a>
+                                    </li>`
+                })
+                box.classList.add('active')
+                console.log(dataArr);
+                showSearch(dataArr, input, box)
+            } else {
+                box.classList.remove('active')
+            }
+        }
+
+        function showSearch(list, input, box) {
+            let listData
+            if (!list.length) {
+                listData = '<li>' + input.value + '</li>'
+            } else {
+                listData = list.join('')
+            }
+            box.innerHTML = listData
+        }
+    </script>
+    @stack('js')
+
 </body>
 
 </html>

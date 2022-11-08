@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ChapterPinEnum;
 use App\Enums\StoryLevelEnum;
 use App\Enums\StoryPinEnum;
 use App\Enums\StoryStatusEnum;
@@ -42,13 +43,18 @@ class StoryController extends Controller
 
         $query = $this->model
             ->with('categories')
-            ->withCount('chapter')
+//            ->addSelect('*',
+//                DB::raw('(select count(*) FROM `chapters`
+//                WHERE `stories`.`id` = `chapters`.`story_id` and chapters.pin > '. StoryPinEnum::EDITING .' ) AS `chapter_count`'))
+            ->with('chapter', function ($qr) {
+                $qr->where('pin', '>', ChapterPinEnum::EDITING);
+            })
             ->with('author')
             ->with('author_2')
             ->with('user')
             ->latest()
             ->where('name', 'like', "%$q%")
-            ->whereNot('pin', StoryPinEnum::EDITING)
+            ->where('pin', '>',StoryPinEnum::EDITING)
         ;
 
 
@@ -100,12 +106,16 @@ class StoryController extends Controller
         $pin = [];
         foreach ($pinEnum as $item) {
             if ($item === StoryPinEnum::EDITING) continue;
+            if ($item === StoryPinEnum::NOT_APPROVE) continue;
             $pin[$item] = StoryPinEnum::getNameByValue($item);
         }
 
 //        user
-        $users = User::query()->get(['id', 'name']);
-
+        $users = Story::selectRaw("DISTINCT users.id, users.name")
+            ->join('users', 'stories.user_id', '=', 'users.id')
+            ->where('pin', '>', StoryPinEnum::EDITING)
+            ->get()
+        ;
 
 //        dd(implode(', ', $query->categories->pluck('name')->toArray()));
 
@@ -130,127 +140,49 @@ class StoryController extends Controller
         ]);
     }
 
-    public function blackList(Request $request)
-    {
-        $q = $request->get('q');
-        $categoriesFilter = $request->get('categories');
-        $statusFilter = $request->get('status');
-        $levelFilter = $request->get('level');
-        $authorFilter = $request->get('author');
-        $author2Filter = $request->get('author_2');
-        $pinFilter = $request->get('pin');
-
-
-        $query = Story::onlyTrashed()
-            ->with('categories')
-            ->withCount('chapter')
-            ->with('author')
-            ->with('author_2')
-            ->with('user')
-            ->latest()
-            ->where('name', 'like', "%$q%")
-            ->whereNot('pin', StoryPinEnum::EDITING)
-        ;
-
-
-        if (isset($categoriesFilter)) {
-            $query = $query->whereHas('categories', function($qr) use ($categoriesFilter) {
-                $qr->whereIn('categories.id', $categoriesFilter);
-            });
-        }
-
-        if (isset($levelFilter) && $levelFilter !== 'All') {
-            $query = $query->where('level', $levelFilter);
-        }
-
-        if (isset($statusFilter) && $statusFilter !== 'All') {
-            $query = $query->where('status', $statusFilter);
-        }
-
-        if (isset($authorFilter) && $authorFilter !== 'All') {
-            $query = $query->where('author_id', $authorFilter);
-        }
-
-        if (isset($author2Filter) && $author2Filter !== 'All') {
-            $query = $query->where('author_2_id', $author2Filter);
-        }
-
-        if (isset($pinFilter) && $pinFilter !== 'All') {
-            $query = $query->where('pin', $pinFilter);
-        }
-
-
-        $data = $query->paginate();
-
-
-        //        categories
-        $categories = Category::query()->get();
-
-        //        status
-        $statusEnum = StoryStatusEnum::getValues();
-        $status = [];
-        foreach ($statusEnum as $item) {
-            $status[$item] = StoryStatusEnum::getNameByValue($item);
-        }
-
-        //        level
-        $levelEnum = StoryLevelEnum::getValues();
-        $level = [];
-        foreach ($levelEnum as $item) {
-            $level[$item] = StoryLevelEnum::getNameByValue($item);
-        }
-
-        //        author
-        $author = Author::query()->where('level', 0)
-            ->get(['id', 'name']);
-        //        author 2
-        $author_2 = Author::query()->where('level', 1)
-            ->get(['id', 'name']);
-
-
-        //        pin
-        $pinEnum = StoryPinEnum::getValues();
-        $pin = [];
-        foreach ($pinEnum as $item) {
-            if ($item === StoryPinEnum::EDITING) continue;
-            $pin[$item] = StoryPinEnum::getNameByValue($item);
-        }
-
-//        dd(implode(', ', $query->categories->pluck('name')->toArray()));
-
-        $this->title = 'Danh sách truyện đã xóa';
-        View::share('title', $this->title);
-
-        return view("admin.$this->table.black_list", [
-            'data' => $data,
-            'q' => $q,
-
-            'categories' => $categories,
-            'status' => $status,
-            'level' => $level,
-            'author' => $author,
-            'author_2' => $author_2,
-            'pin' => $pin,
-
-            'categoriesFilter' => $categoriesFilter,
-            'statusFilter' => $statusFilter,
-            'levelFilter' => $levelFilter,
-            'authorFilter' => $authorFilter,
-            'author_2Filter' => $author2Filter,
-            'pinFilter' => $pinFilter,
-        ]);
-    }
-
     public function view($id)
     {
         $stories = $this->model
             ->where('pin', '>', StoryPinEnum::EDITING)
             ->get(['id', 'name']);
 
-        $story = Story::query()->withCount('chapter')->with('author')
-            ->find($id);
+        $query = Story::selectRaw('COUNT(chapters.story_id) as chapter_count,
+         stories.id, stories.name, stories.status, stories.level, stories.author_id, stories.author_2_id,
+         stories.pin, stories.descriptions, stories.image,
+         author.name as author
+          ')
+            ->join('authors as author', 'stories.author_id', '=', 'author.id')
 
-        $chapters = Chapter::query()->where('story_id', $id)->paginate(1);
+            ->join('chapters', 'chapters.story_id', '=', 'stories.id')
+            ->where('chapters.pin', '>', ChapterPinEnum::EDITING)
+            ->where('stories.id', $id)
+            ->groupBy('stories.id')
+        ;
+        if (!is_null($query->first()->author_2_id)) {
+                $query->addSelect(DB::raw('author_2.name as author_2'))
+                    ->join('authors as author_2', 'stories.author_2_id', '=', 'author_2.id');
+        }
+        $story = $query->first();
+
+        $categories = Category::selectRaw('`categories`.*, `category_story`.`story_id` as `pivot_story_id`,
+                                `category_story`.`category_id` as `pivot_category_id`')
+            ->join('category_story', 'categories.id', '=', 'category_story.category_id')
+            ->where('category_story.story_id', $id)
+            ->get();
+
+        $arrCategoriesId = $categories->pluck('id')->toArray();
+        $arrCategoriesName = $categories->pluck('name')->toArray();
+
+        $arrLinkCategories = array_map(function ($id, $name){
+            return "<a href='" . $id . "'>" . $name . "</a>";
+        }, $arrCategoriesId, $arrCategoriesName);
+
+        $arrLinkCategories = implode(', ', $arrLinkCategories);
+
+        $chapters = Chapter::query()
+            ->where('pin', '>', ChapterPinEnum::EDITING)
+            ->where('story_id', $id)
+            ->paginate(5);
 
         $this->title = "$story->name";
         View::share('title', $this->title);
@@ -258,28 +190,8 @@ class StoryController extends Controller
         return view("admin.$this->table.view", [
             'story' => $story,
             'stories' => $stories,
-            'chapters' => $chapters
-        ]);
-    }
-
-    public function viewBlack($id)
-    {
-        $stories = Story::onlyTrashed()
-            ->where('pin', '>', StoryPinEnum::EDITING)
-            ->get(['id', 'name']);
-
-        $story = Story::onlyTrashed()->withCount('chapter')->with('author')
-            ->find($id);
-
-        $chapters = Chapter::query()->where('story_id', $id)->paginate(1);
-
-        $this->title = "$story->name";
-        View::share('title', $this->title);
-
-        return view("admin.$this->table.view_black", [
-            'story' => $story,
-            'stories' => $stories,
-            'chapters' => $chapters
+            'chapters' => $chapters,
+            'arrLinkCategories' => $arrLinkCategories,
         ]);
     }
 
@@ -289,25 +201,31 @@ class StoryController extends Controller
         return redirect()->route("admin.$this->table.view", $story_id);
     }
 
-    public function findBlack(Request $request)
-    {
-        $story_id = $request->get('story_id');
-        return redirect()->route("admin.$this->table.view_black", $story_id);
-    }
-
     public function approve($id)
     {
         $this->model->find($id)->update([
-            'pin' => StoryPinEnum::APPROVE,
+            'pin' => StoryPinEnum::APPROVED,
         ]);
+        Chapter::query()->where('story_id', $id)
+            ->where('pin', ChapterPinEnum::UPLOADING)
+            ->update([
+                'pin' => ChapterPinEnum::APPROVED,
+            ]);
+        ;
         return redirect()->back()->with('success', 'Đã duyệt truyện');
     }
 
     public function un_approve($id)
     {
         $this->model->find($id)->update([
-            'pin' => StoryPinEnum::UPLOADING,
+            'pin' => StoryPinEnum::NOT_APPROVE,
         ]);
+        Chapter::query()->where('story_id', $id)
+            ->where('pin', '>', ChapterPinEnum::EDITING)
+            ->update([
+                'pin' => ChapterPinEnum::UPLOADING,
+            ]);
+        ;
         return redirect()->back()->with('success', 'Đã bỏ duyệt truyện');
     }
 
@@ -316,57 +234,21 @@ class StoryController extends Controller
         $story = $this->model->find($id);
         if ($story->pin === StoryPinEnum::PINNED) {
             $story->update([
-                'pin' => StoryPinEnum::APPROVE,
+                'pin' => StoryPinEnum::APPROVED,
             ]);
             return redirect()->back()->with('success', 'Đã bỏ ghim truyện');
         } else {
             $story->update([
                 'pin' => StoryPinEnum::PINNED,
             ]);
+            Chapter::query()->where('story_id', $id)
+                ->where('pin', ChapterPinEnum::UPLOADING)
+                ->update([
+                    'pin' => ChapterPinEnum::APPROVED,
+                ]);
+            ;
         }
         return redirect()->back()->with('success', 'Đã ghim truyện');
     }
 
-    public function destroy($id)
-    {
-        $this->model->find($id)->delete();
-        return redirect()->back()->with('success', 'Đã xóa truyện');
-    }
-
-    public function restore($id)
-    {
-        if ($story = Story::onlyTrashed()->find($id)) {
-            $story->restore();
-
-            return redirect()->back()
-                ->with('success', 'Đã khôi phục');
-        }
-        return redirect()->back()
-            ->with('success', 'Không có truyện này');
-    }
-
-    public function kill($id)
-    {
-        if ($story = Story::onlyTrashed()->findOrFail($id)) {
-            if (empty($story->image)) {
-                $story->forceDelete();
-
-                return redirect()->back()
-                    ->with('success', 'Đã xóa vĩnh viễn truyện này');
-            }
-            if (file_exists("storage/$story->image")) {
-                $link = "storage/$story->image";
-                $path = "storage/images/$story->id";
-                unlink($link);
-                rmdir($path);
-            }
-            $story->forceDelete();
-
-            return redirect()->back()
-                ->with('success', 'Đã xóa vĩnh viễn truyện này');
-        }
-
-        return redirect()->back()
-            ->with('error', "Không xóa được");
-    }
 }

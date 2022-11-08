@@ -4,7 +4,6 @@
 use App\Http\Controllers\User\CategoryController;
 use App\Http\Controllers\User\ChapterController;
 use App\Http\Controllers\User\StoryController;
-use App\Http\Controllers\User\UserController;
 use App\Models\Chapter;
 use App\Models\Story;
 use Diglactic\Breadcrumbs\Breadcrumbs;
@@ -17,16 +16,19 @@ Route::prefix('categories')->name('categories.')
     Route::get('/', 'index')->name('index');
 });
 
+// truyện của tôi
 Route::prefix('my_stories')->name('stories.')->group(function() {
     Route::controller(StoryController::class)->group(function() {
         Route::get('/', 'index')->name('index');
         Route::get('/black_list', 'blackList')->name('black_list');
+
         Route::get('/find', 'find')->name('find');
         Route::get('/{slug}-{story}', 'show')->name('show')
             ->where([
                 'slug' => '^(?!((.*/)|(create$))).*\D+.*$',
                 'story' => '[0-9]+',
             ]);
+
         Route::get('/create', 'create')->name('create');
         Route::post('/create', 'store')->name('store');
 
@@ -48,17 +50,22 @@ Route::prefix('my_stories')->name('stories.')->group(function() {
         Route::get('/{slug}/chapter/create', 'create')->name('create');
         Route::post('/{slug}/chapter/create', 'store')->name('store');
 
-        Route::get('/{slug}/chuong-{number}', 'index')->name('index');
+        Route::get('/{slug}/chuong-{number}', 'show')->name('show');
 
         Route::get('/{slug}/chapter/edit/{id}', 'edit')->name('edit');
         Route::put('/{slug}/chapter/edit/{id}', 'update')->name('update');
 
+        Route::post('/{slug}/chapter/upload/{id}', 'upload')->name('upload');
+        Route::post('/{slug}/chapter/upload_all', 'uploadAll')->name('upload_all');
+
         Route::delete('/{slug}/chapter/destroy/{number}', 'destroy')->name('destroy');
     });
+
 });
-
-
-
+Route::prefix('chapters')->name('chapters.')->controller(ChapterController::class)
+->group(function () {
+    Route::get('/', 'index')->name('index');
+});
 
 
 
@@ -77,22 +84,29 @@ Breadcrumbs::for('user.stories.create', function(BreadcrumbTrail $trail) {
     $trail->parent('user.stories.index');
     $trail->push('Thêm truyện mới', route('user.stories.create'));
 });
-
 Breadcrumbs::for('user.stories.show', function(BreadcrumbTrail $trail, Story $story) {
     $trail->parent('user.stories.index');
     $trail->push("$story->name", route('user.stories.show', [$story->slug, $story]));
 });
-
 Breadcrumbs::for('user.stories.edit', function(BreadcrumbTrail $trail, Story $story) {
     $trail->parent('user.stories.show', $story);
     $trail->push("Thay đổi thông tin truyện", route('user.stories.edit', $story->id));
 });
+Breadcrumbs::for('user.stories.black_list', function(BreadcrumbTrail $trail) {
+    $trail->parent('user.stories.index');
+    $trail->push('Danh sách truyện đã xóa', route('user.stories.black_list'));
+});
 
 // chapter
 
-Breadcrumbs::for('user.chapter.index', function(BreadcrumbTrail $trail, Story $story, Chapter $chapter) {
+Breadcrumbs::for('user.chapters.index', function(BreadcrumbTrail $trail) {
+    $trail->parent('index');
+    $trail->push("Danh sách chương khôn được kiểm duyệt", route('user.chapters.index'));
+});
+
+Breadcrumbs::for('user.chapter.show', function(BreadcrumbTrail $trail, Story $story, Chapter $chapter) {
     $trail->parent('user.stories.show', $story);
-    $trail->push("Chương $chapter->number", route('user.stories.chapters.index', [$story->slug, $chapter->number]));
+    $trail->push("Chương $chapter->number", route('user.stories.chapters.show', [$story->slug, $chapter->number]));
 });
 
 Breadcrumbs::for('user.chapter.create', function(BreadcrumbTrail $trail, Story $story) {
@@ -101,6 +115,6 @@ Breadcrumbs::for('user.chapter.create', function(BreadcrumbTrail $trail, Story $
 });
 
 Breadcrumbs::for('user.chapter.edit', function(BreadcrumbTrail $trail, Story $story, Chapter $chapter) {
-    $trail->parent('user.chapter.index', $story, $chapter);
+    $trail->parent('user.chapter.show', $story, $chapter);
     $trail->push("Sửa chương truyện", route('user.stories.chapters.edit', [$story->slug, $chapter->id]));
 });

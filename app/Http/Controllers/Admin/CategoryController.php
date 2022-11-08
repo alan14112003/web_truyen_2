@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Level\StoreRequest;
 use App\Http\Requests\Level\UpdateRequest;
 use App\Models\Category;
+use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
@@ -44,7 +45,7 @@ class CategoryController extends Controller
     {
         $this->title = 'Thêm thể loại';
         View::share('title', $this->title);
-        return view("user.$this->table.create");
+        return view("admin.$this->table.create");
     }
 
     public function store(StoreRequest $request)
@@ -61,14 +62,18 @@ class CategoryController extends Controller
         $this->title = 'Sửa thể loại';
         View::share('title', $this->title);
 
-        return view("user.$this->table.edit", [
+        return view("admin.$this->table.edit", [
             'category' => $category,
         ]);
     }
 
     public function update(UpdateRequest $request, $id)
     {
-        $this->model->where('id', $id)->update($request->validated());
+        $slug = SlugService::createSlug(Category::class, 'slug', $request->name);
+        $data = $request->validated();
+        $data['slug'] = $slug;
+        $this->model->where('id', $id)->update($data);
+
         return redirect()->route("admin.$this->table.index")
             ->with('success', 'Đã sửa thành công');
     }

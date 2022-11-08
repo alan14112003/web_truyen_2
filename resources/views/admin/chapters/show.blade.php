@@ -10,7 +10,16 @@
                 font-family: "Roboto Condensed", Tahoma, sans-serif;
                 text-align: center;
             }
+            .button_edit {
+                position: fixed;
+                right: 5rem;
+                top: 15rem;
+                z-index: 1000;
+            }
 
+            .button_edit i {
+                font-size: 3rem;
+            }
             .chapter_name {
                 font-size: 1.6rem;
                 margin: 0 0 5px;
@@ -60,9 +69,31 @@
             }
         </style>
     @endpush
+    <div class="button_box button_edit">
+        @if ($chapter->pin === \App\Enums\ChapterPinEnum::UPLOADING)
+            <form action="{{ route("admin.stories.chapters.approve", [$story->id, $chapter->number]) }}"
+                  method="post">
+                @csrf
+                <button rel="tooltip" data-original-title="duyệt"
+                        class="btn btn-simple btn-success btn-icon
+                                                                    table-action">
+                    <i class="fa fa-check"></i>
+                </button>
+            </form>
+        @endif
+        <form action="{{ route("admin.stories.chapters.un_approve", [$story->id, $chapter->number]) }}"
+              method="post">
+            @csrf
+            <button rel="tooltip" data-original-title="không duyệt"
+                    class="btn btn-simple btn-warning btn-icon
+                                                                    table-action">
+                <i class="fa fa-ban"></i>
+            </button>
+        </form>
+    </div>
     <div class="row">
         <div class="col-md-12">
-            {{ Breadcrumbs::render('admin.chapters.index', $story, $chapter) }}
+            {{ Breadcrumbs::render('admin.chapters.show', $story, $chapter) }}
         </div>
     </div>
     <div class="row">
@@ -79,8 +110,8 @@
         <div class="col-md-12">
             <hr class="chapter-start">
             <div class="button_box">
-                <a href="{{ route("admin.stories.$table.index", ['id' => $story->id, 'number' => $chapter->number - 1]) }}"
-                   class="btn btn-info btn-fill btn-wd @if ($chapter->number === 1) disabled @endif">
+                <a href="{{ route("admin.stories.$table.show", ['id' => $story->id, 'number' => $pre]) }}"
+                   class="btn btn-info btn-fill btn-wd @if ($chapter->number === $first) disabled @endif">
                     Chương trước</a>
                 <div class="dropdown">
                     <button class="btn btn-info btn-fill dropdown-toggle" type="button" data-toggle="dropdown">Chọn
@@ -89,13 +120,13 @@
                     <ul class="dropdown-menu">
                         @foreach ($chapterList as $chapterItem)
                             <li @if ($chapterItem === $chapter->number) class="active disabled" @endif><a
-                                        href="{{ route("admin.stories.$table.index", ['id' => $story->id, 'number' => $chapterItem]) }}">Chương
+                                        href="{{ route("admin.stories.$table.show", ['id' => $story->id, 'number' => $chapterItem]) }}">Chương
                                     {{ $chapterItem }}</a></li>
                         @endforeach
                     </ul>
                 </div>
-                <a href="{{ route("admin.stories.$table.index", ['id' => $story->id, 'number' => $chapter->number + 1]) }}"
-                   class="btn btn-info btn-fill btn-wd @if ($chapter->number === count($chapterList)) disabled @endif">Chương
+                <a href="{{ route("admin.stories.$table.show", ['id' => $story->id, 'number' => $next]) }}"
+                   class="btn btn-info btn-fill btn-wd @if ($chapter->number === $last) disabled @endif">Chương
                     sau
                 </a>
             </div>
@@ -114,8 +145,8 @@
         <div class="col-md-12">
             <hr class="chapter-end">
             <div class="button_box">
-                <a href="{{ route("admin.stories.$table.index", ['id' => $story->id, 'number' => $chapter->number - 1]) }}"
-                   class="btn btn-info btn-fill btn-wd @if ($chapter->number === 1) disabled @endif">
+                <a href="{{ route("admin.stories.$table.show", ['id' => $story->id, 'number' => $pre]) }}"
+                   class="btn btn-info btn-fill btn-wd @if ($chapter->number === $first) disabled @endif">
                     Chương trước</a>
                 <div class="dropup">
                     <button class="btn btn-info btn-fill dropdown-toggle" type="button" data-toggle="dropdown">Chọn
@@ -124,13 +155,13 @@
                     <ul class="dropdown-menu">
                         @foreach ($chapterList as $chapterItem)
                             <li @if ($chapterItem === $chapter->number) class="active disabled" @endif><a
-                                        href="{{ route("admin.stories.$table.index", ['id' => $story->id, 'number' => $chapterItem]) }}">Chương
+                                        href="{{ route("admin.stories.$table.show", ['id' => $story->id, 'number' => $chapterItem]) }}">Chương
                                     {{ $chapterItem }}</a></li>
                         @endforeach
                     </ul>
                 </div>
-                <a href="{{ route("admin.stories.$table.index", ['id' => $story->id, 'number' => $chapter->number + 1]) }}"
-                   class="btn btn-info btn-fill btn-wd @if ($chapter->number === count($chapterList)) disabled @endif">Chương
+                <a href="{{ route("admin.stories.$table.show", ['id' => $story->id, 'number' => $next]) }}"
+                   class="btn btn-info btn-fill btn-wd @if ($chapter->number === $last) disabled @endif">Chương
                     sau
                 </a>
             </div>

@@ -31,6 +31,40 @@
     <div class="story_info">
         <div class="story_title">
             <h3>Thông tin truyện</h3>
+            <div style="display: flex;">
+                @if ($story->pin === \App\Enums\StoryPinEnum::UPLOADING)
+                    <form action="{{ route("admin.$table.approve", $story->id) }}"
+                          method="post">
+                        @csrf
+                        <button rel="tooltip" data-original-title="duyệt"
+                                class="btn btn-simple btn-success btn-icon table-action">
+                            <i class="fa fa-check"></i>
+                        </button>
+                    </form>
+                @endif
+                <form action="{{ route("admin.$table.un_approve", $story->id) }}"
+                      method="post">
+                    @csrf
+                    <button rel="tooltip" data-original-title="không duyệt"
+                            class="btn btn-simple btn-warning btn-icon
+                                                                    table-action">
+                        <i class="fa fa-ban"></i>
+                    </button>
+                </form>
+                <form action='{{ route("admin.$table.pinned", $story->id) }}'
+                      method="post" id="pinnedForm">
+                    @csrf
+                    <button style="background: transparent; border: none;">
+                        <div class="checkbox" style="margin-top: 8px;">
+                            <input type="checkbox" id="pin-{{ $story->id }}"
+                                   {{ $story->pin === \App\Enums\StoryPinEnum::PINNED ? 'checked' : '' }}
+                                   class="pinnedInput">
+                            <label data-original-title="ghim" rel="tooltip"
+                                   for="pin-{{ $story->id }}"></label>
+                        </div>
+                    </button>
+                </form>
+            </div>
         </div>
         <div class="story_name">
             <h2>{{ $story->name }}</h2>
@@ -52,17 +86,17 @@
                     </div>
                     <div class="story_box_left_bottom_item">
                         <strong>Tác giả:</strong>
-                        <span>{{ $story->author->name }}</span>
+                        <span>{{ $story->author }}</span>
                     </div>
                     @isset($story->author_2)
                         <div class="story_box_left_bottom_item">
                             <strong>Người sửa:</strong>
-                            <span>{{ $story->author_2->name }}</span>
+                            <span>{{ $story->author_2 }}</span>
                         </div>
                     @endisset
                     <div class="story_box_left_bottom_item">
                         <strong>Thể loại:</strong>
-                        <span>{!! $story->categories_link !!}</span>
+                        <span>{!! $arrLinkCategories !!}</span>
                     </div>
                     <div class="story_box_left_bottom_item">
                         <strong>Tình trạng:</strong>
@@ -96,11 +130,34 @@
             @foreach ($chapters as $chapter)
                 <div class="chapter_box_item" style="display: flex; justify-content: space-between">
                     <a style="display: flex; align-items: center;"
-                       href="{{ route("admin.$table.chapters.index", ['id' => $story->id, 'number' => $chapter->number]) }}">
+                       href="{{ route("admin.$table.chapters.show", ['id' => $story->id, 'number' => $chapter->number]) }}">
                         <span class="chapter_box_item_text">
                             <span>Chương </span> {{ $chapter->number }}: {{ $chapter->name }}
                         </span>
                     </a>
+                    <span>{{ $chapter->pin_name }} </span>
+                    <div class="button_group" >
+                        @if ($chapter->pin === \App\Enums\ChapterPinEnum::UPLOADING)
+                            <form action="{{ route("admin.$table.chapters.approve", [$story->id, $chapter->number]) }}"
+                                  method="post">
+                                @csrf
+                                <button rel="tooltip" data-original-title="duyệt"
+                                        class="btn btn-simple btn-success btn-icon
+                                                                    table-action">
+                                    <i class="fa fa-check"></i>
+                                </button>
+                            </form>
+                        @endif
+                        <form action="{{ route("admin.$table.chapters.un_approve", [$story->id, $chapter->number]) }}"
+                              method="post">
+                            @csrf
+                            <button rel="tooltip" data-original-title="không duyệt"
+                                    class="btn btn-simple btn-warning btn-icon
+                                                                    table-action">
+                                <i class="fa fa-ban"></i>
+                            </button>
+                        </form>
+                    </div>
                 </div>
             @endforeach
         </div>
