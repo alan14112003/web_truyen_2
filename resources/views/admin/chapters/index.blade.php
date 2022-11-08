@@ -2,138 +2,234 @@
 @section('main')
     @push('css')
         <style>
-            .story_name h2 {
-                font-size: 2.4rem;
-                margin: 0 0 5px;
-                line-height: 35px;
-                text-transform: uppercase;
-                font-family: "Roboto Condensed", Tahoma, sans-serif;
-                text-align: center;
-            }
-
-            .chapter_name {
-                font-size: 1.6rem;
-                margin: 0 0 5px;
-                line-height: 35px;
-                text-align: center;
-            }
-
-            hr.chapter-start {
-                background: url(//static.8cache.com/img/spriteimg_new_white_op.png) -200px -27px no-repeat;
-                width: 59px;
-                height: 20px;
-            }
-
-            hr.chapter-end {
-                background: url(//static.8cache.com/img/spriteimg_new_white_op.png) 0 -51px no-repeat;
-                width: 277px;
-                height: 35px;
-            }
-
-            .button_box {
-                margin: 24px auto;
-                width: fit-content;
-                display: flex;
-                flex-wrap: wrap;
-            }
-
-            .dropdown,
-            .dropup {
-                margin: 0 8px;
-            }
-
-            .content {
-                max-width: 1000px;
-                margin: auto;
-            }
-
-            .content p {
-                text-align: justify;
-                font-size: 2.2rem;
-            }
-
-            @media screen and (max-width: 63.9375em) {
-                .button_box .btn-wd {
-                    min-width: fit-content;
-                    padding: 8px 8px;
-                }
+            [class^="pe-"] {
+                font-size: 30px;
             }
         </style>
     @endpush
     <div class="row">
         <div class="col-md-12">
-            {{ Breadcrumbs::render('admin.chapters.index', $story, $chapter) }}
+            {{ Breadcrumbs::render('admin.stories.index') }}
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="story_name">
-                <h2 class="text-info">{{ $story->name }}</h2>
-            </div>
-            <div class="chapter_name">
-                <span>Chương </span> {{ $chapter->number }}: {{ $chapter->name }}
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <hr class="chapter-start">
-            <div class="button_box">
-                <a href="{{ route("admin.stories.$table.index", ['id' => $story->id, 'number' => $chapter->number - 1]) }}"
-                   class="btn btn-info btn-fill btn-wd @if ($chapter->number === 1) disabled @endif">
-                    Chương trước</a>
-                <div class="dropdown">
-                    <button class="btn btn-info btn-fill dropdown-toggle" type="button" data-toggle="dropdown">Chọn
-                        chương
-                        <span class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        @foreach ($chapterList as $chapterItem)
-                            <li @if ($chapterItem === $chapter->number) class="active disabled" @endif><a
-                                        href="{{ route("admin.stories.$table.index", ['id' => $story->id, 'number' => $chapterItem]) }}">Chương
-                                    {{ $chapterItem }}</a></li>
-                        @endforeach
-                    </ul>
+            <div class="card">
+                <div class="card-header">
+                    <div class="content">
+                        <form action="" method="get" id="form-filter" class="form-inline">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a data-target="#collapseOne" href="#" data-toggle="collapse-hover">
+                                                    <div class="form-group">
+                                                        <label for="">Thể loại</label>
+                                                    </div>
+                                                    <b class="caret"></b>
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseOne" class="panel-collapse collapse collapse-hover"
+                                            style="height: 0px;">
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-sm-3">
+                                                        <div class="checkbox">
+                                                            <input class="categories_reset" id="categories_reset"
+                                                                name="" type="checkbox" value="">
+                                                            <label for="categories_reset" style="padding-left: 24px">
+                                                                Bỏ chọn
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    @foreach ($categories as $category)
+                                                        <div class="col-sm-3">
+                                                            <div class="checkbox">
+                                                                <input class="filter-input"
+                                                                    @if (isset($categoriesFilter) && in_array($category->id, $categoriesFilter)) checked @endif
+                                                                    id="categories{{ $category->id }}" name="categories[]"
+                                                                    type="checkbox" value="{{ $category->id }}">
+                                                                <label for="categories{{ $category->id }}"
+                                                                    style="padding-left: 24px">
+                                                                    {{ $category->name }}
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 col-md-offset-3">
+                                    <a href="{{ route("admin.$table.index") }}" class="btn btn-default btn-fill"
+                                        style="margin: 24px">
+                                        <i class="fa fa-spin fa-refresh"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="status" class="control-label">Tình trạng</label>
+                                <select name="status" id="status" class="form-control filter-input"
+                                    style="margin-left: 6px">
+                                    <option value="">All</option>
+                                    @foreach ($status as $value => $name)
+                                        <option value="{{ $value }}"
+                                            @if ($statusFilter === (string) $value) selected @endif>{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-left: 16px">
+                                <label for="level" class="control-label">Phân loại</label>
+                                <select name="level" id="level" class="form-control filter-input"
+                                    style="margin-left: 6px">
+                                    <option value="">All</option>
+                                    @foreach ($level as $value => $name)
+                                        <option value="{{ $value }}"
+                                            @if ($levelFilter === (string) $value) selected @endif>{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-left: 16px">
+                                <label for="pin" class="control-label">Trạng thái</label>
+                                <select name="pin" id="pin" class="form-control filter-input"
+                                    style="margin-left: 6px">
+                                    <option value="">All</option>
+                                    @foreach ($pin as $value => $name)
+                                        <option value="{{ $value }}"
+                                            @if ($pinFilter === (string) $value) selected @endif>{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-left: 16px">
+                                <label for="users" class="control-label">Người đăng</label>
+                                <select name="users" id="users" class="form-control filter-input"
+                                    style="margin-left: 6px">
+                                    <option value="">All</option>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}"
+                                            @if ($usersFilter === (string) $user->id) selected @endif>{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <a href="{{ route("admin.stories.$table.index", ['id' => $story->id, 'number' => $chapter->number + 1]) }}"
-                   class="btn btn-info btn-fill btn-wd @if ($chapter->number === count($chapterList)) disabled @endif">Chương
-                    sau
-                </a>
-            </div>
-            <hr class="chapter-end">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="content">
-                {!! $chapter->content !!}
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <hr class="chapter-end">
-            <div class="button_box">
-                <a href="{{ route("admin.stories.$table.index", ['id' => $story->id, 'number' => $chapter->number - 1]) }}"
-                   class="btn btn-info btn-fill btn-wd @if ($chapter->number === 1) disabled @endif">
-                    Chương trước</a>
-                <div class="dropup">
-                    <button class="btn btn-info btn-fill dropdown-toggle" type="button" data-toggle="dropdown">Chọn
-                        chương
-                        <span class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        @foreach ($chapterList as $chapterItem)
-                            <li @if ($chapterItem === $chapter->number) class="active disabled" @endif><a
-                                        href="{{ route("admin.stories.$table.index", ['id' => $story->id, 'number' => $chapterItem]) }}">Chương
-                                    {{ $chapterItem }}</a></li>
-                        @endforeach
-                    </ul>
+                <div class="card-body">
+                    <div class="bootstrap-table">
+                        <div class="content table-responsive table-full-width">
+                            <table class="table table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tên truyện</th>
+                                        <th>Thể loại</th>
+                                        <th>Số chương</th>
+                                        <th>Tình trạng</th>
+                                        <th>Phân loại</th>
+                                        <th>Tác giả</th>
+                                        <th>Tác giả 2</th>
+                                        <th>Người đăng</th>
+                                        <th>Ảnh bìa</th>
+                                        <th>Trạng thái</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($data as $story)
+                                        <tr>
+                                            <td>{{ $story->id }}</td>
+                                            <td>{{ $story->name }}</td>
+                                            <td>{{ $story->categories_name }}</td>
+{{--                                            <td>{{ $story->chapter_count }}</td>--}}
+                                            <td>{{ $story->chapter->count() }}</td>
+                                            <td>{{ $story->status_name }}</td>
+                                            <td>{{ $story->level_name }}</td>
+                                            <td>{{ $story->author->name }}</td>
+                                            <td>{{ optional($story->author_2)->name }}</td>
+                                            <td>{{ optional($story->user)->name }}</td>
+                                            <td>
+                                                <a href="{{ $story->image_url }}" target="_blank">
+                                                    <img src="{{ $story->image_url }}"
+                                                        style="max-width: 100px; max-height: 150px; object-fit: cover;">
+                                                </a>
+                                            </td>
+                                            <td>{{ $story->pin_name }}</td>
+                                            <td class="td-actions text-right">
+                                                <div style="display: flex;">
+                                                    <a rel="tooltip" data-original-title="Xem"
+                                                        href="{{ route("admin.$table.view", $story->id) }}"
+                                                        class="btn btn-simple btn-info btn-icon table-action">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+                                                    @if ($story->pin === \App\Enums\StoryPinEnum::UPLOADING)
+                                                        <form action="{{ route("admin.$table.approve", $story->id) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            <button rel="tooltip" data-original-title="duyệt"
+                                                                class="btn btn-simple btn-success btn-icon
+                                                                    table-action">
+                                                                <i class="fa fa-check"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                    <form action="{{ route("admin.$table.un_approve", $story->id) }}"
+                                                          method="post">
+                                                        @csrf
+                                                        <button rel="tooltip" data-original-title="không duyệt"
+                                                                class="btn btn-simple btn-warning btn-icon
+                                                                    table-action">
+                                                            <i class="fa fa-ban"></i>
+                                                        </button>
+                                                    </form>
+                                                    <form action='{{ route("admin.$table.pinned", $story->id) }}'
+                                                        method="post" id="pinnedForm">
+                                                        @csrf
+                                                        <button style="background: transparent; border: none;">
+                                                            <div class="checkbox" style="margin-top: 8px;">
+                                                                <input type="checkbox" id="pin-{{ $story->id }}"
+                                                                    {{ $story->pin === \App\Enums\StoryPinEnum::PINNED ? 'checked' : '' }}
+                                                                    class="pinnedInput">
+                                                                <label data-original-title="ghim" rel="tooltip"
+                                                                    for="pin-{{ $story->id }}"></label>
+                                                            </div>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="fixed-table-pagination">
+                            <div class="pull-right pagination">
+                                {{ $data->links() }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <a href="{{ route("admin.stories.$table.index", ['id' => $story->id, 'number' => $chapter->number + 1]) }}"
-                   class="btn btn-info btn-fill btn-wd @if ($chapter->number === count($chapterList)) disabled @endif">Chương
-                    sau
-                </a>
             </div>
         </div>
     </div>
+    @push('js')
+        <script>
+            const formFilter = document.querySelector('#form-filter');
+            const inputFilter = document.querySelectorAll('.filter-input');
+            inputFilter.forEach((input) => {
+                input.onchange = () => {
+                    formFilter.submit();
+                }
+            })
+            const categoriesReset = document.getElementById('categories_reset');
+            categoriesReset.oninput = () => {
+                inputFilter.forEach((input) => {
+                    input.checked = false;
+                })
+                formFilter.submit();
+            }
+        </script>
+    @endpush
 @endsection
