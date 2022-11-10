@@ -37,6 +37,7 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::controller(HomeController::class)->group(function () {
     Route::get('/', 'index')->name('index');
+    Route::get('/tim-truyen-nang-cao', 'advancedSearch')->name('advanced_search');
     Route::get('/the-loai/{slug}', 'showCategories')->name('show_categories');
     Route::get('/truyen/{slug}', 'showStory')->name('show_story');
     Route::get('/truyen/{slug}/chuong-{number}', 'showChapter')->name('show_chapter');
@@ -45,6 +46,11 @@ Route::controller(HomeController::class)->group(function () {
 Route::post('star/create/{story}', [StarController::class, 'create'])->name('star.create');
 
 Route::post('/history/destroy', [HistoryController::class, 'destroy'])->name('history.destroy');
+
+Route::get('/test', function (){
+   return view('page.header');
+});
+
 
 // Trang chủ
 Breadcrumbs::for('index', function(BreadcrumbTrail $trail) {

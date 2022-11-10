@@ -63,6 +63,11 @@ class Story extends Model
         return $this->hasMany(Chapter::class);
     }
 
+    public function view()
+    {
+        return $this->hasMany(View::class);
+    }
+
     public function getCategoriesNameAttribute()
     {
         return implode(', ', $this->categories->pluck('name')->toArray());
@@ -94,10 +99,5 @@ class Story extends Model
     public function getPinNameAttribute()
     {
         return StoryPinEnum::getNameByValue($this->pin);
-    }
-    public function getChapterNewAttribute()
-    {
-        return  $this->chapter()->where('pin', ChapterPinEnum::APPROVED)
-            ->orderBy('number', 'desc')->limit(1)->first();
     }
 }

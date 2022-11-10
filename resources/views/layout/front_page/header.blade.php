@@ -3,7 +3,7 @@
         <div class="container">
             <ul class="header__top__nav">
                 <li class="header__top__logo">
-                    <a href="">
+                    <a href="{{ route('index') }}">
                         <img src="{{ asset('/img/page/logo.png') }}" alt="">
                     </a>
                 </li>
@@ -60,7 +60,7 @@
     <section class="header__bottom" id="navDesktop">
         <div class="container">
             <ul class="header__bottom__nav">
-                <li><a href="">Trang chủ</a></li>
+                <li><a href="{{ route('index') }}">Trang chủ</a></li>
                 <li>
                     <a href="#">Thể loại <i class="fa-solid fa-caret-down"></i></a>
                     <ul class="header__bottom__subnav">
@@ -82,7 +82,7 @@
         <div class="container">
             <ul class="header__top__nav">
                 <li class="header__top__logo">
-                    <a href="">
+                    <a href="{{ route('index') }}">
                         <img src="{{ asset('/img/page/icon.png') }}" alt="">
                     </a>
                 </li>
@@ -143,7 +143,7 @@
     <section class="header__bottom" id="navMobile">
         <input type="checkbox" id="showMenuBarCheck">
         <div class="index">
-            <a href="">Trang chủ</a>
+            <a href="{{ route('index') }}">Trang chủ</a>
             <label for="showMenuBarCheck" class="bars nav__btn">
                 <i class="fa-solid fa-list"></i>
             </label>

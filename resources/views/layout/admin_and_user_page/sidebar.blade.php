@@ -20,7 +20,11 @@
     -->
 
         <div class="logo" style="overflow: hidden;">
-            <span class="sidebar-normal"><img src="{{ asset('img/page/logo.png') }}"></span>
+            <span class="sidebar-normal">
+                <a href="{{ route('index') }}">
+                    <img src="{{ asset('img/page/logo.png') }}" alt="logo">
+                </a>
+            </span>
         </div>
 
         <div class="sidebar-wrapper">

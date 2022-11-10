@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\FrontPage;
 
 use App\Enums\ChapterPinEnum;
+use App\Enums\StoryLevelEnum;
 use App\Enums\StoryPinEnum;
+use App\Enums\StoryStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Chapter;
 use App\Models\History;
 use App\Models\Star;
 use App\Models\Story;
+use App\Models\View as ViewAlias;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -19,32 +22,78 @@ use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
+//    trang chủ
     public function index(Request $request): Factory|View|Application
     {
         $q = $request->get('q');
 
+//        láy ra các truyện theo thứ tự từ mới đến cũ
+        $stories = Story::query()
+            ->select('*')
+            ->with('categories')
+            ->with('author')
+            ->withCount('view')
+            ->selectSub("
+            select number
+            from chapters
+            where story_id = stories.id and pin = ". ChapterPinEnum::APPROVED ."
+            order by number desc limit 1
+            ", 'chapter_new_number')
+            ->selectSub("
+            select updated_at
+            from chapters
+            where story_id = stories.id and pin = ". ChapterPinEnum::APPROVED ."
+            order by number desc limit 1
+            ", 'chapter_new_time')
+            ->where('pin', '>', StoryPinEnum::UPLOADING)
+            ->where('name', 'like', "%$q%")
+            ->latest('updated_at')
+            ->inRandomOrder()
+            ->get();
 //      Lịch sử đọc truyện
         $histories = History::showHistoriesByGuest();
         if (Auth::check()) {
             $histories = History::showHistoriesByUser();
         }
 
-//      Top đánh giá
+//      Top 10 đánh giá
+        $topFiveStars = Star::showTopFiveStar();
 
-//
+//      top 10 view
+        $topFiveViewMonth = ViewAlias::showTopViewMonth();
+        $topFiveViewWeek = ViewAlias::showTopViewWeek();
+        $topFiveViewDay = ViewAlias::showTopViewDay();
+
         return view('page.index', [
             'q' => $q,
+            'stories' => $stories,
             'histories' => $histories,
-//            danh sách tìm kiếm
+            'topFiveStars' => $topFiveStars,
+            'topFiveViewMonth' => $topFiveViewMonth,
+            'topFiveViewWeek' => $topFiveViewWeek,
+            'topFiveViewDay' => $topFiveViewDay,
         ]);
     }
 
+//    trang thể loại
     public function showCategories($slug)
     {
-        $data = Story::query()->select([
-            'stories.*'
-        ])
-            ->with('chapter')
+        $data = Story::query()
+            ->select([
+                'stories.*'
+            ])
+            ->selectSub("
+            select number
+            from chapters
+            where story_id = stories.id and pin = ". ChapterPinEnum::APPROVED ."
+            order by number desc limit 1
+            ", 'chapter_new_number')
+            ->selectSub("
+            select updated_at
+            from chapters
+            where story_id = stories.id and pin = ". ChapterPinEnum::APPROVED ."
+            order by number desc limit 1
+            ", 'chapter_new_time')
             ->join('category_story as cs', 'cs.story_id', '=', 'stories.id')
             ->join('categories as c', 'c.id', '=', 'cs.category_id')
             ->where('c.slug', $slug)
@@ -57,6 +106,7 @@ class HomeController extends Controller
         ]);
     }
 
+//    trang truyện
     public function showStory(Request $request,$slug)
     {
         $sort = $request->get('sort');
@@ -103,18 +153,29 @@ class HomeController extends Controller
         ]);
     }
 
-    public function showChapter($slug, $number)
+//    trang chương truyện
+    public function showChapter(Request $request, $slug, $number): Factory|View|Application
     {
         $story = Story::query()->where('slug', $slug)->first();
 
 //        thêm vào lich sử
         History::createHistory($story->id, $number);
 
+//      lấy ra trang hiện tại
         $chapter = Chapter::query()
             ->where('story_id', $story->id)
             ->where('pin', ChapterPinEnum::APPROVED)
             ->where('number', $number)->first();
 
+
+//        thêm vào view
+        $user_id = $request->ip();
+        if (Auth::check()) {
+            $user_id = Auth::id();
+        }
+        ViewAlias::createView($user_id, $story->id, $chapter->id);
+
+//      lấy ra danh sách trang
         $chapterList = Chapter::query()
             ->where('pin', ChapterPinEnum::APPROVED)
             ->where('story_id', $story->id)
@@ -122,6 +183,7 @@ class HomeController extends Controller
             ->toArray()
         ;
 
+//        lấy ra các con trỏ trang
         $curent = array_search($chapter->number, $chapterList, true);
         $pre = $chapterList[$curent - 1] ?? '';
         $next = $chapterList[$curent + 1] ?? '';
@@ -136,6 +198,98 @@ class HomeController extends Controller
             'next' => $next,
             'first' => $first,
             'last' => $last,
+        ]);
+    }
+
+//    trang tìm truyện nâng cao
+    public function advancedSearch(Request $request)
+    {
+        $q = $request->get('q');
+        $categoriesFilter = $request->get('categories');
+        $statusFilter = $request->get('status');
+        $levelFilter = $request->get('level');
+        $authorFilter = $request->get('author');
+
+        $query = Story::query()
+            ->with('categories')
+            ->with('author')
+            ->selectSub("
+            select number
+            from chapters
+            where story_id = stories.id and pin = ". ChapterPinEnum::APPROVED ."
+            order by number desc limit 1
+            ", 'chapter_new_number')
+            ->selectSub("
+            select updated_at
+            from chapters
+            where story_id = stories.id and pin = ". ChapterPinEnum::APPROVED ."
+            order by number desc limit 1
+            ", 'chapter_new_time')
+            ->inRandomOrder()
+            ->where('name', 'like', "%$q%")
+            ->where('pin', '>',StoryPinEnum::UPLOADING)
+        ;
+
+
+        if (isset($categoriesFilter) && !in_array('All', $categoriesFilter)) {
+            $query = $query->whereHas('categories', function($qr) use ($categoriesFilter) {
+                $qr->whereIn('categories.id', $categoriesFilter);
+            });
+        }
+
+        if (isset($levelFilter) && $levelFilter !== 'All') {
+            $query = $query->where('level', $levelFilter);
+        }
+
+        if (isset($statusFilter) && $statusFilter !== 'All') {
+            $query = $query->where('status', $statusFilter);
+        }
+
+        if (isset($authorFilter) && $authorFilter !== 'All') {
+            $query = $query->where('author_id', $authorFilter);
+        }
+
+
+        $data = $query->paginate();
+
+
+        //        categories
+        $categories = Category::query()->get();
+
+        //        status
+        $statusEnum = StoryStatusEnum::getValues();
+        $status = [];
+        foreach ($statusEnum as $item) {
+            $status[$item] = StoryStatusEnum::getNameByValue($item);
+        }
+
+        //        level
+        $levelEnum = StoryLevelEnum::getValues();
+        $level = [];
+        foreach ($levelEnum as $item) {
+            $level[$item] = StoryLevelEnum::getNameByValue($item);
+        }
+
+//        author
+        $authors = Story::query()->selectRaw("DISTINCT authors.id, authors.name")
+            ->join('authors', 'stories.author_id', '=', 'authors.id')
+            ->where('pin', '>', StoryPinEnum::UPLOADING)
+            ->get()
+        ;
+
+        return view("page.advanced_search", [
+            'data' => $data,
+            'q' => $q,
+
+            'categories' => $categories,
+            'status' => $status,
+            'level' => $level,
+            'authors' => $authors,
+
+            'categoriesFilter' => $categoriesFilter,
+            'statusFilter' => $statusFilter,
+            'levelFilter' => $levelFilter,
+            'authorFilter' => $authorFilter,
         ]);
     }
 }

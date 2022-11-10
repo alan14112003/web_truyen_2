@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Enums\ChapterPinEnum;
 use App\Enums\StoryPinEnum;
 use App\Models\Category;
 use App\Models\Story;
@@ -18,9 +19,15 @@ if (!function_exists('listStoriesSearch')) {
     {
 
         $stories = Story::query()
-            ->with('chapter')
             ->with('categories')
-            ->with('author')
+            ->addSelect("*")
+            ->selectSub("select authors.name from authors where authors.id = stories.author_id", 'author_name')
+            ->selectSub("
+            select number
+            from chapters
+            where story_id = stories.id and pin = ". ChapterPinEnum::APPROVED ."
+            order by number desc limit 1
+            ", 'chapter_new')
             ->where('stories.pin', '>', StoryPinEnum::UPLOADING)
             ->inRandomOrder()
             ->get();
@@ -29,9 +36,9 @@ if (!function_exists('listStoriesSearch')) {
             $story = [];
             $story['id'] = $item->id;
             $story['name'] = $item->name;
-            $story['chapter_new'] = $item->chapterNew->number;
+            $story['chapter_new'] = $item->chapter_new;
             $story['category_name'] = $item->categoriesName;
-            $story['author'] = $item->author->name;
+            $story['author'] = $item->author_name;
             $story['image'] = $item->image_url;
             $story['slug'] = $item->slug;
             $listStories[] = $story;
