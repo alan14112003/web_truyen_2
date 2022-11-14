@@ -113,6 +113,19 @@
     <div class="chapter_box">
         <div class="story_title">
             <h3>Danh sách chương</h3>
+            <form class="form-inline" id="form_pin-filter">
+                <div class="form-group">
+                    <label class="control-label"> Lọc: </label>
+                    <select name="chapter_pin_filter" class="form-control" id="select_pin-filter">
+                        <option value="All">Tất cả</option>
+                        @foreach ($ChapterPin as $value => $name)
+                            <option value="{{ $value }}"
+                            @if($chapterPinFilter === (string) $value) selected @endif
+                            >{{ $name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </form>
             <div class="button" style="display: flex; justify-content: space-between;">
                 <form
                     action='{{ route("user.$table.chapters.upload_all", ['slug' => $story->slug]) }}'
@@ -179,6 +192,13 @@
             const story_id = document.getElementById('story_id');
             story_id.onchange = () => {
                 stories_box_form.submit();
+            }
+        </script>
+        <script>
+            const formPinFilter = document.querySelector('#form_pin-filter');
+            const selectPinFilter = document.getElementById('select_pin-filter');
+            selectPinFilter.onchange = () => {
+                formPinFilter.submit();
             }
         </script>
     @endpush

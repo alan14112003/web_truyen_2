@@ -80,6 +80,14 @@
             <ul class="nav">
                 @auth
                     @if (auth()->user()->level_id === 2 || auth()->user()->level_id === 3)
+                        <li>
+                            <a href="{{ route('admin.index') }}">
+                                <span class="sidebar-mini">
+                                    <i class="pe-7s-graph"></i>
+                                </span>
+                                <p class="sidebar-normal">Thống kê</p>
+                            </a>
+                        </li>
                         @if (auth()->user()->level_id === 3)
                             <li>
                                 <a data-toggle="collapse" href="#userHandle">
@@ -131,20 +139,20 @@
                                     <li>
                                         <a href="{{ route('admin.stories.index') }}">
                                             <span class="sidebar-mini">Tr</span>
-                                            <span class="sidebar-normal">Truyện</span>
+                                            <span class="sidebar-normal">Danh sách truyện</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="{{ route('admin.chapters.index') }}">
                                             <span class="sidebar-mini">Ch</span>
-                                            <span class="sidebar-normal">Chương</span>
+                                            <span class="sidebar-normal">Chương chờ duyệt</span>
                                         </a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
                     @endif
-                    {{--                truyện của tôi --}}
+                    {{--  truyện của tôi --}}
                     <li>
                         <a data-toggle="collapse" href="#myStories">
                             <i class="pe-7s-note2"></i>
@@ -155,6 +163,12 @@
                         <div class="collapse" id="myStories">
                             <ul class="nav">
                                 <li>
+                                    <a href="{{ route('user.index') }}">
+                                        <span class="sidebar-mini">TH</span>
+                                        <span class="sidebar-normal">Tổng hợp truyện</span>
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="{{ route('user.categories.index') }}">
                                         <span class="sidebar-mini">TL</span>
                                         <span class="sidebar-normal">Thể loại</span>
@@ -163,7 +177,7 @@
                                 <li>
                                     <a href="{{ route('user.stories.index') }}">
                                         <span class="sidebar-mini">Tr</span>
-                                        <span class="sidebar-normal">Truyện</span>
+                                        <span class="sidebar-normal">Danh sách truyện</span>
                                     </a>
                                 </li>
                                 <li>
@@ -175,7 +189,7 @@
                                 <li>
                                     <a href="{{ route('user.chapters.index') }}">
                                         <span class="sidebar-mini">Ch</span>
-                                        <span class="sidebar-normal">Chương</span>
+                                        <span class="sidebar-normal">Chương không được duyệt</span>
                                     </a>
                                 </li>
                             </ul>

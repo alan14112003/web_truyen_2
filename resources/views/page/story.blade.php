@@ -33,7 +33,7 @@
                     </div>
                     <div class="story_box_left_bottom_item">
                         <strong>Tác giả:</strong>
-                        <span>{{ $story->author->name }}</span>
+                        <a href="{{ route('advanced_search') }}?author={{ $story->author->id }}">{{ $story->author->name }}</a>
                     </div>
                     <div class="story_box_left_bottom_item">
                         <strong>Thể loại:</strong>

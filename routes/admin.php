@@ -14,7 +14,7 @@ use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [AdminController::class, 'welcome'])->name('index');
+Route::get('/', [AdminController::class, 'index'])->name('index');
 
 Route::prefix('levels')->name('levels.')
     ->middleware('admin')  // kiểm tra phải là admin
@@ -92,8 +92,10 @@ Route::prefix('chapters')->name('chapters.')->controller(ChapterController::clas
 
 
 
+
 Breadcrumbs::for('admin.index', function(BreadcrumbTrail $trail) {
-    $trail->push('Trang chủ', route('admin.index'));
+    $trail->parent('index');
+    $trail->push('Quản lý', route('admin.index'));
 });
 
 // Cấp bậc

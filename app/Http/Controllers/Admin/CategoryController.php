@@ -30,7 +30,7 @@ class CategoryController extends Controller
     {
         $q = $request->get('q');
         $query = $this->model->where('name', 'like', "%$q%");
-        $data = $query->paginate();
+        $data = $query->paginate(10);
 
         $this->title = 'Danh sách thể loại';
         View::share('title', $this->title);

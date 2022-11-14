@@ -4,7 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FrontPage\HistoryController;
 use App\Http\Controllers\FrontPage\HomeController;
 use App\Http\Controllers\FrontPage\StarController;
-use App\Http\Controllers\LevelController;
+use App\Models\Category;
 use App\Models\Story;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
@@ -39,6 +39,8 @@ Route::controller(HomeController::class)->group(function () {
     Route::get('/', 'index')->name('index');
     Route::get('/tim-truyen-nang-cao', 'advancedSearch')->name('advanced_search');
     Route::get('/the-loai/{slug}', 'showCategories')->name('show_categories');
+    Route::get('/xep-hang', 'showRank')->name('show_rank');
+    Route::get('/lich-su', 'showHistory')->name('show_history');
     Route::get('/truyen/{slug}', 'showStory')->name('show_story');
     Route::get('/truyen/{slug}/chuong-{number}', 'showChapter')->name('show_chapter');
 });
@@ -57,6 +59,29 @@ Breadcrumbs::for('index', function(BreadcrumbTrail $trail) {
     $trail->push('Trang chủ', route('index'));
 });
 
+// Trang thể loại
+Breadcrumbs::for('show_categories', function(BreadcrumbTrail $trail, Category $category) {
+    $trail->parent('index');
+    $trail->push(ucfirst(strtolower($category->name)), route('show_categories', $category->slug));
+});
+
+// Trang xếp hạng
+Breadcrumbs::for('show_rank', function(BreadcrumbTrail $trail) {
+    $trail->parent('index');
+    $trail->push('Xếp hạng lượt xem', route('show_rank'));
+});
+// Trang lich sử
+Breadcrumbs::for('show_history', function(BreadcrumbTrail $trail) {
+    $trail->parent('index');
+    $trail->push('Lịch sử đọc truyện', route('show_history'));
+});
+// Trang tìm truyện nâng cao
+Breadcrumbs::for('advanced_search', function(BreadcrumbTrail $trail) {
+    $trail->parent('index');
+    $trail->push('Tìm truyện nâng cao', route('advanced_search'));
+});
+
+//trang truyện
 Breadcrumbs::for('show_story', function(BreadcrumbTrail $trail, Story $story) {
     $trail->parent('index');
     $trail->push(ucfirst(strtolower($story->name)), route('show_story', $story->slug));

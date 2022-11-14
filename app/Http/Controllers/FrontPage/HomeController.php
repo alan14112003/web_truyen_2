@@ -50,6 +50,7 @@ class HomeController extends Controller
             ->latest('updated_at')
             ->inRandomOrder()
             ->get();
+
 //      Lịch sử đọc truyện
         $histories = History::showHistoriesByGuest();
         if (Auth::check()) {
@@ -78,10 +79,12 @@ class HomeController extends Controller
 //    trang thể loại
     public function showCategories($slug)
     {
+        $category = Category::query()->where('slug', $slug)->first();
         $data = Story::query()
             ->select([
                 'stories.*'
             ])
+            ->withCount('view')
             ->selectSub("
             select number
             from chapters
@@ -102,7 +105,8 @@ class HomeController extends Controller
             ->get()
         ;
         return view('page.category', [
-            '$data' => $data,
+            'data' => $data,
+            'category' => $category,
         ]);
     }
 
@@ -213,6 +217,7 @@ class HomeController extends Controller
         $query = Story::query()
             ->with('categories')
             ->with('author')
+            ->withCount('view')
             ->selectSub("
             select number
             from chapters
@@ -290,6 +295,28 @@ class HomeController extends Controller
             'statusFilter' => $statusFilter,
             'levelFilter' => $levelFilter,
             'authorFilter' => $authorFilter,
+        ]);
+    }
+
+//    trang xếp hạng truyện theo view
+    public function showRank()
+    {
+        $data = ViewAlias::showTopViewAll();
+
+        return view('page.show_rank', [
+            'data' => $data,
+        ]);
+    }
+
+    public function showHistory()
+    {
+        $histories = History::showHistoriesByGuest();
+        if (Auth::check()) {
+            $histories = History::showHistoriesByUser();
+        }
+
+        return view('page.show_history', [
+           'histories' => $histories,
         ]);
     }
 }

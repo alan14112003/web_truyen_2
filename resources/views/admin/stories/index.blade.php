@@ -130,7 +130,6 @@
                                         <th>Tình trạng</th>
                                         <th>Phân loại</th>
                                         <th>Tác giả</th>
-                                        <th>Tác giả 2</th>
                                         <th>Người đăng</th>
                                         <th>Ảnh bìa</th>
                                         <th>Trạng thái</th>
@@ -148,7 +147,6 @@
                                             <td>{{ $story->status_name }}</td>
                                             <td>{{ $story->level_name }}</td>
                                             <td>{{ $story->author->name }}</td>
-                                            <td>{{ optional($story->author_2)->name }}</td>
                                             <td>{{ optional($story->user)->name }}</td>
                                             <td>
                                                 <a href="{{ $story->image_url }}" target="_blank">

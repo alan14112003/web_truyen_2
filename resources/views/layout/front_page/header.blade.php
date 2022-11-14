@@ -32,9 +32,11 @@
                                 <span class="text-lowercase">{{ auth()->user()->name }}</span>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#">Link 1</a>
-                                <a class="dropdown-item" href="#">Link 2</a>
-                                <a class="dropdown-item" href="#">Link 3</a>
+                                <a class="dropdown-item" href="#">Thông tin cá nhân</a>
+                                <a class="dropdown-item" href="{{ route('user.index') }}">Truyện của tôi</a>
+                                @if(auth()->user()->level_id > 1)
+                                    <a class="dropdown-item" href="{{ route('admin.index') }}">Đến trang quản lý</a>
+                                @endif
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item">
                                 <form action="{{ route('logout') }}" method="post">
@@ -69,9 +71,9 @@
                         @endforeach
                     </ul>
                 </li>
-                <li><a href="#">Xếp hạng <i class="fa-solid fa-caret-down"></i></a></li>
-                <li><a href="">Tìm truyện</a></li>
-                <li><a href="">Lịch sử</a></li>
+                <li><a href="{{ route('show_rank') }}">Xếp hạng</a></li>
+                <li><a href="{{ route('advanced_search') }}">Tìm truyện</a></li>
+                <li><a href="{{ route('show_history') }}">Lịch sử</a></li>
                 <li><a href="">Tin tức</a></li>
             </ul>
         </div>
@@ -100,11 +102,9 @@
                                 <span class="text-lowercase">{{ auth()->user()->name }}</span>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#">Link 1</a>
+                                <a class="dropdown-item" href="#">Thông tin cá nhân</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Link 2</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Link 3</a>
+                                <a class="dropdown-item" href="{{ route('user.index') }}">Truyện của tôi</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">
                                     <form action="{{ route('logout') }}" method="post">
@@ -158,23 +158,20 @@
                     <i class="fa-solid fa-caret-up"></i>
                 </a>
                 <ul class="header__bottom__subnav">
-                    <li><a href=""> Ngôn Tình</a></li>
-                    <li><a href=""> Xuyên Không</a></li>
-                    <li><a href=""> Năn nỉ</a></li>
-                    <li><a href=""> Sống lại</a></li>
-                    <li><a href=""> Trọng sinh</a></li>
-                    <li><a href=""> Trọng sinh</a></li>
-                    <li><a href=""> Trọng sinh</a></li>
+                    @foreach(categoryList() as $category)
+                        <li>
+                            <a href="{{ route('show_categories', $category->slug) }}">
+                                {{ $category->name }}
+                            </a>
+                        </li>
+                    @endforeach
                 </ul>
             </li>
-            <li><a class="show__subnav__btn">Xếp hạng
-                    <i class="fa-solid fa-caret-down"></i>
-                    <i class="fa-solid fa-caret-up"></i>
+            <li><a href="{{ route('show_rank') }}">Xếp hạng
                 </a>
             </li>
-            <li><a href="">Tìm truyện</a></li>
-            <li><a href="">Lịch sử</a></li>
-            <li><a href="">Theo dõi</a></li>
+            <li><a href="{{ route('advanced_search') }}">Tìm truyện</a></li>
+            <li><a href="{{ route('show_history') }}">Lịch sử</a></li>
             <li><a href="">Tin tức</a></li>
         </ul>
     </section>

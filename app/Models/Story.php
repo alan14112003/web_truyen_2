@@ -68,6 +68,11 @@ class Story extends Model
         return $this->hasMany(View::class);
     }
 
+    public function star()
+    {
+        return $this->hasMany(Star::class);
+    }
+
     public function getCategoriesNameAttribute()
     {
         return implode(', ', $this->categories->pluck('name')->toArray());

@@ -1,29 +1,10 @@
 @extends('layout.front_page.master')
 @section('main')
     @push('css')
-        <link rel="stylesheet" href="{{ asset('front_asset/css/style.css') }}">
         <link rel="stylesheet" href="{{ asset('front_asset/css/own/index.css') }}">
         <link rel="stylesheet" href="{{ asset('front_asset/css/own/owl.carousel.min.css') }}">
         <link rel="stylesheet" href="{{ asset('front_asset/css/own/owl.theme.default.min.css') }}">
     @endpush
-    <section class="banner">
-        <div class="banner__item banner__left__top">
-            <img src="https://i.truyenvua.xyz/slider/290x191/slider_1559213484.jpg?gf=hdfgdfg&mobile=2" alt="">
-        </div>
-        <div class="banner__item banner__left__bottom">
-            <img src="https://i.truyenvua.xyz/slider/290x191/slider_1560493497.jpg?gf=hdfgdfg&mobile=2" alt="">
-        </div>
-        <div class="banner__item banner__right__top">
-            <img src="https://i.truyenvua.xyz/slider/290x191/slider_1567830171.jpg?gf=hdfgdfg&mobile=2" alt="">
-        </div>
-        <div class="banner__item banner__right__bottom">
-            <img src="https://i.truyenvua.xyz/slider/290x191/slider_1561609693.jpg?gf=hdfgdfg&mobile=2" alt="">
-        </div>
-        <div class="banner__item banner__center">
-            <img src="https://i.truyenvua.xyz/slider/583x386/slider_1560573084.jpg?gf=hdfgdfg&mobile=2" alt="">
-        </div>
-    </section>
-
     <div class="row">
         <div class="mb-3 col-12 col-md-8">
             <div class="mt-4 mb-1 d-flex justify-content-between">
@@ -34,7 +15,9 @@
             </div>
             <div class="row">
                 @foreach($stories as $story)
-                    <x-story :story="$story"/>
+                    <div class="col-lg-3 col-sm-4 col-6">
+                        <x-story :story="$story"/>
+                    </div>
                 @endforeach
             </div>
         </div>
@@ -220,7 +203,7 @@
                                                         </a>
                                                     </span>
                                                 <div class="rank_top_info_chapter_views">
-                                                    <i class="fa-regular fa-eye"></i> {{ $topViewMonthItem->chapter_new_number }}
+                                                    <i class="fa-regular fa-eye"></i> {{ $topViewMonthItem->view_number }}
                                                 </div>
                                             </div>
                                         </div>
@@ -251,7 +234,7 @@
                                                         </a>
                                                     </span>
                                                 <div class="rank_top_info_chapter_views">
-                                                    <i class="fa-regular fa-eye"></i> {{ $topViewWeekItem->chapter_new_number }}
+                                                    <i class="fa-regular fa-eye"></i> {{ $topViewWeekItem->view_number }}
                                                 </div>
                                             </div>
                                         </div>
@@ -259,114 +242,35 @@
                                 @endforeach
                             </div>
                             <div class="tab-pane fade" id="top-day" role="tabpanel" aria-labelledby="top-day-tab">
-                                <div class="list_li">
-                                    <div class="rank_top_number">
-                                        <span class="pos1">01</span>
-                                    </div>
-                                    <div class="rank_top_img">
-                                        <a href="">
-                                            <img src="https://img.8cache.com/hot-9.jpg" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="rank_top_info">
-                                        <p class="rank_top_info_name">
-                                            <a href="/HTML/Truyen/idol.html">
-                                                [Vong Tiện] Idol Tiện Kỳ Ảo Chi Lữ sy gdfgdfhssgfbgfjhf sêgsdhfg
+                                @foreach($topFiveViewDay as $key => $topViewDayItem)
+                                    <div class="list_li">
+                                        <div class="rank_top_number">
+                                            <span class="pos{{ ++$key }}">0{{ $key }}</span>
+                                        </div>
+                                        <div class="rank_top_img">
+                                            <a href="{{ route('show_story', $topViewDayItem->slug) }}">
+                                                <img src="{{ $topViewDayItem->image_url }}" alt="{{ $topViewDayItem->name }}">
                                             </a>
-                                        </p>
-                                        <div class="rank_top_info_chapter">
-                                                <span class="rank_top_info_chapter_number">
-                                                    <a href="#">
-                                                        Chương 1
-                                                    </a>
-                                                </span>
-                                            <div class="rank_top_info_chapter_views">
-                                                <i class="fa-regular fa-eye"></i>1000
+                                        </div>
+                                        <div class="rank_top_info">
+                                            <p class="rank_top_info_name">
+                                                <a href="{{ route('show_story', $topViewDayItem->slug) }}">
+                                                    {{ $topViewDayItem->name }}
+                                                </a>
+                                            </p>
+                                            <div class="rank_top_info_chapter">
+                                                    <span class="rank_top_info_chapter_number">
+                                                        <a href="{{ route('show_chapter', [$topViewDayItem->slug, $topViewDayItem->chapter_new_number]) }}">
+                                                            Chương {{ $topViewDayItem->chapter_new_number }}
+                                                        </a>
+                                                    </span>
+                                                <div class="rank_top_info_chapter_views">
+                                                    <i class="fa-regular fa-eye"></i> {{ $topViewDayItem->view_number }}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="list_li">
-                                    <div class="rank_top_number">
-                                        <span class="pos2">02</span>
-                                    </div>
-                                    <div class="rank_top_img">
-                                        <a href="">
-                                            <img src="https://img.8cache.com/hot-9.jpg" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="rank_top_info">
-                                        <p class="rank_top_info_name">
-                                            <a href="/HTML/Truyen/idol.html">
-                                                [Vong Tiện] Idol Tiện Kỳ Ảo Chi Lữ sy gdfgdfhssgfbgfjhf sêgsdhfg
-                                            </a>
-                                        </p>
-                                        <div class="rank_top_info_chapter">
-                                                <span class="rank_top_info_chapter_number">
-                                                    <a href="#">
-                                                        Chương 1
-                                                    </a>
-                                                </span>
-                                            <div class="rank_top_info_chapter_views">
-                                                <i class="fa-regular fa-eye"></i>1000
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="list_li">
-                                    <div class="rank_top_number">
-                                        <span class="pos3">03</span>
-                                    </div>
-                                    <div class="rank_top_img">
-                                        <a href="">
-                                            <img src="https://img.8cache.com/hot-9.jpg" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="rank_top_info">
-                                        <p class="rank_top_info_name">
-                                            <a href="/HTML/Truyen/idol.html">
-                                                [Vong Tiện] Idol Tiện Kỳ Ảo Chi Lữ sy gdfgdfhssgfbgfjhf sêgsdhfg
-                                            </a>
-                                        </p>
-                                        <div class="rank_top_info_chapter">
-                                                <span class="rank_top_info_chapter_number">
-                                                    <a href="#">
-                                                        Chương 1
-                                                    </a>
-                                                </span>
-                                            <div class="rank_top_info_chapter_views">
-                                                <i class="fa-regular fa-eye"></i>1000
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="list_li">
-                                    <div class="rank_top_number">
-                                        <span>04</span>
-                                    </div>
-                                    <div class="rank_top_img">
-                                        <a href="">
-                                            <img src="https://img.8cache.com/hot-9.jpg" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="rank_top_info">
-                                        <p class="rank_top_info_name">
-                                            <a href="/HTML/Truyen/idol.html">
-                                                [Vong Tiện] Idol Tiện Kỳ Ảo Chi Lữ sy gdfgdfhssgfbgfjhf sêgsdhfg
-                                            </a>
-                                        </p>
-                                        <div class="rank_top_info_chapter">
-                                                <span class="rank_top_info_chapter_number">
-                                                    <a href="#">
-                                                        Chương 1
-                                                    </a>
-                                                </span>
-                                            <div class="rank_top_info_chapter_views">
-                                                <i class="fa-regular fa-eye"></i>1000
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>

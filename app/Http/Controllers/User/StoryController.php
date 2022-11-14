@@ -294,7 +294,7 @@ class StoryController extends Controller
             }
 //              Xử lý đăng truyện
             $story = $this->model->create([
-                'name' => $data['name'],
+                'name' => strtolower($data['name']),
                 'status' => (int)$data['status'],
                 'author_id' => $author->id,
                 'descriptions' => $data['descriptions'],
@@ -503,13 +503,29 @@ class StoryController extends Controller
     }
 
 
-    public function show($slug, $id)
+    public function show($slug, $id, Request $request)
     {
         $stories = $this->model
             ->where('user_id', auth()->id())
             ->get(['id', 'name']);
 
-        $chapters = Chapter::query()->where('story_id', $id)->paginate(5);
+        $chapterPinFilter = $request->get('chapter_pin_filter');
+
+        $chaptersQuery = Chapter::query()
+            ->where('story_id', $id)
+        ;
+
+        if (isset($chapterPinFilter) && $chapterPinFilter !== 'All') {
+            $chaptersQuery->where('pin', $chapterPinFilter);
+        }
+
+        $chapters = $chaptersQuery->paginate(5);
+
+        $ChapterPinEnum = ChapterPinEnum::getValues();
+        $ChapterPin = [];
+        foreach ($ChapterPinEnum as $item) {
+            $ChapterPin[$item] = ChapterPinEnum::getNameByValue($item);
+        }
 
         $story = Story::query()->withCount('chapter')->where('user_id', Auth::id())
             ->with('author')
@@ -522,7 +538,9 @@ class StoryController extends Controller
         return view("user.$this->table.show", [
             'story' => $story,
             'stories' => $stories,
-            'chapters' => $chapters
+            'chapters' => $chapters,
+            'ChapterPin' => $ChapterPin,
+            'chapterPinFilter' => $chapterPinFilter,
         ]);
     }
 
@@ -551,7 +569,7 @@ class StoryController extends Controller
 
         $chapter = Chapter::query()
             ->where('story_id', $story->id)
-            ->where('pin', ChapterPinEnum::UPLOADING)
+            ->where('pin','>', ChapterPinEnum::EDITING)
             ->count();
 
         if ($chapter === 0) {

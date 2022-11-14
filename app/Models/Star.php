@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ChapterPinEnum;
+use App\Enums\StoryPinEnum;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,6 +32,7 @@ class Star extends Model
             order by number desc limit 1
             ", 'chapter_new_number')
             ->joinSub($starQr, 'stories_rank', 'id', '=', 'stories_rank.story_id')
+            ->where('pin', '>', StoryPinEnum::UPLOADING)
             ->orderBy('totalStar', 'desc')
             ->limit(5)
             ->get();

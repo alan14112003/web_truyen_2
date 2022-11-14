@@ -4,23 +4,25 @@
 use App\Http\Controllers\User\CategoryController;
 use App\Http\Controllers\User\ChapterController;
 use App\Http\Controllers\User\StoryController;
+use App\Http\Controllers\User\UserController;
 use App\Models\Chapter;
 use App\Models\Story;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/nguoi-dung/', [UserController::class, 'index'])->name('index');
 
-Route::prefix('categories')->name('categories.')
+Route::prefix('the-loai')->name('categories.')
     ->controller(CategoryController::class)->group(function() {
     Route::get('/', 'index')->name('index');
 });
 
 // truyện của tôi
-Route::prefix('my_stories')->name('stories.')->group(function() {
+Route::prefix('truyen-cua-toi')->name('stories.')->group(function() {
     Route::controller(StoryController::class)->group(function() {
         Route::get('/', 'index')->name('index');
-        Route::get('/black_list', 'blackList')->name('black_list');
+        Route::get('/truyen-da-xoa', 'blackList')->name('black_list');
 
         Route::get('/find', 'find')->name('find');
         Route::get('/{slug}-{story}', 'show')->name('show')
@@ -29,11 +31,11 @@ Route::prefix('my_stories')->name('stories.')->group(function() {
                 'story' => '[0-9]+',
             ]);
 
-        Route::get('/create', 'create')->name('create');
-        Route::post('/create', 'store')->name('store');
+        Route::get('/them', 'create')->name('create');
+        Route::post('/them', 'store')->name('store');
 
-        Route::get('/edit/{id}', 'edit')->name('edit');
-        Route::put('/edit/{id}', 'update')->name('update');
+        Route::get('/sua/{id}', 'edit')->name('edit');
+        Route::put('/sua/{id}', 'update')->name('update');
 
         Route::delete('/destroy/{id}', 'destroy')->name('destroy');
         Route::post('/approve/{id}', 'approve')->name('approve');
@@ -47,13 +49,13 @@ Route::prefix('my_stories')->name('stories.')->group(function() {
 
     Route::controller(ChapterController::class)->name('chapters.')
         ->group(function() {
-        Route::get('/{slug}/chapter/create', 'create')->name('create');
-        Route::post('/{slug}/chapter/create', 'store')->name('store');
+        Route::get('/{slug}/chuong/them', 'create')->name('create');
+        Route::post('/{slug}/chuong/them', 'store')->name('store');
 
         Route::get('/{slug}/chuong-{number}', 'show')->name('show');
 
-        Route::get('/{slug}/chapter/edit/{id}', 'edit')->name('edit');
-        Route::put('/{slug}/chapter/edit/{id}', 'update')->name('update');
+        Route::get('/{slug}/chuong/sua/{id}', 'edit')->name('edit');
+        Route::put('/{slug}/chuong/sua/{id}', 'update')->name('update');
 
         Route::post('/{slug}/chapter/upload/{id}', 'upload')->name('upload');
         Route::post('/{slug}/chapter/upload_all', 'uploadAll')->name('upload_all');
@@ -62,22 +64,30 @@ Route::prefix('my_stories')->name('stories.')->group(function() {
     });
 
 });
-Route::prefix('chapters')->name('chapters.')->controller(ChapterController::class)
+Route::prefix('chuong')->name('chapters.')->controller(ChapterController::class)
 ->group(function () {
-    Route::get('/', 'index')->name('index');
+    Route::get('/chuong-khong-duoc-duyet', 'index')->name('index');
 });
 
 
 
+
+
+// trang chủ
+Breadcrumbs::for('user.index', function(BreadcrumbTrail $trail) {
+    $trail->parent('index');
+    $trail->push('Tổng hợp truyện', route('user.index'));
+});
+
 // Thể loại
 Breadcrumbs::for('user.categories.index', function(BreadcrumbTrail $trail) {
-    $trail->parent('index');
+    $trail->parent('user.index');
     $trail->push('Thể loại', route('user.categories.index'));
 });
 
 // Truyện
 Breadcrumbs::for('user.stories.index', function(BreadcrumbTrail $trail) {
-    $trail->parent('index');
+    $trail->parent('user.index');
     $trail->push('Danh sách truyện của tôi', route('user.stories.index'));
 });
 Breadcrumbs::for('user.stories.create', function(BreadcrumbTrail $trail) {
@@ -100,8 +110,8 @@ Breadcrumbs::for('user.stories.black_list', function(BreadcrumbTrail $trail) {
 // chapter
 
 Breadcrumbs::for('user.chapters.index', function(BreadcrumbTrail $trail) {
-    $trail->parent('index');
-    $trail->push("Danh sách chương khôn được kiểm duyệt", route('user.chapters.index'));
+    $trail->parent('user.index');
+    $trail->push("Danh sách chương không được kiểm duyệt", route('user.chapters.index'));
 });
 
 Breadcrumbs::for('user.chapter.show', function(BreadcrumbTrail $trail, Story $story, Chapter $chapter) {

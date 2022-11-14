@@ -152,7 +152,7 @@ class ChapterController extends Controller
             }
         }
 
-        if ($story->user_id === Auth::id()) {
+        if (Auth::user()->level_id > 1) {
             $chapter->update([
                 'pin' => ChapterPinEnum::APPROVED,
             ]);

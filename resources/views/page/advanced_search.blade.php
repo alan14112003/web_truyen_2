@@ -1,13 +1,26 @@
 @extends('layout.front_page.master')
 @section('main')
+    @push('css')
+        <link rel="stylesheet" href="{{ asset('front_asset/css/own/index.css') }}">
+        <style>
+            body.dark #form-filter {
+                color: var(--color-dark);
+            }
+        </style>
+    @endpush
     <div class="row">
         <div class="col-md-12">
-            <h2 class="text-center my-4">Tìm truyện nâng cao</h2>
+            {{ Breadcrumbs::render("advanced_search") }}
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
             <form action="" method="get" id="form-filter">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="text-center my-4">Tìm truyện nâng cao</h2>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row">
@@ -88,5 +101,12 @@
                 </div>
             </form>
         </div>
+    </div>
+    <div class="row">
+        @foreach($data as $story)
+            <div class="col-lg-2 col-sm-3 col-6">
+                <x-story :story="$story"/>
+            </div>
+        @endforeach
     </div>
 @endsection

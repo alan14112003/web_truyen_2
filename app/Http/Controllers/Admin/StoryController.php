@@ -50,7 +50,6 @@ class StoryController extends Controller
                 $qr->where('pin', '>', ChapterPinEnum::EDITING);
             })
             ->with('author')
-            ->with('author_2')
             ->with('user')
             ->latest()
             ->where('name', 'like', "%$q%")

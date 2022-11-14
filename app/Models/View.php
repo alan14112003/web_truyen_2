@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ChapterPinEnum;
+use App\Enums\StoryPinEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -55,6 +56,7 @@ class View extends Model
             order by number desc limit 1
             ", 'chapter_new_number')
             ->joinSub($topViewMonthQuery, 'rank_view', 'id', '=', 'rank_view.story_id')
+            ->where('pin', '>', StoryPinEnum::UPLOADING)
             ->orderBy('view_number', 'desc')
             ->limit(5)
             ->get();
@@ -78,6 +80,7 @@ class View extends Model
             order by number desc limit 1
             ", 'chapter_new_number')
             ->joinSub($topViewMonthQuery, 'rank_view', 'id', '=', 'rank_view.story_id')
+            ->where('pin', '>', StoryPinEnum::UPLOADING)
             ->orderBy('view_number', 'desc')
             ->limit(5)
             ->get();
@@ -101,7 +104,36 @@ class View extends Model
             order by number desc limit 1
             ", 'chapter_new_number')
             ->joinSub($topViewMonthQuery, 'rank_view', 'id', '=', 'rank_view.story_id')
+            ->where('pin', '>', StoryPinEnum::UPLOADING)
             ->orderBy('view_number', 'desc')
+            ->limit(5)
+            ->get();
+    }
+
+    public static function showTopViewAll(): Collection|array
+    {
+
+        $topViewMonthQuery = View::query()->selectRaw('COUNT(*) as view_count, story_id')
+            ->groupBy('story_id')
+        ;
+
+        return Story::query()
+            ->select('*')
+            ->selectSub("
+            select number
+            from chapters
+            where story_id = stories.id and pin = ". ChapterPinEnum::APPROVED ."
+            order by number desc limit 1
+            ", 'chapter_new_number')
+            ->selectSub("
+            select updated_at
+            from chapters
+            where story_id = stories.id and pin = ". ChapterPinEnum::APPROVED ."
+            order by number desc limit 1
+            ", 'chapter_new_time')
+            ->joinSub($topViewMonthQuery, 'rank_view', 'id', '=', 'rank_view.story_id')
+            ->where('pin', '>', StoryPinEnum::UPLOADING)
+            ->orderBy('view_count', 'desc')
             ->limit(5)
             ->get();
     }
