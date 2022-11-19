@@ -294,7 +294,7 @@ class StoryController extends Controller
             }
 //              Xử lý đăng truyện
             $story = $this->model->create([
-                'name' => strtolower($data['name']),
+                'name' => Str::lower($data['name']),
                 'status' => (int)$data['status'],
                 'author_id' => $author->id,
                 'descriptions' => $data['descriptions'],
@@ -322,7 +322,7 @@ class StoryController extends Controller
             $story->categories()->attach($data['categories']);
 
             DB::commit();
-            return redirect()->route("user.$this->table.index")
+            return redirect()->route("user.$this->table.show", [$story->slug, $story->id])
                 ->with('success', 'Tạo truyện mới thành công');
         } catch (Throwable $e) {
             $link = "storage/$story->image";

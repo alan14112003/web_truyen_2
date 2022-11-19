@@ -7,34 +7,34 @@
             <link rel="stylesheet" href="{{ asset('front_asset/css/own/owl.carousel.min.css') }}">
             <link rel="stylesheet" href="{{ asset('front_asset/css/own/owl.theme.default.min.css') }}">
         @endpush
-        <!-- slide -->
-        <div class="">
-            <h3 class="mt-4 mb-0" style="color: #2980b9;">Truyện đề cử</h3>
-        </div>
-        <div class="owl-carousel owl-theme mt-2">
-            <div class="item">
-                <a href="#">
-                    <img src="https://static.8cache.com/cover/eJzLyTDW90-0zLAI9C9MTnROtPQI8cj0z8w2D_NPMzV1MU7N9IxKKXFzczZ38jFx9E11K3NODMwKyHb1TC03SgwLzYyoCMrNN_d3T3H1jnAtcQoOTim1LTcyNNXNMDYyAgCcgR35/tuong-thanh-qua-phu-khi-con-tre.jpg" alt="">
-                </a>
-                <div class="item_view">
-                    <p class="item_view_name">
-                        <a href="/HTML/Truyen/idol.html">
-                            [Vong Tiện] Idol Tiện Kỳ Ảo Chi Lữamcjjdnaisdjoiaefs,nfeiia ueb
-                        </a>
-                    </p>
-                    <p class="item_view_chapter">
+            <!-- slide -->
+            <div class="">
+                <h3 class="mt-4 mb-0" style="color: #2980b9;">Truyện đề cử</h3>
+            </div>
+            <div class="owl-carousel owl-theme mt-2">
+                <div class="item">
+                    <a href="#">
+                        <img src="https://static.8cache.com/cover/eJzLyTDW90-0zLAI9C9MTnROtPQI8cj0z8w2D_NPMzV1MU7N9IxKKXFzczZ38jFx9E11K3NODMwKyHb1TC03SgwLzYyoCMrNN_d3T3H1jnAtcQoOTim1LTcyNNXNMDYyAgCcgR35/tuong-thanh-qua-phu-khi-con-tre.jpg" alt="">
+                    </a>
+                    <div class="item_view">
+                        <p class="item_view_name">
+                            <a href="/HTML/Truyen/idol.html">
+                                [Vong Tiện] Idol Tiện Kỳ Ảo Chi Lữamcjjdnaisdjoiaefs,nfeiia ueb
+                            </a>
+                        </p>
+                        <p class="item_view_chapter">
                         <span class="item_view_chapter_number">
                             <a href="#">
                                 Chương 1
                             </a>
                         </span>
-                        <span class="item_view_chapter_time">
+                            <span class="item_view_chapter_time">
                             3 giờ trước
                         </span>
-                    </p>
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
         <!-- {{-- ...grid... --}} -->
         <div class="row">
             <div class="mb-3 col-12 col-md-8">

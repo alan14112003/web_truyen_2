@@ -127,16 +127,17 @@
             <h3>Danh sách chương</h3>
         </div>
         <div class="chapter_list">
+            <table style="width: 100%">
             @foreach ($chapters as $chapter)
-                <div class="chapter_box_item" style="display: flex; justify-content: space-between">
-                    <a style="display: flex; align-items: center;"
+                <tr class="chapter_box_item">
+                    <td><a style="display: flex; align-items: center;"
                        href="{{ route("admin.$table.chapters.show", ['id' => $story->id, 'number' => $chapter->number]) }}">
                         <span class="chapter_box_item_text">
                             <span>Chương </span> {{ $chapter->number }}: {{ $chapter->name }}
                         </span>
-                    </a>
-                    <span>{{ $chapter->pin_name }} </span>
-                    <div class="button_group" >
+                    </a></td>
+                    <td><span>{{ $chapter->pin_name }} </span></td>
+                    <td class="button_group" style="justify-content: flex-end">
                         @if ($chapter->pin === \App\Enums\ChapterPinEnum::UPLOADING)
                             <form action="{{ route("admin.$table.chapters.approve", [$story->id, $chapter->number]) }}"
                                   method="post">
@@ -157,9 +158,10 @@
                                 <i class="fa fa-ban"></i>
                             </button>
                         </form>
-                    </div>
-                </div>
+                    </td>
+                </tr>
             @endforeach
+            </table>
         </div>
         <div style="display: flex; justify-content: center;">
             {{ $chapters->links() }}

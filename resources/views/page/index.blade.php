@@ -5,6 +5,39 @@
         <link rel="stylesheet" href="{{ asset('front_asset/css/own/owl.carousel.min.css') }}">
         <link rel="stylesheet" href="{{ asset('front_asset/css/own/owl.theme.default.min.css') }}">
     @endpush
+    <!-- slide -->
+    <div class="">
+        <h3 class="mt-4 mb-0" style="color: #2980b9;">Truyện đề cử</h3>
+    </div>
+    <div class="owl-carousel owl-theme mt-2">
+        @foreach ($storiesPin as $story)
+            <div class="item">
+                <a href="{{ route('show_story', $story->slug) }}">
+                    <img src="{{ $story->image_url }}" alt="{{ $story->name }}">
+                </a>
+                <div class="item_view">
+                    <p class="item_view_name text-capitalize">
+                        <a href="{{ route('show_story', $story->slug) }}">
+                            {{ $story->name }}
+                        </a>
+                    </p>
+                    <p class="item_view_chapter">
+                        <span class="item_view_chapter_number">
+                            <a href="{{ route('show_chapter', [$story->slug, $story->chapter_new_number]) }}">
+                                Chương {{ $story->chapter_new_number }}
+                            </a>
+                        </span>
+                        <span class="item_view_chapter_time">
+                            @php
+                            \Carbon\Carbon::setLocale('vi')
+                            @endphp
+                            {{ \Carbon\Carbon::make($story->chapter_new_time)->diffForHumans(\Carbon\Carbon::now()) }}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        @endforeach
+    </div>
     <div class="row">
         <div class="mb-3 col-12 col-md-8">
             <div class="mt-4 mb-1 d-flex justify-content-between">
@@ -19,6 +52,11 @@
                         <x-story :story="$story"/>
                     </div>
                 @endforeach
+            </div>
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                    {{ $stories->links() }}
+                </div>
             </div>
         </div>
         <div class="col-12 col-md-4">
@@ -42,7 +80,7 @@
                                                 </a>
                                             </div>
                                             <div class="history_info">
-                                                <p class="history_info_name">
+                                                <p class="history_info_name text-capitalize">
                                                     <a href="{{ route('show_story', $history->story->slug) }}">
                                                         {{ $history->story->name }}
                                                     </a>
@@ -76,7 +114,7 @@
                                                 </a>
                                             </div>
                                             <div class="history_info">
-                                                <p class="history_info_name">
+                                                <p class="history_info_name text-capitalize">
                                                     <a href="{{ route('show_story', $history->story_slug) }}">
                                                         {{ $history->story_name }}
                                                     </a>
@@ -160,7 +198,7 @@
                                             </a>
                                         </div>
                                         <div class="rank_top_info">
-                                            <p class="rank_top_info_name">
+                                            <p class="rank_top_info_name text-capitalize">
                                                 <a href="{{ route('show_story', $topStarItem->name) }}">
                                                     {{ $topStarItem->name }}
                                                 </a>
@@ -191,7 +229,7 @@
                                             </a>
                                         </div>
                                         <div class="rank_top_info">
-                                            <p class="rank_top_info_name">
+                                            <p class="rank_top_info_name text-capitalize">
                                                 <a href="{{ route('show_story', $topViewMonthItem->slug) }}">
                                                     {{ $topViewMonthItem->name }}
                                                 </a>
@@ -222,7 +260,7 @@
                                             </a>
                                         </div>
                                         <div class="rank_top_info">
-                                            <p class="rank_top_info_name">
+                                            <p class="rank_top_info_name text-capitalize">
                                                 <a href="{{ route('show_story', $topViewWeekItem->slug) }}">
                                                     {{ $topViewWeekItem->name }}
                                                 </a>
@@ -253,7 +291,7 @@
                                             </a>
                                         </div>
                                         <div class="rank_top_info">
-                                            <p class="rank_top_info_name">
+                                            <p class="rank_top_info_name text-capitalize">
                                                 <a href="{{ route('show_story', $topViewDayItem->slug) }}">
                                                     {{ $topViewDayItem->name }}
                                                 </a>
@@ -281,6 +319,29 @@
 
     @push('js')
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="{{ asset('front_asset/js/own/owl.carousel.js') }}"></script>
+        <script>
+            $('.owl-carousel').owlCarousel({
+                loop: true,
+                margin: 10,
+                nav: true,
+                autoplay: true,
+                autoplayTimeout: 1500,
+                autoplayHoverPause: true,
+
+                responsive: {
+                    0: {
+                        items: 2
+                    },
+                    600: {
+                        items: 3
+                    },
+                    1000: {
+                        items: 5
+                    }
+                }
+            })
+        </script>
         <script type="text/javascript">
             $(document).ready(function()
             {

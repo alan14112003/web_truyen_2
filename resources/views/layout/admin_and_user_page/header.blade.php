@@ -77,27 +77,7 @@
                         </p>
                     </a>
                     <ul class="dropdown-menu dropdown-with-icons">
-                        <li>
-                            <a href="#">
-                                <i class="pe-7s-mail"></i> Messages
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="pe-7s-help1"></i> Help Center
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="pe-7s-tools"></i> Settings
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <i class="pe-7s-lock"></i> Lock Screen
-                            </a>
-                        </li>
+
                         <li>
                             <a>
                                 <form action="{{ route('logout') }}" method="post">

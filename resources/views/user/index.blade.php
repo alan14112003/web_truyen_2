@@ -91,7 +91,7 @@
     </div>
     <div class="row">
         @foreach($approvedStories as $approvedStory)
-            <div class="col-lg-2 col-sm-3 col-6">
+            <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6">
                 <div class="item_box">
                     <a href="{{ route('user.stories.show', [$approvedStory->slug, $approvedStory->id]) }}">
                         <div class="box_image">
@@ -126,7 +126,7 @@
     </div>
     <div class="row">
         @foreach($uploadingStories as $uploadingStory)
-            <div class="col-lg-2 col-sm-3 col-6">
+            <div class="col-lg-2 col-sm-3 col-xs-6">
                 <div class="item_box">
                     <a href="{{ route('user.stories.show', [$uploadingStory->slug, $uploadingStory->id]) }}">
                         <div class="box_image">
@@ -162,7 +162,7 @@
     </div>
     <div class="row">
         @foreach($notApprovedStories as $notApprovedStory)
-            <div class="col-lg-2 col-sm-3 col-6">
+            <div class="col-lg-2 col-sm-3 col-xs-6">
                 <div class="item_box">
                     <a href="{{ route('user.stories.show', [$notApprovedStory->slug, $notApprovedStory->id]) }}">
                         <div class="box_image">
@@ -196,7 +196,7 @@
     </div>
     <div class="row">
         @foreach($editingStories as $editingStory)
-            <div class="col-lg-2 col-sm-3 col-6">
+            <div class="col-lg-2 col-sm-3 col-xs-6">
                 <div class="item_box">
                     <a href="{{ route('user.stories.show', [$editingStory->slug, $editingStory->id]) }}">
                         <div class="box_image">
@@ -230,7 +230,7 @@
     </div>
     <div class="row">
         @foreach($chapters as $chapter)
-            <div class="col-lg-2 col-sm-3 col-6">
+            <div class="col-lg-2 col-sm-3 col-xs-6">
                 <div class="item_box">
                     <a href="{{ route('user.stories.chapters.show', [$chapter->slug, $chapter->number]) }}">
                         <div class="box_image">

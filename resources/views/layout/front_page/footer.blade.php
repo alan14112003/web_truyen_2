@@ -17,24 +17,9 @@
     </section>
     <section class="footer__right">
         <ul class="footer__right__links__box">
-            <li class="footer__right__links__box__item">
-                <a href=""> Chuyển sinh </a>
-            </li>
-            <li class="footer__right__links__box__item">
-                <a href=""> Romance </a>
-            </li>
-            <li class="footer__right__links__box__item">
-                <a href=""> Ngôn tình </a>
-            </li>
-            <li class="footer__right__links__box__item">
-                <a href=""> Cổ đại </a>
-            </li>
-            <li class="footer__right__links__box__item">
-                <a href=""> xuyên không </a>
-            </li>
-            <li class="footer__right__links__box__item">
-                <a href=""> Fantasy </a>
-            </li>
+            @foreach(categoryList() as $category)
+                <li class="footer__right__links__box__item"><a href="{{ route('show_categories', $category->slug) }}">{{ $category->name }}</a></li>
+            @endforeach
         </ul>
         <p class="footer__right__content">
             Mọi thông tin và hình ảnh trên website đều được sưu tầm trên Internet. Chúng tôi không sở hữu

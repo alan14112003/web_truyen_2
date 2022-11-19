@@ -63,6 +63,25 @@
             body.dark .comments_box {
                 background-color: #e1e1e1;
             }
+            .lentop {
+                display:none;
+                bottom: 10%;
+                right: 10px;
+                cursor: pointer;
+                position: fixed;
+                z-index: 1000;
+            }
+            .lentop div {
+                background:#8C52FF;
+                border:2px solid #fff;
+                border-radius:45px;
+                padding:11px 12.5px;
+                box-shadow: 1px 3px 5px 0px rgba(0, 0, 0, 0.3)
+            }
+            .lentop img {
+                width:16px;
+                height:16px;
+            }
         </style>
     @endpush
 {{--    <div class="row">--}}
@@ -143,10 +162,31 @@
             </div>
         </div>
     </div>
+    <div class='lentop'>
+        <div>
+            <img src='https://1.bp.blogspot.com/-k6sikOdzFXQ/VwqCKDosmEI/AAAAAAAAKxE/nLxLhkTIO6o3iE5ZWmtxo2bf4QHdzPQNQ/s1600/top.png' />
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12 comments_box">
             <div class="fb-comments" data-href="{{ route('show_story', $story->slug) }}"
                  data-width="100%" data-numposts="10"></div>
         </div>
     </div>
+    @push('js')
+        <script src="https://code.jquery.com/jquery-latest.js"></script>
+        <script>
+            // ----------tao nut len dau trang-----------
+
+            $(function() {
+                $(window).scroll(function() {
+                    if ($(this).scrollTop() > 100) $(".lentop").fadeIn();
+                    else $(".lentop").fadeOut();
+                });
+                $(".lentop").click(function() {
+                    $("body,html").animate({ scrollTop: 0 }, "slow");
+                });
+            });
+        </script>
+    @endpush
 @endsection

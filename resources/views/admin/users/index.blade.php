@@ -63,6 +63,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Info</th>
+                                    <th>Số truyện đã đăng</th>
                                     <th>Cấp bậc</th>
                                     <th>Ảnh đại diện</th>
                                     <th>Ngày đăng ký</th>
@@ -83,6 +84,7 @@
                                                    style="margin: 0 10px">{{ $user->email }}</a>
                                             </div>
                                         </td>
+                                        <td>{{ $user->story_count }}</td>
                                         <td>
                                             {{ $user->level->name }}
                                         </td>

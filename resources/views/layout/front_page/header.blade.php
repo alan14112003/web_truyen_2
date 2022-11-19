@@ -65,16 +65,15 @@
                 <li><a href="{{ route('index') }}">Trang chủ</a></li>
                 <li>
                     <a href="#">Thể loại <i class="fa-solid fa-caret-down"></i></a>
-                    <ul class="header__bottom__subnav">
+                    <ul class="header__bottom__subnav row">
                         @foreach(categoryList() as $category)
-                            <li><a href="{{ route('show_categories', $category->slug) }}">{{ $category->name }}</a></li>
+                            <li class="col-md-3"><a href="{{ route('show_categories', $category->slug) }}">{{ $category->name }}</a></li>
                         @endforeach
                     </ul>
                 </li>
                 <li><a href="{{ route('show_rank') }}">Xếp hạng</a></li>
                 <li><a href="{{ route('advanced_search') }}">Tìm truyện</a></li>
                 <li><a href="{{ route('show_history') }}">Lịch sử</a></li>
-                <li><a href="">Tin tức</a></li>
             </ul>
         </div>
     </section>
@@ -106,6 +105,9 @@
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ route('user.index') }}">Truyện của tôi</a>
                                 <div class="dropdown-divider"></div>
+                                @if(auth()->user()->level_id > 1)
+                                    <a class="dropdown-item" href="{{ route('admin.index') }}">Đến trang quản lý</a>
+                                @endif
                                 <a class="dropdown-item" href="#">
                                     <form action="{{ route('logout') }}" method="post">
                                         @csrf
@@ -172,7 +174,6 @@
             </li>
             <li><a href="{{ route('advanced_search') }}">Tìm truyện</a></li>
             <li><a href="{{ route('show_history') }}">Lịch sử</a></li>
-            <li><a href="">Tin tức</a></li>
         </ul>
     </section>
 </header>

@@ -52,6 +52,10 @@ class User extends Authenticatable
         return $this->belongsTo(Level::class);
     }
 
+    public function story()
+    {
+        return $this->hasMany(Story::class);
+    }
     public function getGenderNameAttribute()
     {
        return UserGenderEnum::getNameByValue($this->gender) === false ?

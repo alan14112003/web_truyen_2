@@ -112,7 +112,7 @@ class ChapterController extends Controller
         $chapter = $this->model->find($id);
 
         $chapter->update($request->validated());
-        return redirect()->route("user.stories.$this->table.index", ['slug' => $slug, 'number' => $chapter->number])
+        return redirect()->route("user.stories.chapters.show", [$slug, $chapter->number])
                 ->with('success', 'Đã sửa thành công');
     }
 

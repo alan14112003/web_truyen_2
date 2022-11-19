@@ -34,7 +34,7 @@ class Star extends Model
             ->joinSub($starQr, 'stories_rank', 'id', '=', 'stories_rank.story_id')
             ->where('pin', '>', StoryPinEnum::UPLOADING)
             ->orderBy('totalStar', 'desc')
-            ->limit(5)
+            ->limit(3)
             ->get();
         ;
         return $storiesRank;

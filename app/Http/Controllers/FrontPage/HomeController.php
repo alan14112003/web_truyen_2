@@ -47,9 +47,29 @@ class HomeController extends Controller
             ", 'chapter_new_time')
             ->where('pin', '>', StoryPinEnum::UPLOADING)
             ->where('name', 'like', "%$q%")
-            ->latest('updated_at')
             ->inRandomOrder()
-            ->get();
+            ->paginate(12);
+
+//        lấy ra truyện được ghim
+        $storiesPin = Story::query()
+            ->select('*')
+            ->selectSub("
+            select number
+            from chapters
+            where story_id = stories.id and pin = ". ChapterPinEnum::APPROVED ."
+            order by number desc limit 1
+            ", 'chapter_new_number')
+            ->selectSub("
+            select updated_at
+            from chapters
+            where story_id = stories.id and pin = ". ChapterPinEnum::APPROVED ."
+            order by number desc limit 1
+            ", 'chapter_new_time')
+            ->where('pin', '=', StoryPinEnum::PINNED)
+            ->inRandomOrder()
+            ->limit(6)
+            ->get()
+        ;
 
 //      Lịch sử đọc truyện
         $histories = History::showHistoriesByGuest();
@@ -68,6 +88,7 @@ class HomeController extends Controller
         return view('page.index', [
             'q' => $q,
             'stories' => $stories,
+            'storiesPin' => $storiesPin,
             'histories' => $histories,
             'topFiveStars' => $topFiveStars,
             'topFiveViewMonth' => $topFiveViewMonth,

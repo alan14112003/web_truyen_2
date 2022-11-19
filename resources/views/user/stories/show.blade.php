@@ -142,16 +142,17 @@
             </div>
         </div>
         <div class="chapter_list">
+            <table style="width: 100%">
             @foreach ($chapters as $chapter)
-                <div class="chapter_box_item" style="display: flex; justify-content: space-between">
-                    <a style="display: flex; align-items: center;"
+                <tr class="chapter_box_item">
+                    <td><a style="display: flex; align-items: center;"
                        href="{{ route("user.$table.chapters.show", ['slug' => $story->slug, 'number' => $chapter->number]) }}">
                         <span class="chapter_box_item_text">
                             <span>Chương </span> {{ $chapter->number }}: {{ $chapter->name }}
                         </span>
-                    </a>
-                    <span>{{ $chapter->pin_name }} </span>
-                    <div class="button_group">
+                    </a></td>
+                    <td><span>{{ $chapter->pin_name }} </span></td>
+                    <td class="button_group" style="justify-content: flex-end">
                         <form
                             action='{{ route("user.$table.chapters.upload", ['slug' => $story->slug, 'id' => $chapter->id]) }}'
                             method="post" >
@@ -178,9 +179,10 @@
                             </button>
                         </form>
 
-                    </div>
-                </div>
+                    </td>
+                </tr>
             @endforeach
+            </table>
         </div>
         <div style="display: flex; justify-content: center;">
             {{ $chapters->links() }}

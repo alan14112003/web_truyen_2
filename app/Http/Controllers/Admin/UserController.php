@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\StoryPinEnum;
 use App\Enums\UserGenderEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreRequest;
@@ -45,7 +46,10 @@ class UserController extends Controller
         $genderFilter = $request->get('gender');
         $levelFilter = $request->get('level_id');
 
-        $query = $this->model->with('level')
+        $query = $this->model
+            ->select('*')
+            ->selectSub('Select count(*) from stories where user_id = users.id and pin > '. StoryPinEnum::UPLOADING , 'story_count')
+            ->with('level')
             ->where('name', 'like', "%$q%")
             ->whereNot('id', Auth::user()->id)
             ->latest();
