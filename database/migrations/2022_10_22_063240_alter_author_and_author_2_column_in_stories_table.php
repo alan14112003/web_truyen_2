@@ -15,15 +15,15 @@ return new class extends Migration
     {
         if (Schema::hasColumn('stories', 'author')) {
             Schema::table('stories', function(Blueprint $table) {
-                $table->foreignId('author_id')->nullable()
-                    ->after('status')
+                $table->foreignId('author_id')
+                    ->after('status')->change()
                     ->constrained('authors');
             });
         }
         if (Schema::hasColumn('stories', 'author_2')) {
             Schema::table('stories', function(Blueprint $table) {
                 $table->foreignId('author_2_id')->nullable()
-                    ->after('author_id')
+                    ->after('author_id')->change()
                     ->constrained('authors');
             });
         }
