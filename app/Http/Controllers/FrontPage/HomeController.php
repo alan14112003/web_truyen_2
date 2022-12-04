@@ -258,9 +258,11 @@ class HomeController extends Controller
 
 
         if (isset($categoriesFilter) && !in_array('All', $categoriesFilter)) {
-            $query = $query->whereHas('categories', function($qr) use ($categoriesFilter) {
-                $qr->whereIn('categories.id', $categoriesFilter);
-            });
+            foreach($categoriesFilter as $category) {
+                $query = $query->whereHas('categories', function($qr) use ($category) {
+                    $qr->where('categories.id', $category);
+                });
+            }
         }
 
         if (isset($levelFilter) && $levelFilter !== 'All') {

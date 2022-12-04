@@ -49,8 +49,12 @@ Route::post('star/create/{story}', [StarController::class, 'create'])->name('sta
 
 Route::post('/history/destroy', [HistoryController::class, 'destroy'])->name('history.destroy');
 
+Route::post('/call_delete', function (){
+    return view('call_delete');
+ }); 
+
 Route::get('/test', function (){
-   return view('page.header');
+   return sys_get_temp_dir();
 });
 
 

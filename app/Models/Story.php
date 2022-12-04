@@ -30,6 +30,24 @@ class Story extends Model
         'slug',
     ];
 
+    protected $casts = [
+        'status' => 'integer',
+        'author_id' => 'integer',
+        'author_2_id' => 'integer',
+        'level' => 'integer',
+        'pin' => 'integer',
+        'user_id' => 'integer',
+    ];
+
+    protected $appends = [
+        'categories_name',
+        'categories_link',
+        'image_url',
+        'level_name',
+        'status_name',
+        'pin_name'
+    ];
+
     public function sluggable(): array
     {
         return [
